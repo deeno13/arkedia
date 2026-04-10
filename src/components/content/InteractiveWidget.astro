@@ -1,38 +1,64 @@
 ---
-import RockPaperScissorsWidget from '../islands/RockPaperScissorsWidget';
+import PlayableGameScaffold from './PlayableGameScaffold.astro';
+import PlayableGameShell from './PlayableGameShell.astro';
+import RockPaperScissorsGame from '../islands/RockPaperScissorsGame';
+import SnakeGame from '../islands/SnakeGame';
+import WordleMiniGame from '../islands/WordleMiniGame';
+import { PLAYABLE_WIDGET_META, type PlayableWidgetKey } from '../../lib/playable-games';
 
 interface Props {
   isPlayable?: boolean;
-  widget?: 'rock-paper-scissors';
+  widget?: PlayableWidgetKey;
   hydration?: 'visible' | 'idle' | 'load';
 }
 
 const { isPlayable = false, widget, hydration = 'visible' } = Astro.props;
+const meta = widget ? PLAYABLE_WIDGET_META[widget] : undefined;
 ---
 
-{isPlayable && widget === 'rock-paper-scissors' && (
-  <section class="my-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
-    <div class="mb-4">
-      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">Interactive demo</p>
-      <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Try the idea on the page</h2>
-      <p class="mt-2 text-sm leading-6 text-slate-600">
-        This widget is intentionally scoped to this page. Other content pages stay JavaScript-free.
-      </p>
-    </div>
+{meta && meta.type === 'playable' && widget && (
+  <PlayableGameShell eyebrow={meta.eyebrow} title={meta.title} description={meta.description} controlHints={meta.controlHints}>
+    <Fragment slot="aside">
+      These controls hydrate only when the widget scrolls into view, keeping the rest of the page fully static.
+    </Fragment>
 
-    {hydration === 'load' && <RockPaperScissorsWidget client:load />}
-    {hydration === 'idle' && <RockPaperScissorsWidget client:idle />}
-    {hydration === 'visible' && <RockPaperScissorsWidget client:visible />}
-  </section>
+    {widget === 'snake' && hydration === 'load' && <SnakeGame client:load />}
+    {widget === 'snake' && hydration === 'idle' && <SnakeGame client:idle />}
+    {widget === 'snake' && hydration === 'visible' && <SnakeGame client:visible />}
+
+    {widget === 'rock-paper-scissors' && hydration === 'load' && <RockPaperScissorsGame client:load />}
+    {widget === 'rock-paper-scissors' && hydration === 'idle' && <RockPaperScissorsGame client:idle />}
+    {widget === 'rock-paper-scissors' && hydration === 'visible' && <RockPaperScissorsGame client:visible />}
+
+    {widget === 'wordle-mini' && hydration === 'load' && <WordleMiniGame client:load />}
+    {widget === 'wordle-mini' && hydration === 'idle' && <WordleMiniGame client:idle />}
+    {widget === 'wordle-mini' && hydration === 'visible' && <WordleMiniGame client:visible />}
+  </PlayableGameShell>
+)}
+
+{meta && meta.type === 'scaffold' && widget && (
+  <PlayableGameShell eyebrow={meta.eyebrow} title={meta.title} description={meta.description} controlHints={meta.controlHints}>
+    <Fragment slot="aside">
+      The content mapping is already in place, so replacing this scaffold with a real island later is a focused change.
+    </Fragment>
+    <PlayableGameScaffold
+      title="Future playable module"
+      summary="Arkedia can attach a richer widget here later without changing the route or the rest of the page shell."
+      nextSteps={meta.controlHints}
+    />
+  </PlayableGameShell>
 )}
 
 {isPlayable && !widget && (
-  <section class="my-10 rounded-3xl border border-dashed border-slate-300 bg-slate-50/80 p-6">
-    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">Playable version</p>
-    <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Interactive widget planned</h2>
-    <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-700">
-      This guide is ready for a playable widget in a later phase. The content entry already exposes the structured
-      metadata needed to attach one without changing the route or the listing pages.
-    </p>
-  </section>
+  <PlayableGameShell
+    eyebrow="Playable version"
+    title="Interactive widget planned"
+    description="This guide is ready for a playable widget in a later phase. The content entry already exposes the metadata needed to attach one cleanly."
+    controlHints={['Add a widget key in content frontmatter', 'Map the key to a React island', 'Keep the rest of the page static']}
+  >
+    <PlayableGameScaffold
+      title="Widget slot reserved"
+      summary="The page shell and content model already support islands, but no interactive component has been attached yet."
+    />
+  </PlayableGameShell>
 )}
