@@ -1,11 +1,67 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import GameCard from '../components/ui/GameCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
+  (left, right) => left.data.title.localeCompare(right.data.title),
+);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout
+  title="Arkedia | Educational Games Built With Astro"
+  description="A fast, content-first educational games site where each game can pair clear explanations with optional interactive practice."
+>
+  <section class="grid gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,1fr)]">
+    <div class="space-y-6">
+      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">Arkedia</p>
+      <h1 class="max-w-3xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
+        Educational game pages first, interactive widgets only where they add value.
+      </h1>
+      <p class="max-w-2xl text-lg leading-8 text-slate-700">
+        This foundation keeps Astro in charge of routing, layout, and content rendering. MDX drives long-form
+        explanations, while React stays limited to isolated game widgets.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a
+          class="inline-flex items-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+          href="/games/"
+        >
+          Browse game pages
+        </a>
+        <a
+          class="inline-flex items-center rounded-full border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-950"
+          href="https://docs.astro.build/"
+        >
+          Astro docs
+        </a>
+      </div>
+    </div>
+
+    <aside class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+      <h2 class="text-lg font-semibold text-slate-950">Phase 1 guardrails</h2>
+      <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-700">
+        <li>Static-first pages live in Astro and build at compile time.</li>
+        <li>Game content belongs in Astro collections with typed frontmatter.</li>
+        <li>MDX handles long-form educational content and examples.</li>
+        <li>React widgets remain opt-in islands attached only to relevant pages.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="mt-16 space-y-6">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">Collection sample</p>
+        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Game pages</h2>
+      </div>
+      <a class="text-sm font-medium text-sky-700 hover:text-sky-800" href="/games/">
+        View all
+      </a>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {games.map((game) => <GameCard entry={game} />)}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import RockPaperScissorsWidget from '../islands/RockPaperScissorsWidget';
+
+interface Props {
+  widget?: 'rock-paper-scissors';
+  hydration?: 'visible' | 'idle' | 'load';
+}
+
+const { widget, hydration = 'visible' } = Astro.props;
+---
+
+{widget === 'rock-paper-scissors' && (
+  <section class="my-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+    <div class="mb-4">
+      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">Interactive demo</p>
+      <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Try the idea on the page</h2>
+      <p class="mt-2 text-sm leading-6 text-slate-600">
+        This widget is intentionally scoped to this page. Other content pages stay JavaScript-free.
+      </p>
+    </div>
+
+    {hydration === 'load' && <RockPaperScissorsWidget client:load />}
+    {hydration === 'idle' && <RockPaperScissorsWidget client:idle />}
+    {hydration === 'visible' && <RockPaperScissorsWidget client:visible />}
+  </section>
+)}

@@ -1,0 +1,43 @@
+---
+import SiteHeader from '../components/ui/SiteHeader.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  noindex?: boolean;
+}
+
+const { title, description, canonical, noindex = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+  </head>
+  <body class="min-h-screen">
+    <a
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+      href="#content"
+    >
+      Skip to content
+    </a>
+
+    <div class="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 pb-12 pt-6 sm:px-6 lg:px-8">
+      <SiteHeader />
+      <main id="content" class="flex-1 py-10">
+        <slot />
+      </main>
+      <footer class="border-t border-slate-200 pt-6 text-sm text-slate-600">
+        <p>Arkedia is structured to stay static-first, content-driven, and selective about JavaScript.</p>
+      </footer>
+    </div>
+  </body>
+</html>
