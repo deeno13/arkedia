@@ -1,0 +1,34 @@
+---
+interface Item {
+  label: string;
+  tone?: 'accent' | 'neutral' | 'warm';
+}
+
+interface Props {
+  items: Array<string | Item>;
+  label?: string;
+}
+
+const { items, label = 'Metadata' } = Astro.props;
+
+const normalized = items.map((item) => (typeof item === 'string' ? { label: item, tone: 'neutral' as const } : item));
+---
+
+{normalized.length > 0 && (
+  <ul aria-label={label} class="flex flex-wrap gap-2">
+    {normalized.map((item) => (
+      <li>
+        <span
+          class:list={[
+            'inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium',
+            item.tone === 'accent' && 'border-sky-200 bg-sky-50 text-sky-800',
+            item.tone === 'warm' && 'border-amber-200 bg-amber-50 text-amber-800',
+            (!item.tone || item.tone === 'neutral') && 'border-slate-200 bg-slate-50 text-slate-700',
+          ]}
+        >
+          {item.label}
+        </span>
+      </li>
+    ))}
+  </ul>
+)}

@@ -1,0 +1,53 @@
+---
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import SiteHead from '../components/layout/SiteHead.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  mainClass?: string;
+}
+
+const { title, description, image, type = 'website', noindex = false, mainClass = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SiteHead
+      title={title}
+      description={description}
+      pathname={Astro.url.pathname}
+      image={image}
+      type={type}
+      noindex={noindex}
+    />
+  </head>
+  <body class="min-h-screen">
+    <a
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+      href="#content"
+    >
+      Skip to content
+    </a>
+
+    <div class="relative min-h-screen overflow-x-clip">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+        <div class="absolute inset-x-0 top-0 h-[36rem] bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.16),transparent_55%)]"></div>
+        <div class="absolute right-0 top-32 h-72 w-72 rounded-full bg-amber-100/45 blur-3xl"></div>
+        <div class="absolute left-0 top-[28rem] h-72 w-72 rounded-full bg-sky-100/55 blur-3xl"></div>
+      </div>
+
+      <SiteHeader />
+      <main id="content" class:list={['pb-20', mainClass]}>
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

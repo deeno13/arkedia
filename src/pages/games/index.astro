@@ -1,27 +1,52 @@
 ---
 import { getCollection } from 'astro:content';
+import Callout from '../../components/ui/Callout.astro';
 import GameCard from '../../components/ui/GameCard.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import LinkButton from '../../components/ui/LinkButton.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
 
 const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
   (left, right) => left.data.title.localeCompare(right.data.title),
 );
 ---
 
-<BaseLayout
-  title="Games | Arkedia"
+<MainLayout
+  title="Games"
   description="Explore educational game pages authored through Astro content collections and enhanced with optional interactive islands."
 >
-  <section class="space-y-4">
-    <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">Games collection</p>
-    <h1 class="text-4xl font-semibold tracking-tight text-slate-950">Content-driven game pages</h1>
-    <p class="max-w-3xl text-lg leading-8 text-slate-700">
-      Each entry in the games collection owns its metadata, educational copy, and optional widget attachment.
-      That keeps routing and page generation simple while preserving a static-first site.
-    </p>
-  </section>
+  <PageHero
+    eyebrow="Games collection"
+    title="Browse educational game pages built from content first"
+    description="Each entry owns its frontmatter, MDX content, and optional widget metadata. The list page stays static, while future games can grow in depth without changing the shell."
+  >
+    <Fragment slot="actions">
+      <LinkButton href="/about/" variant="secondary">Why this structure?</LinkButton>
+    </Fragment>
+  </PageHero>
 
-  <section class="mt-10 grid gap-4 md:grid-cols-2">
-    {games.map((game) => <GameCard entry={game} />)}
-  </section>
-</BaseLayout>
+  <Section
+    eyebrow="Available guides"
+    title="Current collection entries"
+    description="Cards are designed to stay content-friendly today while leaving room for cover images, related content, and richer metadata tomorrow."
+  >
+    <div class="grid gap-6 md:grid-cols-2">
+      {games.map((game) => <GameCard entry={game} />)}
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Static-first default"
+    title="The listing page stays fast on purpose"
+    description="This page renders as static HTML and CSS with no hydration. Interactive JavaScript is reserved for game pages that genuinely need a widget."
+    size="narrow"
+  >
+    <Callout title="Why this matters">
+      <p>
+        Arkedia should feel quick to load, easy to scan, and dependable on low-power devices. Astro’s native page
+        rendering is the default, not the fallback.
+      </p>
+    </Callout>
+  </Section>
+</MainLayout>

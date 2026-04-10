@@ -1,0 +1,71 @@
+---
+import Callout from '../components/ui/Callout.astro';
+import LinkButton from '../components/ui/LinkButton.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import Section from '../components/ui/Section.astro';
+import { editorialPrinciples } from '../data/site';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="About"
+  description="Learn how Arkedia is being built as a static-first educational games site that prioritizes explanations, accessibility, and selective interactivity."
+>
+  <PageHero
+    eyebrow="About Arkedia"
+    title="A content-first educational games site with a static-first core"
+    description="Arkedia is designed to teach through game pages that pair readable explanations with optional interactive practice. The site architecture aims to stay understandable for authors, fast for readers, and flexible for future content collections."
+  >
+    <Fragment slot="actions">
+      <LinkButton href="/games/">Explore the games</LinkButton>
+    </Fragment>
+  </PageHero>
+
+  <Section
+    eyebrow="Mission"
+    title="Use game pages to teach underlying ideas clearly"
+    description="The goal is not just to host games. Each page should help learners understand rules, strategies, concepts, and examples around the game itself."
+  >
+    <div class="grid gap-4 lg:grid-cols-3">
+      <Callout title="Content-first">
+        <p>Most value should come from the page itself: explanation, structure, and examples, even before interaction is added.</p>
+      </Callout>
+      <Callout title="Static-first" tone="neutral">
+        <p>Astro handles routing and rendering by default so pages remain quick, resilient, and easy to cache.</p>
+      </Callout>
+      <Callout title="Selective islands">
+        <p>React is reserved for playable widgets or teaching interactions that genuinely benefit from local state.</p>
+      </Callout>
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Principles"
+    title="How the project should evolve"
+    description="These are the defaults guiding later phases as more content, richer media, and optional game widgets are added."
+  >
+    <div class="grid gap-4 lg:grid-cols-3">
+      {editorialPrinciples.map((principle) => (
+        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+          <p class="text-base leading-7 text-slate-700">{principle}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Architecture"
+    title="Built to stay readable for both authors and developers"
+    description="Layouts, cards, prose wrappers, metadata components, and page heroes are all Astro components. That keeps the shell simple while giving content pages a consistent design language."
+    size="narrow"
+  >
+    <Callout title="Why this helps later phases">
+      <ul class="space-y-3">
+        <li>New game pages can plug into a stable layout and card system.</li>
+        <li>MDX content can expand without changing the surrounding shell.</li>
+        <li>Future cover images can use Astro’s image workflow naturally.</li>
+        <li>Optional widgets can stay page-scoped rather than becoming a site requirement.</li>
+      </ul>
+    </Callout>
+  </Section>
+</MainLayout>

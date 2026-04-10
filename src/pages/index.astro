@@ -1,67 +1,91 @@
 ---
 import { getCollection } from 'astro:content';
+import Callout from '../components/ui/Callout.astro';
 import GameCard from '../components/ui/GameCard.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import LinkButton from '../components/ui/LinkButton.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import Section from '../components/ui/Section.astro';
+import { editorialPrinciples, roadmapGames } from '../data/site';
+import MainLayout from '../layouts/MainLayout.astro';
 
 const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
   (left, right) => left.data.title.localeCompare(right.data.title),
 );
+const featuredGames = games.slice(0, 2);
 ---
 
-<BaseLayout
-  title="Arkedia | Educational Games Built With Astro"
-  description="A fast, content-first educational games site where each game can pair clear explanations with optional interactive practice."
+<MainLayout
+  title="Home"
+  description="Arkedia is a content-first educational games site built with Astro, combining strong editorial pages with optional islands only where interaction helps."
 >
-  <section class="grid gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,1fr)]">
-    <div class="space-y-6">
-      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">Arkedia</p>
-      <h1 class="max-w-3xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
-        Educational game pages first, interactive widgets only where they add value.
-      </h1>
-      <p class="max-w-2xl text-lg leading-8 text-slate-700">
-        This foundation keeps Astro in charge of routing, layout, and content rendering. MDX drives long-form
-        explanations, while React stays limited to isolated game widgets.
-      </p>
-      <div class="flex flex-wrap gap-3">
-        <a
-          class="inline-flex items-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
-          href="/games/"
-        >
-          Browse game pages
-        </a>
-        <a
-          class="inline-flex items-center rounded-full border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-950"
-          href="https://docs.astro.build/"
-        >
-          Astro docs
-        </a>
-      </div>
-    </div>
-
-    <aside class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
-      <h2 class="text-lg font-semibold text-slate-950">Phase 1 guardrails</h2>
-      <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-700">
-        <li>Static-first pages live in Astro and build at compile time.</li>
-        <li>Game content belongs in Astro collections with typed frontmatter.</li>
-        <li>MDX handles long-form educational content and examples.</li>
-        <li>React widgets remain opt-in islands attached only to relevant pages.</li>
+  <PageHero
+    eyebrow="Content-first educational games"
+    title="Build trust with clear explanations first, then add interaction only where it helps."
+    description="Arkedia is structured around Astro’s strengths: static pages, content collections, MDX for long-form learning, and optional islands for playable widgets when they actually improve understanding."
+  >
+    <Fragment slot="actions">
+      <LinkButton href="/games/">Browse games</LinkButton>
+      <LinkButton href="/about/" variant="secondary">Read about Arkedia</LinkButton>
+    </Fragment>
+    <div slot="media" class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/70">
+      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Roadmap</p>
+      <ul class="mt-5 space-y-4">
+        {roadmapGames.map((game, index) => (
+          <li class="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3">
+            <span class="text-sm font-medium text-slate-800">{game}</span>
+            <span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">0{index + 1}</span>
+          </li>
+        ))}
       </ul>
-    </aside>
-  </section>
+    </div>
+  </PageHero>
 
-  <section class="mt-16 space-y-6">
-    <div class="flex items-end justify-between gap-4">
-      <div>
-        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">Collection sample</p>
-        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Game pages</h2>
+  <Section
+    eyebrow="Editorial model"
+    title="A shell that stays fast while content grows richer"
+    description="The site shell is built from Astro components and server-rendered HTML. That keeps the baseline experience quick, readable, and easy to evolve as the content collection expands."
+  >
+    <div class="grid gap-4 lg:grid-cols-3">
+      {editorialPrinciples.map((principle) => (
+        <Callout title="Guiding principle">
+          <p>{principle}</p>
+        </Callout>
+      ))}
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Featured pages"
+    title="Initial game guides"
+    description="The current collection already demonstrates the intended content flow: typed frontmatter, MDX explanations, and a clean path for optional widget attachment."
+  >
+    <div class="grid gap-6 md:grid-cols-2">
+      {featuredGames.map((game) => <GameCard entry={game} />)}
+    </div>
+  </Section>
+
+  <Section
+    eyebrow="Phase 2 readiness"
+    title="Ready for collections, previews, and related content"
+    description="The shell already expects structured metadata, preview media, and card-based relationships. Future game pages can plug into this system without turning the site into a SPA."
+  >
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
+      <Callout title="What plugs in next">
+        <ul class="space-y-3">
+          <li>More MDX game guides with consistent schema validation.</li>
+          <li>Optional cover images rendered through Astro’s image pipeline.</li>
+          <li>Related-game sections driven by collection metadata.</li>
+          <li>Playable islands added only to pages that need them.</li>
+        </ul>
+      </Callout>
+
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Current collection</p>
+        <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-950">{games.length}</p>
+        <p class="mt-2 text-sm leading-7 text-slate-600">
+          Game page{games.length === 1 ? '' : 's'} already available for the content-driven routing layer.
+        </p>
       </div>
-      <a class="text-sm font-medium text-sky-700 hover:text-sky-800" href="/games/">
-        View all
-      </a>
     </div>
-
-    <div class="grid gap-4 md:grid-cols-2">
-      {games.map((game) => <GameCard entry={game} />)}
-    </div>
-  </section>
-</BaseLayout>
+  </Section>
+</MainLayout>
