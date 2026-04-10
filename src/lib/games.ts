@@ -15,6 +15,12 @@ export const GAME_STATUS_LABELS = {
   'coming-soon': 'Coming soon',
 } as const;
 
+export const GAME_DIFFICULTY_LABELS = {
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
+} as const;
+
 type MetadataTone = 'accent' | 'neutral' | 'warm';
 
 export interface MetadataItem {
@@ -78,6 +84,10 @@ export function formatStatusLabel(status: GameEntry['data']['status']) {
   return GAME_STATUS_LABELS[status];
 }
 
+export function formatDifficultyLabel(difficulty: GameEntry['data']['difficulty']) {
+  return GAME_DIFFICULTY_LABELS[difficulty];
+}
+
 export function formatPlayerRange(minPlayers: number, maxPlayers: number) {
   if (minPlayers === maxPlayers) {
     return `${minPlayers} player${minPlayers === 1 ? '' : 's'}`;
@@ -88,6 +98,14 @@ export function formatPlayerRange(minPlayers: number, maxPlayers: number) {
 
 export function formatEstimatedMinutes(minutes: number) {
   return `${minutes} min`;
+}
+
+export function formatDate(value: Date) {
+  return new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(value);
 }
 
 export function indexGamesBySlug(entries: GameEntry[]) {
@@ -118,16 +136,16 @@ export function resolveRelatedGames(entry: GameEntry, entries: GameEntry[]) {
 
 export function formatGameCardMetadata(entry: GameEntry): MetadataItem[] {
   return [
-    { label: formatCategoryLabel(entry.data.category) },
     { label: formatPlayerRange(entry.data.minPlayers, entry.data.maxPlayers) },
     { label: formatEstimatedMinutes(entry.data.estimatedMinutes), tone: 'warm' },
+    { label: entry.data.isPlayable ? 'Playable' : 'Guide', tone: entry.data.isPlayable ? 'accent' : 'neutral' },
   ];
 }
 
 export function formatGamePageMetadata(entry: GameEntry): MetadataItem[] {
   return [
     { label: formatCategoryLabel(entry.data.category) },
-    { label: entry.data.difficulty, tone: 'warm' },
+    { label: formatDifficultyLabel(entry.data.difficulty), tone: 'warm' },
     { label: formatPlayerRange(entry.data.minPlayers, entry.data.maxPlayers) },
     { label: formatEstimatedMinutes(entry.data.estimatedMinutes) },
     ...(entry.data.isPlayable ? [{ label: 'Playable', tone: 'accent' as const }] : []),
@@ -148,6 +166,33 @@ export function getGameCategorySummaries(entries: GameEntry[]) {
       count,
     }))
     .sort((left, right) => left.label.localeCompare(right.label));
+}
+
+export function groupGamesByCategory(entries: GameEntry[]) {
+  return getGameCategorySummaries(entries).map((summary) => ({
+    ...summary,
+    entries: entries.filter((entry) => entry.data.category === summary.slug),
+  }));
+}
+
+export function getGameDifficultySummaries(entries: GameEntry[]) {
+  const counts = new Map<GameEntry['data']['difficulty'], number>();
+
+  for (const entry of entries) {
+    counts.set(entry.data.difficulty, (counts.get(entry.data.difficulty) ?? 0) + 1);
+  }
+
+  return Array.from(counts.entries())
+    .map(([difficulty, count]) => ({
+      slug: difficulty,
+      label: formatDifficultyLabel(difficulty),
+      count,
+    }))
+    .sort((left, right) => left.label.localeCompare(right.label));
+}
+
+export function getPlayableGameCount(entries: GameEntry[]) {
+  return entries.filter((entry) => entry.data.isPlayable).length;
 }
 
 export function getPopularGameTags(entries: GameEntry[], limit = 10) {

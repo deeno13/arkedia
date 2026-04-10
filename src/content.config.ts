@@ -28,10 +28,15 @@ const games = defineCollection({
     updatedAt: z.coerce.date().optional(),
     playableWidget: z.enum(PLAYABLE_WIDGET_OPTIONS).optional(),
     widgetHydration: z.enum(['visible', 'idle', 'load']).default('visible'),
-  }).refine((data) => data.minPlayers <= data.maxPlayers, {
-    message: 'minPlayers must be less than or equal to maxPlayers.',
-    path: ['minPlayers'],
-  }),
+  })
+    .refine((data) => data.minPlayers <= data.maxPlayers, {
+      message: 'minPlayers must be less than or equal to maxPlayers.',
+      path: ['minPlayers'],
+    })
+    .refine((data) => !data.coverImage || Boolean(data.coverImageAlt?.trim()), {
+      message: 'Provide coverImageAlt when coverImage is set.',
+      path: ['coverImageAlt'],
+    }),
 });
 
 export const collections = { games };

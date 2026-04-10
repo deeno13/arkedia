@@ -1,0 +1,35 @@
+---
+import { Image, type ImageMetadata } from 'astro:assets';
+
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  variant?: 'card' | 'hero';
+  class?: string;
+}
+
+const { image, alt, variant = 'card', class: className = '' } = Astro.props;
+
+const variants = {
+  card: {
+    widths: [480, 720],
+    sizes: '(min-width: 1280px) 24rem, (min-width: 768px) 50vw, 100vw',
+    className: 'h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]',
+  },
+  hero: {
+    widths: [640, 960, 1280],
+    sizes: '(min-width: 1024px) 32rem, 100vw',
+    className: 'h-full w-full object-cover',
+  },
+} as const;
+
+const config = variants[variant];
+---
+
+<Image
+  src={image}
+  alt={alt}
+  widths={config.widths}
+  sizes={config.sizes}
+  class:list={[config.className, className]}
+/>

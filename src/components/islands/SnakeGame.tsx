@@ -26,6 +26,7 @@ const keyDirectionMap: Record<string, Direction> = {
 
 export default function SnakeGame() {
   const [state, setState] = useState(() => getInitialSnakeState());
+  const boardHelpId = 'snake-board-help';
 
   useEffect(() => {
     if (state.status !== 'playing') {
@@ -83,10 +84,16 @@ export default function SnakeGame() {
       <div className="flex flex-wrap gap-3">
         <button
           type="button"
-          onClick={togglePause}
+          onClick={state.status === 'lost' ? reset : togglePause}
           className="rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
         >
-          {state.status === 'playing' ? 'Pause' : state.status === 'lost' ? 'Game over' : 'Start'}
+          {state.status === 'playing'
+            ? 'Pause'
+            : state.status === 'paused'
+              ? 'Resume'
+              : state.status === 'lost'
+                ? 'Start a new run'
+                : 'Start'}
         </button>
         <button
           type="button"
@@ -99,10 +106,13 @@ export default function SnakeGame() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,0.7fr)]">
         <div>
+          <p id={boardHelpId} className="mb-3 text-sm leading-7 text-slate-700">
+            Focus the board and use the arrow keys or WASD to steer. Press the space bar to pause or resume.
+          </p>
           <div
-            role="application"
             tabIndex={0}
-            aria-label="Snake game board. Use arrow keys or WASD to change direction."
+            aria-label="Snake game board"
+            aria-describedby={boardHelpId}
             onKeyDown={(event) => {
               const requested = keyDirectionMap[event.key];
 
@@ -121,6 +131,7 @@ export default function SnakeGame() {
             {board.map((cell) => (
               <div
                 key={`${cell.x}-${cell.y}`}
+                aria-hidden="true"
                 className={[
                   'flex items-center justify-center rounded-md border text-[10px] font-semibold uppercase',
                   cell.isHead
@@ -131,15 +142,6 @@ export default function SnakeGame() {
                         ? 'border-amber-300 bg-amber-100 text-amber-900'
                         : 'border-slate-200 bg-white text-slate-300',
                 ].join(' ')}
-                aria-label={
-                  cell.isHead
-                    ? 'Snake head'
-                    : cell.isBody
-                      ? 'Snake body'
-                      : cell.isFood
-                        ? 'Food'
-                        : 'Empty cell'
-                }
               >
                 {cell.isHead ? 'H' : cell.isBody ? 'S' : cell.isFood ? 'F' : ''}
               </div>

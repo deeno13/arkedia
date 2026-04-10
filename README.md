@@ -1,36 +1,59 @@
 # Arkedia
 
-Arkedia is a fast, content-first educational games site built with Astro. The project is static-first by default: game pages and educational explanations are authored as content, while React is reserved for isolated interactive widgets.
+Arkedia is a static-first educational games site built with Astro. Each game page is treated as a learning resource first: the rules, examples, strategies, and related concepts live in typed MDX content, while React is reserved for page-scoped playable widgets only where interaction adds real value.
+
+## v1 scope
+
+Arkedia v1 includes:
+
+- a static Astro site shell with reusable layouts and UI components
+- a typed `games` content collection powered by MDX
+- dynamic game detail pages generated from content entries
+- optimized local cover images through Astro assets
+- related-game editorial links
+- playable React islands for Snake, Rock Paper Scissors, and a Wordle-style mini game
+- scaffold placeholders for future Sudoku and Crossword widgets
+
+Intentionally deferred to v2:
+
+- backend features
+- accounts, persistence, or leaderboards
+- CMS integration
+- site-wide SPA behavior
+- heavier browse tooling beyond the current static-first experience
+- full playable implementations for every game
 
 ## Stack
 
 - Astro
 - TypeScript
-- Tailwind CSS 4 via Astro's current Tailwind setup
+- Tailwind CSS 4
 - MDX
 - React for islands only
 
-## Commands Used In This Phase
-
-The workspace already contained a clean Astro `basics` starter, which matches the official minimal CLI path:
+## Run locally
 
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev
 ```
 
-The required integrations were added using Astro's official integration flow:
+Open the local URL shown by Astro in your terminal.
 
-```sh
-npx astro add tailwind react mdx --yes
-```
-
-Verification:
+## Build for production
 
 ```sh
 npm run build
+npm run preview
 ```
 
-## Project Structure
+If you want canonical URLs and share metadata to use the production domain, provide `SITE_URL` before building:
+
+```sh
+SITE_URL=https://example.com npm run build
+```
+
+## Project structure
 
 ```text
 /
@@ -40,129 +63,135 @@ npm run build
 ├── src/
 │   ├── components/
 │   │   ├── content/
-│   │   │   └── InteractiveWidget.astro
 │   │   ├── islands/
-│   │   │   └── RockPaperScissorsWidget.tsx
+│   │   ├── layout/
 │   │   └── ui/
-│   │       ├── GameCard.astro
-│   │       └── SiteHeader.astro
 │   ├── content/
 │   │   └── games/
-│   │       ├── rock-paper-scissors.mdx
-│   │       └── snake.mdx
+│   │       └── <slug>/
+│   │           ├── cover.svg
+│   │           └── index.mdx
+│   ├── data/
 │   ├── layouts/
-│   │   └── BaseLayout.astro
+│   ├── lib/
 │   ├── pages/
-│   │   ├── games/
-│   │   │   ├── [slug].astro
-│   │   │   └── index.astro
-│   │   └── index.astro
-│   ├── styles/
-│   │   └── global.css
-│   └── content.config.ts
+│   └── styles/
 ├── astro.config.mjs
 ├── package.json
-└── tsconfig.json
+└── src/content.config.ts
 ```
 
-## Architecture Guardrails
+## Content model
 
-### Static-first
+Game content lives in the `games` collection under `src/content/games/`. Each game gets its own folder so local assets can stay next to the MDX entry.
 
-- Prefer Astro pages, layouts, and server-rendered HTML by default.
-- Keep all site content build-time friendly.
-- Do not introduce backend routes, a database, auth, or CMS dependencies.
-- Ship client JavaScript only when a page truly needs interaction.
+Example:
 
-### Content collections
+```text
+src/content/games/snake/
+├── cover.svg
+└── index.mdx
+```
 
-- Game pages live in the `games` collection under `src/content/games/`.
-- Use Astro's content layer with a `glob()` loader in `src/content.config.ts`.
-- Treat frontmatter as the source of truth for page metadata, taxonomy, and widget attachment.
-- Prefer one MDX file per game so the educational article and metadata stay together.
+The collection schema validates fields such as:
 
-### MDX usage
+- `title`
+- `slug`
+- `excerpt`
+- `category`
+- `tags`
+- `difficulty`
+- `minPlayers`
+- `maxPlayers`
+- `estimatedMinutes`
+- `educationalTopics`
+- `isPlayable`
+- `status`
+- `coverImage`
+- `coverImageAlt`
+- `relatedGameSlugs`
+- `seoTitle`
+- `seoDescription`
+- `description`
+- `publishedAt`
+- `updatedAt`
+- `playableWidget`
+- `widgetHydration`
 
-- Use MDX for long-form educational pages with examples, callouts, diagrams, and structured explanations.
-- Keep most pages mostly Markdown-first; only reach for embedded components when the content really benefits from them.
-- Prefer frontmatter-driven layout concerns over sprinkling page chrome into MDX files.
+## How to add a new game
 
-### React islands
+1. Create a folder in `src/content/games/` using a lowercase, hyphen-separated slug.
+2. Add an `index.mdx` file with the required frontmatter.
+3. Add an optional local cover image such as `cover.svg` beside the entry.
+4. Write the educational body content in MDX.
+5. Add `relatedGameSlugs` so the page can suggest useful next reads.
+6. Run `npm run build` to validate the schema and generate the route.
 
-- Keep React inside `src/components/islands/`.
-- Use React only for stateful widgets, input-heavy UI, timers, animation state, or browser APIs.
-- Do not use React for headers, cards, navigation, article chrome, or static marketing sections.
-- Attach widgets to a game page through frontmatter and a small Astro wrapper so only pages that need JS receive it.
+Minimal example:
 
-### JavaScript budget
+```mdx
+---
+title: Example Game
+slug: example-game
+excerpt: A short summary for cards and listings.
+category: logic
+tags:
+  - reasoning
+difficulty: beginner
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 10
+educationalTopics:
+  - pattern recognition
+isPlayable: false
+status: published
+seoTitle: Example Game guide
+seoDescription: Learn how Example Game works and why it is educational.
+description: A longer sentence for the page hero.
+publishedAt: 2026-04-10
+relatedGameSlugs: []
+---
 
-- Default to zero client-side JS for informational pages.
-- Prefer Astro plus semantic HTML for layout, navigation, lists, and presentational UI.
-- Use a small inline `<script>` only for tiny, page-local progressive enhancement where React would be overkill.
-- Avoid `client:load` unless the widget must be interactive immediately on page load.
+## How the game works
 
-## Conventions For Future Phases
+Write the guide here.
+```
 
-### Naming
+## How to attach a playable widget
 
-- Use PascalCase for Astro and React components.
-- Use kebab-case for route files and content entry filenames.
-- Keep collection names lowercase and plural, such as `games`.
+Playable widgets are intentionally isolated from the rest of the site shell.
 
-### Directory layout
+1. Create the React island in `src/components/islands/`.
+2. Add any small logic helpers in `src/lib/playable/` if needed.
+3. Register the widget key and metadata in `src/lib/playable-games.ts`.
+4. Extend the widget mapping in `src/components/content/InteractiveWidget.astro`.
+5. Set `isPlayable: true` and `playableWidget: <key>` in the game entry frontmatter.
+6. Choose the lightest useful hydration mode, usually `visible`.
 
-- `src/pages/` contains route entry points only.
-- `src/layouts/` contains shared page shells.
-- `src/components/ui/` contains reusable presentational components.
-- `src/components/islands/` contains React components that hydrate on the client.
-- `src/components/content/` contains Astro helpers that bridge content and widgets.
-- `public/` is for unprocessed static assets.
+## Architecture notes
 
-### Reusable UI
+- Astro handles routing, layout, metadata, and static rendering by default.
+- MDX is the source of truth for long-form educational content.
+- React is limited to interactive islands inside game pages.
+- Local cover images live in `src/content/` so Astro can optimize them.
+- Page metadata flows through the shared layout and supports canonical URLs when `SITE_URL` is configured.
+- The games index stays static-first and uses collection metadata for browse cues instead of a heavy search UI.
 
-- Build reusable cards, badges, headers, and callouts as Astro components first.
-- Keep components content-agnostic where reasonable, with data passed from pages or collections.
-- Avoid creating a component abstraction until at least two pages need the same pattern.
+## v1 checklist
 
-### Content-driven routing
+- Static Astro site shell
+- Typed content collection for games
+- MDX-authored educational game pages
+- Dynamic routes generated from content
+- Optimized local cover images
+- Related games
+- Playable islands for selected games
+- Shared SEO and accessibility foundations
 
-- Use collection-driven routes like `src/pages/games/[slug].astro`.
-- Keep listing pages simple and powered by `getCollection()`.
-- Let collection frontmatter drive titles, descriptions, taxonomy, and optional widget metadata.
+## Suggested v2 next steps
 
-### SEO flow
-
-- Centralize document title, description, canonical, and robots handling in `BaseLayout.astro`.
-- Flow page metadata from content frontmatter into the layout.
-- Add `site` in `astro.config.mjs` once the production domain is known.
-
-### Accessibility defaults
-
-- Use semantic headings and preserve a single `h1` per page.
-- Include a skip link in the base layout.
-- Ensure islands expose labels, keyboard support, and status updates where needed.
-- Keep color contrast and focus states visible by default.
-
-### Astro vs React
-
-- Use plain Astro plus HTML for static UI and page composition.
-- Use plain Astro plus a small `<script>` for tiny DOM-only enhancements.
-- Use React islands for multi-step interaction, local state, or reusable interactive widgets.
-
-### Hydration directives
-
-- Prefer `client:visible` for demos or widgets that can wait until the user scrolls near them.
-- Use `client:idle` for above-the-fold interaction that is helpful soon but not critical for first paint.
-- Use `client:load` only for widgets that must be ready immediately.
-- Avoid `client:only` unless SSR is impossible for a specific browser-only dependency.
-
-## Phase 1 Checklist
-
-- Minimal Astro foundation in place
-- Official Tailwind integration added
-- Official React integration added
-- Official MDX integration added
-- Content collection scaffolded for games
-- Content-driven listing and dynamic route added
-- React limited to a sample island pattern
-- Project conventions documented for the next build phases
+- Add more game entries and richer editorial examples
+- Replace the Sudoku and Crossword scaffolds with focused playable widgets
+- Add progressive browse enhancements such as lightweight filtering
+- Configure the production domain through `SITE_URL`
+- Add an official sitemap integration once the final public domain is fixed

@@ -4,6 +4,7 @@ import { playRpsRound, rpsChoices, type RpsChoice, type RpsRound } from '../../l
 export default function RockPaperScissorsGame() {
   const [history, setHistory] = useState<RpsRound[]>([]);
   const latestRound = history[0];
+  const instructionsId = 'rps-game-instructions';
 
   const score = useMemo(
     () =>
@@ -27,6 +28,10 @@ export default function RockPaperScissorsGame() {
 
   return (
     <div className="space-y-5">
+      <p id={instructionsId} className="text-sm leading-7 text-slate-700">
+        Choose rock, paper, or scissors to play a round. The latest result and running totals update immediately below.
+      </p>
+
       <div className="flex flex-wrap gap-3" aria-label="Choose rock, paper, or scissors">
         {rpsChoices.map((choice) => (
           <button
@@ -38,6 +43,7 @@ export default function RockPaperScissorsGame() {
                 handleKey(choice);
               }
             }}
+            aria-describedby={instructionsId}
             className="rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
             aria-label={`Play ${choice}`}
           >

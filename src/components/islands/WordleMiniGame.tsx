@@ -8,6 +8,8 @@ export default function WordleMiniGame() {
   const [value, setValue] = useState('');
   const [guesses, setGuesses] = useState<EvaluatedGuess[]>([]);
   const [message, setMessage] = useState('Enter a five-letter word to begin.');
+  const helpId = 'wordle-mini-help';
+  const statusId = 'wordle-mini-status';
 
   const hasWon = guesses.some((guess) => guess.isCorrect);
   const hasLost = guesses.length >= MAX_GUESSES && !hasWon;
@@ -85,6 +87,9 @@ export default function WordleMiniGame() {
       <form onSubmit={submitGuess} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <label className="flex-1 text-sm font-medium text-slate-800">
           Guess a five-letter word
+          <span id={helpId} className="mt-2 block text-sm font-normal tracking-normal text-slate-600">
+            Use one of the included practice words. Feedback is explained in text as well as color.
+          </span>
           <input
             type="text"
             inputMode="text"
@@ -94,6 +99,7 @@ export default function WordleMiniGame() {
             maxLength={5}
             value={value}
             disabled={hasWon || hasLost}
+            aria-describedby={`${helpId} ${statusId}`}
             onChange={(event) => setValue(event.target.value.replace(/[^a-z]/gi, '').slice(0, 5))}
             className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base tracking-[0.3em] uppercase text-slate-950 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30"
           />
@@ -114,7 +120,11 @@ export default function WordleMiniGame() {
         </button>
       </form>
 
-      <p className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-700" aria-live="polite">
+      <p
+        id={statusId}
+        className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-700"
+        aria-live="polite"
+      >
         {message}
       </p>
 

@@ -2,51 +2,83 @@
 import Callout from '../../components/ui/Callout.astro';
 import GameCard from '../../components/ui/GameCard.astro';
 import LinkButton from '../../components/ui/LinkButton.astro';
+import MetadataPills from '../../components/ui/MetadataPills.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import Section from '../../components/ui/Section.astro';
 import Badge from '../../components/ui/Badge.astro';
 import {
+  getGameDifficultySummaries,
   getGameCategorySummaries,
+  getPlayableGameCount,
   getPopularGameTags,
+  groupGamesByCategory,
   getPublishedGames,
 } from '../../lib/games';
 import MainLayout from '../../layouts/MainLayout.astro';
 
 const games = await getPublishedGames();
 const categorySummaries = getGameCategorySummaries(games);
+const categoryGroups = groupGamesByCategory(games);
+const difficultySummaries = getGameDifficultySummaries(games);
 const popularTags = getPopularGameTags(games, 8);
+const playableGameCount = getPlayableGameCount(games);
 ---
 
 <MainLayout
-  title="Games"
-  description="Explore educational game pages authored through Astro content collections and enhanced with optional interactive islands."
+  title="Educational game guides"
+  description="Browse Arkedia’s educational game guides, built from Astro content collections with typed metadata, optimized local cover images, and optional playable islands."
 >
   <PageHero
-    eyebrow="Games collection"
-    title="Browse game guides generated from Astro content entries"
-    description="Every card on this page comes from the games collection. Adding a new MDX entry automatically updates the listing and its matching detail route."
+    eyebrow="Games library"
+    title="Browse educational game guides by category, difficulty, and format"
+    description="This listing stays static-first and collection-driven. Every entry is authored in MDX, validated through Astro’s content system, and surfaced here automatically at build time."
   >
+    <MetadataPills
+      slot="meta"
+      label="Games library summary"
+      items={[
+        `${games.length} published guides`,
+        `${playableGameCount} playable`,
+        `${categorySummaries.length} categories`,
+      ]}
+    />
     <Fragment slot="actions">
-      <LinkButton href="/about/" variant="secondary">Why this structure?</LinkButton>
+      <LinkButton href="/about/" variant="secondary">How Arkedia is built</LinkButton>
     </Fragment>
   </PageHero>
 
   <Section
-    eyebrow="Collection metadata"
-    title="Structured for future filtering and search"
-    description="The content model already exposes category, tag, players, duration, and playability. That makes future filtering straightforward without hardcoding page-specific logic."
+    eyebrow="Browse cues"
+    title="A lightweight way to scan the collection"
+    description="The v1 browse experience stays static and readable. You can jump to a category, inspect difficulty coverage, and spot common topics without hydrating a search UI."
   >
-    <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
       <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
-        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Categories</p>
-        <ul class="mt-5 space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Jump to category</p>
+        <ul class="mt-5 flex flex-wrap gap-2">
           {categorySummaries.map((item) => (
-            <li class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
-              <span class="text-sm font-medium text-slate-800">{item.label}</span>
-              <span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{item.count}</span>
+            <li>
+              <a
+                class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-900"
+                href={`#category-${item.slug}`}
+              >
+                {item.label}
+                <span class="ml-2 rounded-full bg-white px-2 py-0.5 text-xs text-slate-500">{item.count}</span>
+              </a>
             </li>
           ))}
         </ul>
+
+        <div class="mt-6 rounded-2xl bg-slate-50 p-4">
+          <p class="text-sm font-semibold text-slate-950">Difficulty coverage</p>
+          <ul class="mt-3 flex flex-wrap gap-2">
+            {difficultySummaries.map((item) => (
+              <li>
+                <Badge tone="warm">{item.label} · {item.count}</Badge>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
@@ -59,27 +91,41 @@ const popularTags = getPopularGameTags(games, 8);
           ))}
         </ul>
         <p class="mt-5 text-sm leading-7 text-slate-600">
-          Cards also expose structured data attributes, so client-side filtering can be added later without changing
-          the authoring model.
+          The card metadata and content schema already support future progressive enhancement. If search or richer
+          filters arrive later, they can layer onto the same authoring model instead of replacing it.
         </p>
       </div>
     </div>
   </Section>
 
-  <Section
-    eyebrow="Available guides"
-    title="Published game entries"
-    description="Listings stay in sync with the collection automatically. Create a new game entry and it will appear here the next time the site builds."
-  >
-    <div class="grid gap-6 md:grid-cols-2">
-      {games.map((game) => <GameCard entry={game} />)}
-    </div>
-  </Section>
+  {games.length === 0 ? (
+    <Section eyebrow="Collection status" title="No published games yet" description="The collection is wired up, but there are no published entries to display right now." size="narrow">
+      <Callout title="What to do next" tone="neutral">
+        <p>
+          Add a new folder in <code>src/content/games/</code> with an <code>index.mdx</code> entry, then rebuild the
+          site to have it appear automatically.
+        </p>
+      </Callout>
+    </Section>
+  ) : (
+    categoryGroups.map((group) => (
+      <Section
+        id={`category-${group.slug}`}
+        eyebrow="Category"
+        title={group.label}
+        description={`${group.count} guide${group.count === 1 ? '' : 's'} currently published in this category.`}
+      >
+        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {group.entries.map((game) => <GameCard entry={game} />)}
+        </div>
+      </Section>
+    ))
+  )}
 
   <Section
     eyebrow="Static-first default"
     title="The listing page stays fast on purpose"
-    description="This page is fully static. Search and filtering can arrive later as progressive enhancement, not as a requirement for reading the collection."
+    description="This page is fully static. Search and richer filtering can arrive later as progressive enhancement, not as a requirement for reading the collection."
     size="narrow"
   >
     <Callout title="Why this matters">
