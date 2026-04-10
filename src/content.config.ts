@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { PLAYABLE_WIDGET_OPTIONS } from './lib/playable-games';
 
 const games = defineCollection({
   loader: glob({ pattern: '**/index.mdx', base: './src/content/games' }),
@@ -25,7 +26,7 @@ const games = defineCollection({
     description: z.string(),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
-    playableWidget: z.enum(['rock-paper-scissors']).optional(),
+    playableWidget: z.enum(PLAYABLE_WIDGET_OPTIONS).optional(),
     widgetHydration: z.enum(['visible', 'idle', 'load']).default('visible'),
   }).refine((data) => data.minPlayers <= data.maxPlayers, {
     message: 'minPlayers must be less than or equal to maxPlayers.',
