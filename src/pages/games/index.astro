@@ -1,15 +1,20 @@
 ---
-import { getCollection } from 'astro:content';
 import Callout from '../../components/ui/Callout.astro';
 import GameCard from '../../components/ui/GameCard.astro';
 import LinkButton from '../../components/ui/LinkButton.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import Section from '../../components/ui/Section.astro';
+import Badge from '../../components/ui/Badge.astro';
+import {
+  getGameCategorySummaries,
+  getPopularGameTags,
+  getPublishedGames,
+} from '../../lib/games';
 import MainLayout from '../../layouts/MainLayout.astro';
 
-const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
-  (left, right) => left.data.title.localeCompare(right.data.title),
-);
+const games = await getPublishedGames();
+const categorySummaries = getGameCategorySummaries(games);
+const popularTags = getPopularGameTags(games, 8);
 ---
 
 <MainLayout
@@ -18,8 +23,8 @@ const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
 >
   <PageHero
     eyebrow="Games collection"
-    title="Browse educational game pages built from content first"
-    description="Each entry owns its frontmatter, MDX content, and optional widget metadata. The list page stays static, while future games can grow in depth without changing the shell."
+    title="Browse game guides generated from Astro content entries"
+    description="Every card on this page comes from the games collection. Adding a new MDX entry automatically updates the listing and its matching detail route."
   >
     <Fragment slot="actions">
       <LinkButton href="/about/" variant="secondary">Why this structure?</LinkButton>
@@ -27,9 +32,44 @@ const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
   </PageHero>
 
   <Section
+    eyebrow="Collection metadata"
+    title="Structured for future filtering and search"
+    description="The content model already exposes category, tag, players, duration, and playability. That makes future filtering straightforward without hardcoding page-specific logic."
+  >
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Categories</p>
+        <ul class="mt-5 space-y-3">
+          {categorySummaries.map((item) => (
+            <li class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+              <span class="text-sm font-medium text-slate-800">{item.label}</span>
+              <span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{item.count}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Popular tags</p>
+        <ul class="mt-5 flex flex-wrap gap-2">
+          {popularTags.map((item) => (
+            <li>
+              <Badge>{item.tag} · {item.count}</Badge>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-5 text-sm leading-7 text-slate-600">
+          Cards also expose structured data attributes, so client-side filtering can be added later without changing
+          the authoring model.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <Section
     eyebrow="Available guides"
-    title="Current collection entries"
-    description="Cards are designed to stay content-friendly today while leaving room for cover images, related content, and richer metadata tomorrow."
+    title="Published game entries"
+    description="Listings stay in sync with the collection automatically. Create a new game entry and it will appear here the next time the site builds."
   >
     <div class="grid gap-6 md:grid-cols-2">
       {games.map((game) => <GameCard entry={game} />)}
@@ -39,7 +79,7 @@ const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
   <Section
     eyebrow="Static-first default"
     title="The listing page stays fast on purpose"
-    description="This page renders as static HTML and CSS with no hydration. Interactive JavaScript is reserved for game pages that genuinely need a widget."
+    description="This page is fully static. Search and filtering can arrive later as progressive enhancement, not as a requirement for reading the collection."
     size="narrow"
   >
     <Callout title="Why this matters">

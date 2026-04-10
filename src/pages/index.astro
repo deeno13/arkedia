@@ -1,17 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
 import Callout from '../components/ui/Callout.astro';
 import GameCard from '../components/ui/GameCard.astro';
 import LinkButton from '../components/ui/LinkButton.astro';
 import PageHero from '../components/ui/PageHero.astro';
 import Section from '../components/ui/Section.astro';
 import { editorialPrinciples, roadmapGames } from '../data/site';
+import { getPublishedGames } from '../lib/games';
 import MainLayout from '../layouts/MainLayout.astro';
 
-const games = (await getCollection('games', ({ data }) => !data.draft)).sort(
-  (left, right) => left.data.title.localeCompare(right.data.title),
-);
-const featuredGames = games.slice(0, 2);
+const games = await getPublishedGames();
+const featuredGames = games.slice(0, 3);
 ---
 
 <MainLayout
@@ -72,9 +70,9 @@ const featuredGames = games.slice(0, 2);
     <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
       <Callout title="What plugs in next">
         <ul class="space-y-3">
-          <li>More MDX game guides with consistent schema validation.</li>
+          <li>More MDX game guides with typed schema validation.</li>
           <li>Optional cover images rendered through Astro’s image pipeline.</li>
-          <li>Related-game sections driven by collection metadata.</li>
+          <li>Related game sections resolved through slug-based references.</li>
           <li>Playable islands added only to pages that need them.</li>
         </ul>
       </Callout>
