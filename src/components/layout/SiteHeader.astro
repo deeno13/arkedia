@@ -1,0 +1,43 @@
+---
+import Container from './Container.astro';
+import { mainNavigation, siteConfig } from '../../data/site';
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+  <Container class="flex flex-wrap items-center justify-between gap-4 py-4">
+    <a class="inline-flex items-center gap-3 text-slate-950" href="/">
+      <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-base font-semibold text-sky-800">
+        A
+      </span>
+      <span>
+        <span class="block text-base font-semibold tracking-tight">{siteConfig.name}</span>
+        <span class="block text-sm text-slate-600">Educational games, explained clearly</span>
+      </span>
+    </a>
+
+    <nav aria-label="Primary" class="flex flex-wrap items-center gap-2">
+      {mainNavigation.map((item) => {
+        const isCurrent = item.href === '/'
+          ? pathname === '/'
+          : pathname === item.href || pathname.startsWith(item.href);
+
+        return (
+          <a
+            href={item.href}
+            aria-current={isCurrent ? 'page' : undefined}
+            class:list={[
+              'rounded-full px-4 py-2 text-sm font-medium transition',
+              isCurrent
+                ? 'bg-slate-950 text-white'
+                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-950',
+            ]}
+          >
+            {item.label}
+          </a>
+        );
+      })}
+    </nav>
+  </Container>
+</header>

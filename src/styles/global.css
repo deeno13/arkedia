@@ -33,8 +33,22 @@
     min-height: 100vh;
   }
 
+  * {
+    border-color: var(--color-arkedia-border);
+  }
+
   a {
     text-underline-offset: 0.18em;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(3, 105, 161, 0.65);
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -63,6 +77,10 @@
     @apply mt-5;
   }
 
+  .content-prose :where(a) {
+    @apply font-medium text-sky-800 underline decoration-sky-200 transition hover:text-sky-900;
+  }
+
   .content-prose :where(ul, ol) {
     @apply pl-6;
   }
@@ -79,7 +97,15 @@
     @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm text-sky-800;
   }
 
+  .content-prose :where(hr) {
+    @apply my-10 border-slate-200;
+  }
+
   .content-prose :where(blockquote) {
     @apply rounded-r-2xl border-l-4 border-sky-200 bg-sky-50/70 px-5 py-3 text-slate-700;
+  }
+
+  .content-prose :where(img) {
+    @apply mt-8 overflow-hidden rounded-[1.5rem] border border-slate-200;
   }
 }

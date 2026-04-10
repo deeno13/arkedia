@@ -1,0 +1,34 @@
+---
+import Container from './Container.astro';
+import { editorialPrinciples, mainNavigation } from '../../data/site';
+---
+
+<footer class="border-t border-slate-200/80 bg-white/70 py-10">
+  <Container class="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)]">
+    <div class="space-y-4">
+      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Arkedia</p>
+      <p class="max-w-md text-sm leading-7 text-slate-600">
+        Built as a static-first educational site where explanations, examples, and optional practice can live
+        together without turning the whole site into a client-heavy app.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-slate-950">Explore</h2>
+      <ul class="mt-4 space-y-3 text-sm text-slate-600">
+        {mainNavigation.map((item) => (
+          <li>
+            <a class="transition hover:text-slate-950" href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-slate-950">Editorial guardrails</h2>
+      <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
+        {editorialPrinciples.map((principle) => <li>{principle}</li>)}
+      </ul>
+    </div>
+  </Container>
+</footer>

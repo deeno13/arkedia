@@ -1,12 +1,15 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const games = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/games' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),
     excerpt: z.string(),
+    cover: image().optional(),
+    coverAlt: z.string().optional(),
     difficulty: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
     tags: z.array(z.string()).default([]),
     relatedConcepts: z.array(z.string()).default([]),

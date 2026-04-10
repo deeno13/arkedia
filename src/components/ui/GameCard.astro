@@ -1,32 +1,78 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import Badge from './Badge.astro';
+import LinkButton from './LinkButton.astro';
+import MetadataPills from './MetadataPills.astro';
 
 interface Props {
   entry: CollectionEntry<'games'>;
 }
 
 const { entry } = Astro.props;
+const href = `/games/${entry.id}/`;
+const metadata = [
+  { label: entry.data.difficulty, tone: 'accent' as const },
+  ...entry.data.relatedConcepts.slice(0, 2).map((concept) => ({ label: concept })),
+];
+const hasCoverSlot = Astro.slots.has('cover');
 ---
 
-<article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 transition hover:-translate-y-0.5 hover:shadow-md">
-  <div class="flex items-center justify-between gap-3">
-    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">{entry.data.difficulty}</p>
-    {entry.data.widget && (
-      <span class="rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-800">Interactive widget</span>
+<article class="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/70">
+  <a href={href} class="block">
+    <div class="aspect-[16/9] overflow-hidden border-b border-slate-200 bg-gradient-to-br from-sky-100 via-white to-amber-50">
+      {hasCoverSlot ? (
+        <slot name="cover" />
+      ) : entry.data.cover ? (
+        <Image
+          src={entry.data.cover}
+          alt={entry.data.coverAlt ?? ''}
+          class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+          widths={[480, 720]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
+      ) : (
+        <div class="flex h-full flex-col justify-between p-6">
+          <Badge tone="accent">Game page</Badge>
+          <div class="max-w-xs">
+            <p class="text-xl font-semibold tracking-tight text-slate-950">{entry.data.title}</p>
+            <p class="mt-2 text-sm leading-6 text-slate-600">{entry.data.description}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  </a>
+
+  <div class="flex flex-1 flex-col p-6">
+    <div class="flex flex-wrap items-center gap-2">
+      <Badge tone="warm">{entry.data.difficulty}</Badge>
+      {entry.data.widget && <Badge tone="accent">Playable widget ready</Badge>}
+    </div>
+
+    <h2 class="mt-4 text-2xl font-semibold tracking-tight text-slate-950">
+      <a class="transition hover:text-sky-800" href={href}>{entry.data.title}</a>
+    </h2>
+
+    <p class="mt-3 text-sm leading-7 text-slate-700">{entry.data.excerpt}</p>
+
+    <div class="mt-5">
+      <MetadataPills items={metadata} label={`${entry.data.title} metadata`} />
+    </div>
+
+    {entry.data.tags.length > 0 && (
+      <ul class="mt-5 flex flex-wrap gap-2 text-xs text-slate-600">
+        {entry.data.tags.map((tag) => (
+          <li>
+            <Badge>{tag}</Badge>
+          </li>
+        ))}
+      </ul>
     )}
+
+    <div class="mt-6 pt-2">
+      <LinkButton href={href} variant="text" class="font-semibold">
+        Read the guide
+      </LinkButton>
+    </div>
   </div>
-
-  <h2 class="mt-4 text-xl font-semibold tracking-tight text-slate-950">
-    <a class="hover:text-sky-800" href={`/games/${entry.id}/`}>{entry.data.title}</a>
-  </h2>
-
-  <p class="mt-3 text-sm leading-6 text-slate-700">{entry.data.excerpt}</p>
-
-  {entry.data.tags.length > 0 && (
-    <ul class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-      {entry.data.tags.map((tag) => (
-        <li class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">{tag}</li>
-      ))}
-    </ul>
-  )}
 </article>

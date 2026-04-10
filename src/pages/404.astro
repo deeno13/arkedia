@@ -1,0 +1,23 @@
+---
+import LinkButton from '../components/ui/LinkButton.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Page not found"
+  description="The page you were looking for could not be found."
+  noindex={true}
+>
+  <PageHero
+    eyebrow="404"
+    title="This page is missing, but the rest of Arkedia is still on track"
+    description="Try the home page or browse the current game guides to get back to the content-first part of the site."
+    size="narrow"
+  >
+    <Fragment slot="actions">
+      <LinkButton href="/">Back home</LinkButton>
+      <LinkButton href="/games/" variant="secondary">Browse games</LinkButton>
+    </Fragment>
+  </PageHero>
+</MainLayout>
