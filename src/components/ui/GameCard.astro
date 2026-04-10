@@ -4,29 +4,32 @@ import type { CollectionEntry } from 'astro:content';
 import Badge from './Badge.astro';
 import LinkButton from './LinkButton.astro';
 import MetadataPills from './MetadataPills.astro';
+import { formatCategoryLabel, formatGameCardMetadata } from '../../lib/games';
 
 interface Props {
   entry: CollectionEntry<'games'>;
 }
 
 const { entry } = Astro.props;
-const href = `/games/${entry.id}/`;
-const metadata = [
-  { label: entry.data.difficulty, tone: 'accent' as const },
-  ...entry.data.relatedConcepts.slice(0, 2).map((concept) => ({ label: concept })),
-];
+const href = `/games/${entry.data.slug}/`;
+const metadata = formatGameCardMetadata(entry);
 const hasCoverSlot = Astro.slots.has('cover');
 ---
 
-<article class="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/70">
+<article
+  class="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/70"
+  data-game-slug={entry.data.slug}
+  data-game-category={entry.data.category}
+  data-game-tags={entry.data.tags.join(',')}
+>
   <a href={href} class="block">
     <div class="aspect-[16/9] overflow-hidden border-b border-slate-200 bg-gradient-to-br from-sky-100 via-white to-amber-50">
       {hasCoverSlot ? (
         <slot name="cover" />
-      ) : entry.data.cover ? (
+      ) : entry.data.coverImage ? (
         <Image
-          src={entry.data.cover}
-          alt={entry.data.coverAlt ?? ''}
+          src={entry.data.coverImage}
+          alt={entry.data.coverImageAlt ?? ''}
           class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
           widths={[480, 720]}
           sizes="(min-width: 768px) 50vw, 100vw"
@@ -45,8 +48,9 @@ const hasCoverSlot = Astro.slots.has('cover');
 
   <div class="flex flex-1 flex-col p-6">
     <div class="flex flex-wrap items-center gap-2">
+      <Badge tone="accent">{formatCategoryLabel(entry.data.category)}</Badge>
       <Badge tone="warm">{entry.data.difficulty}</Badge>
-      {entry.data.widget && <Badge tone="accent">Playable widget ready</Badge>}
+      {entry.data.isPlayable && <Badge tone="accent">Playable</Badge>}
     </div>
 
     <h2 class="mt-4 text-2xl font-semibold tracking-tight text-slate-950">
@@ -61,7 +65,7 @@ const hasCoverSlot = Astro.slots.has('cover');
 
     {entry.data.tags.length > 0 && (
       <ul class="mt-5 flex flex-wrap gap-2 text-xs text-slate-600">
-        {entry.data.tags.map((tag) => (
+        {entry.data.tags.slice(0, 4).map((tag) => (
           <li>
             <Badge>{tag}</Badge>
           </li>

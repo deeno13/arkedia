@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
+import GameFacts from '../../components/content/GameFacts.astro';
 import InteractiveWidget from '../../components/content/InteractiveWidget.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import Callout from '../../components/ui/Callout.astro';
@@ -9,13 +10,18 @@ import MetadataPills from '../../components/ui/MetadataPills.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import Prose from '../../components/ui/Prose.astro';
 import Section from '../../components/ui/Section.astro';
+import {
+  getPublishedGames,
+  resolveRelatedGames,
+  formatGamePageMetadata,
+} from '../../lib/games';
 import MainLayout from '../../layouts/MainLayout.astro';
 
 export async function getStaticPaths() {
-  const games = await getCollection('games', ({ data }) => !data.draft);
+  const games = await getPublishedGames();
 
   return games.map((game) => ({
-    params: { slug: game.id },
+    params: { slug: game.data.slug },
     props: { game },
   }));
 }
@@ -26,18 +32,17 @@ interface Props {
 
 const { game } = Astro.props;
 const { Content } = await render(game);
-const relatedGames = (await getCollection('games', ({ data }) => !data.draft))
-  .filter((entry) => entry.id !== game.id && entry.data.tags.some((tag) => game.data.tags.includes(tag)))
-  .slice(0, 2);
-
-const metadata = [
-  { label: game.data.difficulty, tone: 'warm' as const },
-  { label: `Published ${game.data.publishDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` },
-  ...(game.data.widget ? [{ label: 'Optional playable widget', tone: 'accent' as const }] : []),
-];
+const allGames = await getPublishedGames();
+const relatedGames = resolveRelatedGames(game, allGames).slice(0, 3);
+const metadata = formatGamePageMetadata(game);
 ---
 
-<MainLayout title={game.data.title} description={game.data.description} type="article">
+<MainLayout
+  title={game.data.seoTitle}
+  description={game.data.seoDescription}
+  image={game.data.coverImage?.src}
+  type="article"
+>
   <PageHero eyebrow="Game guide" title={game.data.title} description={game.data.description}>
     <Breadcrumbs
       slot="breadcrumbs"
@@ -49,11 +54,11 @@ const metadata = [
     />
     <MetadataPills slot="meta" items={metadata} label={`${game.data.title} metadata`} />
 
-    {game.data.cover && (
+    {game.data.coverImage && (
       <div slot="media" class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-lg shadow-slate-200/70">
         <Image
-          src={game.data.cover}
-          alt={game.data.coverAlt ?? ''}
+          src={game.data.coverImage}
+          alt={game.data.coverImageAlt ?? ''}
           class="h-full w-full object-cover"
           widths={[640, 960]}
           sizes="(min-width: 1024px) 32rem, 100vw"
@@ -64,6 +69,18 @@ const metadata = [
 
   <Section size="narrow" class="pt-10">
     <article class="space-y-10">
+      <GameFacts entry={game} />
+
+      <Callout title="Educational topics" tone="neutral">
+        <div class="flex flex-wrap gap-2">
+          {game.data.educationalTopics.map((topic) => (
+            <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700">
+              {topic}
+            </span>
+          ))}
+        </div>
+      </Callout>
+
       <Callout title="Page model" tone="neutral">
         <p>
           This guide is rendered through Astro’s content layer and MDX pipeline. Interactive behavior remains
@@ -71,7 +88,11 @@ const metadata = [
         </p>
       </Callout>
 
-      <InteractiveWidget widget={game.data.widget} hydration={game.data.widgetHydration} />
+      <InteractiveWidget
+        isPlayable={game.data.isPlayable}
+        widget={game.data.playableWidget}
+        hydration={game.data.widgetHydration}
+      />
 
       <Prose>
         <Content />
@@ -82,10 +103,10 @@ const metadata = [
   {relatedGames.length > 0 && (
     <Section
       eyebrow="Related guides"
-      title="Continue with nearby concepts"
-      description="Related game cards can stay content-driven too, which keeps discovery tied to metadata instead of custom application state."
+      title="Continue with related games"
+      description="Related entries are resolved through each game’s `relatedGameSlugs` metadata, so authors control the editorial connections directly from content."
     >
-      <div class="grid gap-6 md:grid-cols-2">
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {relatedGames.map((entry) => <GameCard entry={entry} />)}
       </div>
     </Section>

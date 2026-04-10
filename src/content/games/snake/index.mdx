@@ -1,0 +1,68 @@
+---
+title: Snake
+slug: snake
+excerpt: A guide to Snake as a lesson in grid movement, risk management, and feedback loops.
+category: arcade
+tags:
+  - grid movement
+  - path planning
+  - feedback loops
+  - reaction
+difficulty: beginner
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 10
+educationalTopics:
+  - coordinate systems
+  - algorithmic thinking
+  - risk management
+  - spatial reasoning
+isPlayable: false
+status: published
+coverImage: ./cover.svg
+coverImageAlt: An abstract grid illustration representing the Snake playfield.
+relatedGameSlugs:
+  - sudoku
+  - rock-paper-scissors
+seoTitle: Snake strategy and educational guide
+seoDescription: Learn how Snake works, why it teaches planning and feedback loops, and how to use it as an educational game.
+description: Snake turns simple movement rules into a useful lesson about planning ahead, reading space, and reacting to feedback.
+publishedAt: 2026-04-10
+updatedAt: 2026-04-10
+widgetHydration: visible
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+Snake is often remembered as a classic arcade game, but it is also a compact system for teaching how small decisions accumulate. Each move changes the board state, and every new segment in the snake’s body narrows the path options that remain.
+
+## How the game works
+
+The player moves a snake around a grid to collect food. Every time the snake eats, it grows longer, which increases the challenge. The game ends when the snake hits a wall or runs into its own body.
+
+That rule set is simple enough for beginners, but it quickly introduces an important idea: a good move is not only about the next square. It is also about leaving room for the next five or ten moves.
+
+## Example
+
+Imagine the snake is moving right along the top edge of the board and a piece of food appears below it. A new player might turn down immediately because the food is close. A more careful player will ask a second question: if I go down now, will I still have a safe path back out once the snake is longer?
+
+This is exactly what makes Snake useful for teaching planning. Students can see that a short-term reward is not always the best long-term decision.
+
+## Strategy tips
+
+- keep the center of the board open as long as possible
+- avoid creating tight loops that trap the snake’s head
+- read the path after the food, not just the path to the food
+- treat empty space as a resource that can be spent too quickly
+
+## Educational value
+
+Snake is a practical way to talk about coordinates, state changes, and feedback loops. Every input changes the system, and the consequences become visible immediately. That makes the game a good bridge between intuitive play and more formal computational ideas such as path planning or greedy decision-making.
+
+<Callout title="Teaching prompt">
+  Ask learners to narrate not only what move they chose, but what future collision they were trying to avoid. That pushes the discussion from reaction to reasoning.
+</Callout>
+
+## Related concepts
+
+Snake connects naturally to coordinate systems, spatial reasoning, algorithmic thinking, and even basic optimization. Once students understand how movement on the grid works, it becomes easier to connect the game to arrays, graph traversal, and decision trees later on.

@@ -1,0 +1,66 @@
+---
+title: Sudoku
+slug: sudoku
+excerpt: A logic puzzle that helps learners practice constraint reasoning, pattern detection, and patient elimination.
+category: logic
+tags:
+  - deduction
+  - logic puzzle
+  - elimination
+  - working memory
+difficulty: intermediate
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 20
+educationalTopics:
+  - constraint satisfaction
+  - logical elimination
+  - pattern recognition
+  - attention management
+isPlayable: false
+status: published
+coverImage: ./cover.svg
+coverImageAlt: A stylized Sudoku grid with highlighted cells and number marks.
+relatedGameSlugs:
+  - snake
+  - crossword
+seoTitle: Sudoku educational guide and strategy
+seoDescription: Learn how Sudoku works, which strategies beginners can use, and why it is valuable for logic and constraint-based reasoning.
+description: Sudoku teaches how to reason through constraints one step at a time, making it a strong fit for content-driven explanation.
+publishedAt: 2026-04-10
+updatedAt: 2026-04-10
+widgetHydration: visible
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+Sudoku is a good example of a puzzle that looks numeric but is really about structure. You do not need arithmetic to solve it. What matters is reading constraints clearly and using them to narrow what is still possible.
+
+## How the game works
+
+A standard Sudoku grid is divided into rows, columns, and smaller boxes. The goal is to place the digits 1 through 9 so that each row, each column, and each box contains each digit exactly once.
+
+Every empty square is governed by overlapping rules. That makes the puzzle a practical lesson in reasoning under constraints: what can go here, what cannot, and what follows from that?
+
+## Example
+
+Suppose a cell sits in a row that already contains 1, 2, 3, 4, and 5. Its column contains 6 and 7. Its box contains 8. At that point only 9 can fit, even before any advanced technique appears. That one example helps learners see that Sudoku is often about ruling things out until one answer remains.
+
+## Strategy tips
+
+- scan rows, columns, and boxes for places with only one possible value
+- write down candidate numbers when the puzzle becomes dense
+- use elimination before reaching for advanced patterns
+- revisit earlier sections after every confirmed number because one answer can open several more
+
+## Educational value
+
+Sudoku teaches disciplined reasoning. Instead of guessing, learners practice checking conditions carefully and making claims that can be justified. That supports later work in mathematics, programming, and formal logic where intermediate steps matter as much as the final answer.
+
+<Callout title="Teaching prompt">
+  Invite learners to explain not just which number belongs in a cell, but which rules forced that conclusion. This shifts the activity from puzzle-solving toward proof.
+</Callout>
+
+## Related concepts
+
+Sudoku connects to constraint satisfaction, inference, combinatorics, and search strategy. It is also a useful contrast with arcade games like Snake because both involve planning, but one emphasizes space and movement while the other emphasizes elimination and consistency.

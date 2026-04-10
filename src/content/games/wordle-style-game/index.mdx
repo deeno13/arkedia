@@ -1,0 +1,66 @@
+---
+title: Wordle-style Game
+slug: wordle-style-game
+excerpt: A word-guessing format that teaches deduction, vocabulary, and information use under tight constraints.
+category: word
+tags:
+  - word patterns
+  - deduction
+  - vocabulary
+  - inference
+difficulty: intermediate
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 12
+educationalTopics:
+  - vocabulary development
+  - probabilistic reasoning
+  - elimination strategies
+  - pattern recognition
+isPlayable: false
+status: published
+coverImage: ./cover.svg
+coverImageAlt: Letter tiles arranged in rows to represent a word-guessing puzzle.
+relatedGameSlugs:
+  - crossword
+  - sudoku
+seoTitle: Wordle-style game guide and strategy
+seoDescription: Explore how a Wordle-style game works, why it teaches deduction and vocabulary, and how to think through guesses more effectively.
+description: Word-guessing games reward careful information use, making them ideal for teaching elimination, vocabulary, and strategy.
+publishedAt: 2026-04-10
+updatedAt: 2026-04-10
+widgetHydration: visible
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+A Wordle-style game is built around a satisfying teaching pattern: guess, receive feedback, refine the next guess. That loop gives learners a concrete reason to think about what information a clue provides and how to use it efficiently.
+
+## How the game works
+
+The player guesses a hidden word, usually with a fixed number of letters. After each guess, the game marks which letters are correct, which are present in the word but in the wrong position, and which letters are absent. The player uses those clues to improve the next attempt.
+
+This makes every guess a small reasoning exercise. A strong guess is not only a shot at the answer. It also collects information that narrows the search space.
+
+## Example
+
+Suppose a learner guesses `TRAIN` and learns that `A` and `I` are in the target word, but only `I` is in the correct position. The next guess should not repeat the same uncertain structure blindly. It should place `A` somewhere new, preserve the confirmed `I`, and test fresh letters that could separate several candidate words at once.
+
+## Strategy tips
+
+- use early guesses to test high-value letters rather than chasing a lucky solve
+- pay close attention to letter position, not only letter presence
+- avoid repeating eliminated letters unless the game allows repeated characters and you are testing that case
+- use your remaining guesses to reduce possibilities, not merely to “try something”
+
+## Educational value
+
+Word-guessing games reward vocabulary knowledge, but they also teach deduction. Learners practice reading partial evidence, revising their assumptions, and balancing certainty against exploration. That makes the format useful in language classrooms and in general reasoning exercises.
+
+<Callout title="Teaching prompt">
+  Ask students to explain why their second guess was better than their first. The goal is to make the feedback loop visible, not just the final answer.
+</Callout>
+
+## Related concepts
+
+This format connects to probability, constraint satisfaction, orthographic patterns, and information efficiency. It also pairs well with crossword-style clueing because both games ask learners to use partial evidence to refine possible answers.

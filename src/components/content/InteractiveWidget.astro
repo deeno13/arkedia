@@ -2,14 +2,15 @@
 import RockPaperScissorsWidget from '../islands/RockPaperScissorsWidget';
 
 interface Props {
+  isPlayable?: boolean;
   widget?: 'rock-paper-scissors';
   hydration?: 'visible' | 'idle' | 'load';
 }
 
-const { widget, hydration = 'visible' } = Astro.props;
+const { isPlayable = false, widget, hydration = 'visible' } = Astro.props;
 ---
 
-{widget === 'rock-paper-scissors' && (
+{isPlayable && widget === 'rock-paper-scissors' && (
   <section class="my-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
     <div class="mb-4">
       <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">Interactive demo</p>
@@ -22,5 +23,16 @@ const { widget, hydration = 'visible' } = Astro.props;
     {hydration === 'load' && <RockPaperScissorsWidget client:load />}
     {hydration === 'idle' && <RockPaperScissorsWidget client:idle />}
     {hydration === 'visible' && <RockPaperScissorsWidget client:visible />}
+  </section>
+)}
+
+{isPlayable && !widget && (
+  <section class="my-10 rounded-3xl border border-dashed border-slate-300 bg-slate-50/80 p-6">
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">Playable version</p>
+    <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Interactive widget planned</h2>
+    <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-700">
+      This guide is ready for a playable widget in a later phase. The content entry already exposes the structured
+      metadata needed to attach one without changing the route or the listing pages.
+    </p>
   </section>
 )}
