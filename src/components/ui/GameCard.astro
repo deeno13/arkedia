@@ -1,10 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Badge from './Badge.astro';
+import GameCoverImage from './GameCoverImage.astro';
 import LinkButton from './LinkButton.astro';
 import MetadataPills from './MetadataPills.astro';
-import { formatCategoryLabel, formatGameCardMetadata } from '../../lib/games';
+import { formatCategoryLabel, formatDifficultyLabel, formatGameCardMetadata } from '../../lib/games';
 
 interface Props {
   entry: CollectionEntry<'games'>;
@@ -27,13 +27,7 @@ const hasCoverSlot = Astro.slots.has('cover');
       {hasCoverSlot ? (
         <slot name="cover" />
       ) : entry.data.coverImage ? (
-        <Image
-          src={entry.data.coverImage}
-          alt={entry.data.coverImageAlt ?? ''}
-          class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-          widths={[480, 720]}
-          sizes="(min-width: 768px) 50vw, 100vw"
-        />
+        <GameCoverImage image={entry.data.coverImage} alt={entry.data.coverImageAlt ?? entry.data.title} />
       ) : (
         <div class="flex h-full flex-col justify-between p-6">
           <Badge tone="accent">Game page</Badge>
@@ -49,7 +43,7 @@ const hasCoverSlot = Astro.slots.has('cover');
   <div class="flex flex-1 flex-col p-6">
     <div class="flex flex-wrap items-center gap-2">
       <Badge tone="accent">{formatCategoryLabel(entry.data.category)}</Badge>
-      <Badge tone="warm">{entry.data.difficulty}</Badge>
+      <Badge tone="warm">{formatDifficultyLabel(entry.data.difficulty)}</Badge>
       {entry.data.isPlayable && <Badge tone="accent">Playable</Badge>}
     </div>
 

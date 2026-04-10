@@ -19,7 +19,7 @@ const { items } = Astro.props;
           {item.href ? (
             <a class="transition hover:text-slate-950" href={item.href}>{item.label}</a>
           ) : (
-            <span class="text-slate-950">{item.label}</span>
+            <span aria-current="page" class="text-slate-950">{item.label}</span>
           )}
         </li>
         {index < items.length - 1 && <li aria-hidden="true" class="text-slate-400">/</li>}

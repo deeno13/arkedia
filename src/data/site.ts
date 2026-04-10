@@ -1,9 +1,10 @@
 export const siteConfig = {
   name: 'Arkedia',
+  tagline: 'Educational games, explained clearly',
   description:
-    'A content-first educational games site built with Astro, designed to stay static-first, accessible, and ready for optional interactive islands.',
+    'Arkedia is a static-first educational games library built with Astro. It pairs structured guides, thoughtful metadata, and optional playable islands without turning the whole site into a client-heavy app.',
   locale: 'en',
-  siteUrl: '',
+  defaultOgImageAlt: 'Preview image for Arkedia educational game guides',
 } as const;
 
 export const mainNavigation = [

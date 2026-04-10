@@ -1,34 +1,53 @@
 ---
+import type { ImageMetadata } from 'astro';
 import SiteFooter from '../components/layout/SiteFooter.astro';
 import SiteHead from '../components/layout/SiteHead.astro';
 import SiteHeader from '../components/layout/SiteHeader.astro';
+import { siteConfig } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
-  image?: string;
+  image?: string | ImageMetadata;
+  imageAlt?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  publishedTime?: Date | string;
+  modifiedTime?: Date | string;
   mainClass?: string;
 }
 
-const { title, description, image, type = 'website', noindex = false, mainClass = '' } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  imageAlt,
+  type = 'website',
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  mainClass = '',
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={siteConfig.locale}>
   <head>
     <SiteHead
       title={title}
       description={description}
+      site={Astro.site}
       pathname={Astro.url.pathname}
       image={image}
+      imageAlt={imageAlt}
       type={type}
       noindex={noindex}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
     />
   </head>
-  <body class="min-h-screen">
+  <body class="min-h-screen antialiased">
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
       href="#content"
@@ -44,7 +63,7 @@ const { title, description, image, type = 'website', noindex = false, mainClass 
       </div>
 
       <SiteHeader />
-      <main id="content" class:list={['pb-20', mainClass]}>
+      <main id="content" tabindex="-1" class:list={['pb-20', mainClass]}>
         <slot />
       </main>
       <SiteFooter />

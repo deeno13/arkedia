@@ -2,25 +2,32 @@
 import Callout from '../components/ui/Callout.astro';
 import GameCard from '../components/ui/GameCard.astro';
 import LinkButton from '../components/ui/LinkButton.astro';
+import MetadataPills from '../components/ui/MetadataPills.astro';
 import PageHero from '../components/ui/PageHero.astro';
 import Section from '../components/ui/Section.astro';
 import { editorialPrinciples, roadmapGames } from '../data/site';
-import { getPublishedGames } from '../lib/games';
+import { getPlayableGameCount, getPublishedGames } from '../lib/games';
 import MainLayout from '../layouts/MainLayout.astro';
 
 const games = await getPublishedGames();
 const featuredGames = games.slice(0, 3);
+const playableGameCount = getPlayableGameCount(games);
 ---
 
 <MainLayout
-  title="Home"
-  description="Arkedia is a content-first educational games site built with Astro, combining strong editorial pages with optional islands only where interaction helps."
+  title="Content-first educational games"
+  description="Arkedia is a static-first educational games site built with Astro, pairing readable long-form guides with optional playable widgets only where they improve learning."
 >
   <PageHero
     eyebrow="Content-first educational games"
-    title="Build trust with clear explanations first, then add interaction only where it helps."
-    description="Arkedia is structured around Astro’s strengths: static pages, content collections, MDX for long-form learning, and optional islands for playable widgets when they actually improve understanding."
+    title="Learn how games work before the interface gets in the way."
+    description="Arkedia treats each game as an educational topic first. Rules, strategies, and examples live in typed MDX content, while interactive widgets appear only on pages where practice adds real value."
   >
+    <MetadataPills
+      slot="meta"
+      label="Arkedia homepage summary"
+      items={[`${games.length} published guides`, `${playableGameCount} playable widgets`, 'Static-first by default']}
+    />
     <Fragment slot="actions">
       <LinkButton href="/games/">Browse games</LinkButton>
       <LinkButton href="/about/" variant="secondary">Read about Arkedia</LinkButton>
@@ -63,17 +70,17 @@ const featuredGames = games.slice(0, 3);
   </Section>
 
   <Section
-    eyebrow="Phase 2 readiness"
-    title="Ready for collections, previews, and related content"
-    description="The shell already expects structured metadata, preview media, and card-based relationships. Future game pages can plug into this system without turning the site into a SPA."
+    eyebrow="v1 foundation"
+    title="Ready for more content without changing the architecture"
+    description="The current release already has typed game metadata, optimized local cover images, related guides, and optional interactive islands. Adding new entries mostly means adding new content."
   >
     <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
       <Callout title="What plugs in next">
         <ul class="space-y-3">
-          <li>More MDX game guides with typed schema validation.</li>
-          <li>Optional cover images rendered through Astro’s image pipeline.</li>
-          <li>Related game sections resolved through slug-based references.</li>
-          <li>Playable islands added only to pages that need them.</li>
+          <li>More MDX game guides with the same typed schema and editorial structure.</li>
+          <li>Richer examples, diagrams, and callouts inside long-form content.</li>
+          <li>Playable widgets attached only to games that benefit from practice.</li>
+          <li>Progressive browse enhancements layered onto existing metadata.</li>
         </ul>
       </Callout>
 
