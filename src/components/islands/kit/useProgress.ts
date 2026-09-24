@@ -11,11 +11,21 @@ export function useProgress(slug: string): ProgressRecord {
   return record;
 }
 
-/** A remembered setting (difficulty, board size, mode) that persists per device. */
-export function usePref<T extends PrefValue>(slug: string, key: string, fallback: T): [T, (value: T) => void] {
-  const [value, setValue] = useState<T>(() => getPref(slug, key, fallback));
+type WidenBoolean<T> = T extends boolean ? boolean : T;
+
+/**
+ * A remembered setting (difficulty, board size, mode) that persists per device.
+ * `T` is deliberately unconstrained so an inferred fallback widens (`'1'` → string,
+ * `false` → boolean); pass an explicit union (`usePref<Level>(…)`) to keep a narrow type.
+ */
+export function usePref<T>(
+  slug: string,
+  key: string,
+  fallback: T & PrefValue,
+): [WidenBoolean<T>, (value: WidenBoolean<T> & PrefValue) => void] {
+  const [value, setValue] = useState(() => getPref<PrefValue>(slug, key, fallback) as WidenBoolean<T> & PrefValue);
   const update = useCallback(
-    (next: T) => {
+    (next: WidenBoolean<T> & PrefValue) => {
       setValue(next);
       setPref(slug, key, next);
     },
