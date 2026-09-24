@@ -157,7 +157,7 @@ const sheetHeading = 'text-base font-extrabold font-stretch-expanded leading-tig
           <section aria-labelledby="your-record" class="border-t border-rule px-5 py-5">
             <h2 id="your-record" class={sheetHeading}>Your record</h2>
             <div class="mt-3">
-              <RecordPanel slug={data.slug} title={data.title} />
+              <RecordPanel slug={data.slug} title={data.title} vsComputerOnly={data.maxPlayers > 1} />
             </div>
           </section>
         </aside>

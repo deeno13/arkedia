@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { Button } from './Button';
 
 export interface GameStat {
@@ -36,6 +36,11 @@ interface GameFrameProps {
 /**
  * The die-cut frame every Arkedia board sits in: options and stats on top, the board,
  * then a live status line that turns into a result strip when the round ends.
+ *
+ * Focus: after New game / Play again, focus moves into the board (the first
+ * `[data-board-focus]`, else the first `[tabindex="0"]`, else the first enabled control),
+ * so keyboard play continues. When a round ends and focus was lost (the focused control
+ * became disabled), focus moves to Play again.
  */
 export function GameFrame({
   label,
@@ -48,8 +53,33 @@ export function GameFrame({
   status,
   result,
 }: GameFrameProps) {
+  const frameRef = useRef<HTMLElement>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const hasResult = Boolean(result);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!hasResult || !frame) return;
+    const active = document.activeElement;
+    const focusLost = !active || active === document.body || (frame.contains(active) && (active as HTMLButtonElement).disabled);
+    if (focusLost) frame.querySelector<HTMLElement>('[data-play-again]')?.focus({ preventScroll: true });
+  }, [hasResult]);
+
+  function startNewGame() {
+    onNewGame();
+    // After React commits the new round (a macrotask later), hand focus to the board.
+    window.setTimeout(() => {
+      const board = boardRef.current;
+      const target =
+        board?.querySelector<HTMLElement>('[data-board-focus]') ??
+        board?.querySelector<HTMLElement>('[tabindex="0"]') ??
+        board?.querySelector<HTMLElement>('button:not(:disabled), input:not(:disabled)');
+      target?.focus({ preventScroll: true });
+    }, 0);
+  }
+
   return (
-    <section aria-label={label} className="overflow-hidden rounded-die border-2 border-ink bg-card text-ink">
+    <section ref={frameRef} aria-label={label} className="overflow-hidden rounded-die border-2 border-ink bg-card text-ink">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink px-3 py-2.5 sm:px-4">
         <div className="flex min-w-0 flex-wrap items-center gap-3">{options}</div>
         {stats.length > 0 && (
@@ -64,7 +94,7 @@ export function GameFrame({
         )}
       </div>
 
-      <div className="relative px-3 py-4 sm:px-5 sm:py-6">{children}</div>
+      <div ref={boardRef} className="relative px-3 py-4 sm:px-5 sm:py-6">{children}</div>
 
       <div
         className={[
@@ -76,7 +106,12 @@ export function GameFrame({
           {result ? (
             <>
               <strong className="text-base font-extrabold font-stretch-expanded">{result.title}</strong>
-              {result.detail && <span className="ml-2">{result.detail}</span>}
+              {result.detail && (
+                <>
+                  <span className="sr-only">. </span>
+                  <span className="ml-2">{result.detail}</span>
+                </>
+              )}
             </>
           ) : (
             status
@@ -87,7 +122,8 @@ export function GameFrame({
           <Button
             variant={result ? 'paper' : 'primary'}
             size="sm"
-            onClick={onNewGame}
+            onClick={startNewGame}
+            data-play-again={result ? '' : undefined}
           >
             {result ? 'Play again' : newGameLabel}
           </Button>

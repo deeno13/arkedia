@@ -47,7 +47,7 @@ export function Segmented<T extends string | number>({ label, options, value, on
               disabled={disabled}
               onClick={() => onChange(option.value)}
               className={[
-                'min-h-8 rounded-[3px] px-2.5 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-45',
+                'min-h-8 pointer-coarse:min-h-10 rounded-[3px] px-2.5 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-45',
                 checked ? 'bg-ink text-paper' : 'text-ink hover:bg-paper-deep',
               ].join(' ')}
             >

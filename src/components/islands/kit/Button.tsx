@@ -17,8 +17,8 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  sm: 'min-h-9 px-3 text-sm',
-  md: 'min-h-11 px-4 text-base',
+  sm: 'min-h-9 px-3 text-sm pointer-coarse:min-h-11',
+  md: 'min-h-11 px-4 text-base pointer-coarse:min-h-12',
 };
 
 /** Arkedia's game control button. Use `primary` for the one main action (New game). */
