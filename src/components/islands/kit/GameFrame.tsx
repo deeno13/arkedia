@@ -72,7 +72,7 @@ export function GameFrame({
           result?.tone === 'win' ? 'bg-game text-on-game' : result ? 'bg-ink text-paper' : '',
         ].join(' ')}
       >
-        <p aria-live="polite" aria-atomic="true" className="min-w-0 flex-1 text-sm leading-6">
+        <p aria-live="polite" aria-atomic="true" className="min-w-[min(100%,15rem)] flex-1 text-sm leading-6">
           {result ? (
             <>
               <strong className="text-base font-extrabold font-stretch-expanded">{result.title}</strong>
