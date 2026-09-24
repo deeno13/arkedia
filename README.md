@@ -102,4 +102,4 @@ The MDX body is the guide. Use this order: one or two intro paragraphs, `## How 
 
 ## Design
 
-The direction is a tabletop compendium: chipboard paper, black ink, one solid process ink per game, Archivo (expanded black for lids and titles) and Source Serif 4 for the guides. Product and voice rules live in [PRODUCT.md](PRODUCT.md); a DESIGN.md with the full system will sit beside it.
+The direction is a tabletop compendium: chipboard paper, black ink, one solid process ink per game, Archivo (expanded black for lids and titles) and Source Serif 4 for the guides. Product and voice rules live in [PRODUCT.md](PRODUCT.md); tokens, named design rules and component anatomy (box lids, GameFrame, board diagrams, cover spec) live in [DESIGN.md](DESIGN.md).
