@@ -17,6 +17,8 @@ type WidenBoolean<T> = T extends boolean ? boolean : T;
  * A remembered setting (difficulty, board size, mode) that persists per device.
  * `T` is deliberately unconstrained so an inferred fallback widens (`'1'` → string,
  * `false` → boolean); pass an explicit union (`usePref<Level>(…)`) to keep a narrow type.
+ * Stays in sync with storage: "Reset record", "Clear all progress" and other tabs
+ * update the value, so a stale in-memory copy is never written back.
  */
 export function usePref<T>(
   slug: string,
@@ -24,6 +26,10 @@ export function usePref<T>(
   fallback: T & PrefValue,
 ): [WidenBoolean<T>, (value: WidenBoolean<T> & PrefValue) => void] {
   const [value, setValue] = useState(() => getPref<PrefValue>(slug, key, fallback) as WidenBoolean<T> & PrefValue);
+  useEffect(
+    () => onProgressChange(() => setValue(getPref<PrefValue>(slug, key, fallback) as WidenBoolean<T> & PrefValue)),
+    [slug, key, fallback],
+  );
   const update = useCallback(
     (next: WidenBoolean<T> & PrefValue) => {
       setValue(next);
