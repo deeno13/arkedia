@@ -1,0 +1,111 @@
+---
+title: "2048"
+slug: "2048"
+excerpt: "Slide the tiles, merge equal numbers, and keep your biggest tile in the corner."
+description: "Slide every tile on a 4×4 board at once. Two equal tiles that collide merge into their sum. Build a 2048 tile before the board fills up."
+category: arcade
+ink: orange
+difficulty: beginner
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 10
+concept: "Powers of two and greedy strategy"
+skills:
+  - "planning ahead"
+  - "keeping order"
+  - "powers of two"
+quickRules:
+  - "Pick a direction. Every tile slides as far as it can that way."
+  - "Two tiles with the same number that collide merge into one tile worth their sum, and you score that sum."
+  - "A tile can only merge once per move, so 2, 2, 2, 2 slid left becomes 4, 4, not 8."
+  - "After every move that changes the board, a new 2 (or, one time in ten, a 4) appears in an empty square."
+  - "Make a 2048 tile to win. The game ends when the board is full and no two neighbours match."
+controls:
+  - "Click the board, then use the arrow keys or W, A, S, D to slide."
+  - "Touch: swipe up, down, left or right on the board."
+  - "U, Ctrl+Z or the Undo button takes back your last move (one step only)."
+  - "After you make 2048, choose Keep going to play on or Stop here to bank the score."
+widget: "2048"
+coverImage: ./cover.svg
+coverImageAlt: "A four-by-four board with a few tiles marked by pips, one tile sliding left toward an equal tile."
+relatedGameSlugs:
+  - snake
+  - tower-of-hanoi
+  - sudoku
+seoTitle: "2048: rules, the corner strategy and a free board to play"
+seoDescription: "Learn 2048 in a minute, then play it with keys or swipes. Exact merge rules, a worked example, the corner strategy, and why every tile is a power of two."
+publishedAt: 2026-09-25
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+2048 is sixteen squares, one kind of move, and a single rule about equal numbers. You push everything in one direction, matching tiles combine, and a new tile drops in. There's no timer and no opponent except the board slowly filling up behind you.
+
+It rewards a very particular sort of tidiness. Players who slide at random reach 256 or 512 and stall. Players who keep their tiles in order reach 2048 surprisingly often, and the difference is a strategy you can learn in one sitting.
+
+## How to play
+
+The board starts with two tiles. On each turn you choose up, down, left or right.
+
+- **Sliding.** Every tile moves as far as it can in that direction, stopping at the edge or against another tile.
+- **Merging.** When a tile slides into a tile of the same value, the two become one tile of double the value, and your score goes up by that new value. Merging a pair of 64s gives a 128 and 128 points.
+- **One merge per tile per move.** A tile created by a merge can't merge again in the same move. So a row of `2 2 2 2` slid left becomes `4 4 _ _`, and `4 4 8 _` becomes `8 8 _ _`, not `16`.
+- **Which pair merges first.** When three equal tiles line up, the two nearest the wall you're sliding toward merge. `2 2 2 _` slid right becomes `_ _ 2 4`.
+- **New tiles.** If the move changed anything, a new tile appears on a random empty square: a 2 nine times in ten, a 4 otherwise. A move that changes nothing doesn't count, and no tile appears.
+- **Winning and ending.** Building a 2048 tile wins. You can stop there and bank your score, or keep going for 4096 and beyond. Either way the round ends when the board is full and no two touching tiles match, because then no move changes anything.
+
+Undo takes back exactly one move, including the tile that spawned after it.
+
+## A worked example
+
+Take one row and slide it left three times, ignoring new tiles for clarity.
+
+| Move | Before | After | Points |
+|---|---|---|---|
+| 1 | `2 2 4 8` | `4 4 8 _` | 4 |
+| 2 | `4 4 8 _` | `8 8 _ _` | 8 |
+| 3 | `8 8 _ _` | `16 _ _ _` | 16 |
+
+On move 1 the two 2s merge into a 4, but that fresh 4 can't then merge with the 4 beside it. It has to wait for move 2. Likewise the 8 made on move 2 waits until move 3. A neat descending row (`8 4 2 2`) collapses one step at a time into a single big tile, all against the wall. That picture, a row sorted from big to small, is the whole strategy in miniature.
+
+## Strategy
+
+### Pick a corner and live there
+
+Choose a corner, say bottom-left, and keep your biggest tile in it. Use mostly two directions (down and left) and a third (right) when you must. Avoid the fourth (up): it's the move that drags your big tile out of its corner and lets a 2 appear underneath it.
+
+### Keep the edge row full and ordered
+
+Fill the bottom row with tiles that decrease away from the corner: `128 64 32 16`, say. When the row is full and sorted, sliding left is always safe for that row, so it never breaks while you work the rows above.
+
+### Snake the chain
+
+Continue the order up into the next row in the opposite direction, so the whole board reads like one long snake of decreasing values. Then a single new tile at the tail end can set off a cascade: 8 meets 8, the 16 meets 16, and so on back to the corner.
+
+### Merge toward the big tile, not away from it
+
+When you have a choice of merges, prefer the one that moves a value closer to the tile it'll eventually join. Two 32s merging in the far corner means you now need to march a 64 all the way back.
+
+### Undo is for learning
+
+Using Undo when a random tile lands badly isn't cheating here; it's the fastest way to see which positions were fragile. Try a round without it once your corner habit is solid.
+
+## The idea underneath
+
+Every tile is a power of two: 2 is 2<sup>1</sup>, 4 is 2<sup>2</sup>, and so on up to 2048, which is 2<sup>11</sup>. Merging adds one to the exponent, so you can think of each tile as its exponent and each merge as `n + n → n + 1`.
+
+Merges never change the total of all the tiles on the board. Only new tiles do, adding 2 or 4 each time. With an average spawn of 0.9 × 2 + 0.1 × 4 = 2.2, the board's total grows by about 2.2 per move, so a single 2048 tile needs roughly 2048 ÷ 2.2 ≈ 930 moves. That's why a game feels long even when it goes well.
+
+Points track the work done. A tile of 2<sup>k</sup> built entirely from 2s went through k − 1 layers of merges, each layer worth 2<sup>k</sup> points in total, so it earned (k − 1) × 2<sup>k</sup> points. A 2048 made that way is worth 10 × 2048 = 20,480. Spawned 4s skip a layer, so real scores come in a little lower.
+
+The corner strategy is a **greedy** strategy with a rule attached: take merges when they come, but never make a move that breaks the ordering. Pure greed (always take the biggest merge now) does poorly because the random spawn punishes disorder. Strong computer players search ahead over both your moves and the possible spawns, weighing the average outcome — a method called expectimax — but they end up favouring the same ordered, cornered shapes that humans learn by feel.
+
+## Common mistakes
+
+- **Pressing the forbidden direction in a panic.** If up is your only legal move, do it, then slide back down at once.
+- **Chasing small merges across the board.** A 4 + 4 on the far side isn't worth breaking your row.
+- **Leaving the edge row with a gap.** A gap lets the row shift sideways, and the big tile can leave the corner.
+
+<Callout title="Try this">
+  Play a round using only down, left and right. Up is allowed only when nothing else moves. Note your top tile, then compare it with a round of free play.
+</Callout>

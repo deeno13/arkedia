@@ -1,69 +1,118 @@
 ---
-title: Snake
+title: "Snake"
 slug: snake
-excerpt: A guide to Snake as a lesson in grid movement, risk management, and feedback loops.
+excerpt: "Eat, grow, don’t bite yourself. Every bite makes the board a little smaller."
+description: "Steer a growing snake toward food without hitting the walls or your own body. Every bite makes you longer, and every extra square of snake is a square you can no longer use."
 category: arcade
-tags:
-  - grid movement
-  - path planning
-  - feedback loops
-  - reaction
+ink: green
 difficulty: beginner
 minPlayers: 1
 maxPlayers: 1
-estimatedMinutes: 10
-educationalTopics:
-  - coordinate systems
-  - algorithmic thinking
-  - risk management
-  - spatial reasoning
-isPlayable: true
-status: published
+estimatedMinutes: 5
+concept: "Planning under a shrinking space"
+skills:
+  - "planning ahead"
+  - "spatial reasoning"
+  - "risk management"
+quickRules:
+  - "The snake moves one square at a time and never stops; you only choose which way it turns."
+  - "Steer the head onto the black diamond to eat it. You grow one square longer and a new diamond appears."
+  - "You can turn left or right, but never straight back into yourself."
+  - "Hit a wall or any part of your own body and the round ends. Your score is how many diamonds you ate."
+  - "Moving into the square your tail is just leaving is safe."
+controls:
+  - "Click the board, then press any arrow key or W, A, S, D to start and steer."
+  - "Space or P pauses and resumes. Switching tabs pauses too."
+  - "Touch: swipe on the board, or tap the arrow pad beside it."
+  - "Pick Slow, Normal or Fast before you start; each speed keeps its own best score."
+widget: "snake"
 coverImage: ./cover.svg
-coverImageAlt: An abstract grid illustration representing the Snake playfield.
+coverImageAlt: "A snake winding across a square grid toward a diamond of food, its head marked with two eyes."
 relatedGameSlugs:
-  - sudoku
-  - rock-paper-scissors
-seoTitle: Snake strategy and educational guide
-seoDescription: Learn how Snake works, why it teaches planning and feedback loops, and how to use it as an educational game.
-description: Snake turns simple movement rules into a useful lesson about planning ahead, reading space, and reacting to feedback.
-publishedAt: 2026-04-10
-updatedAt: 2026-04-10
-playableWidget: snake
-widgetHydration: visible
+  - "2048"
+  - minesweeper
+  - tower-of-hanoi
+seoTitle: "Snake: rules, strategy and a free board to play"
+seoDescription: "Learn Snake in a minute, then play it in your browser with keys or touch. Why tail-chasing is safe, how to keep open space, and why a perfect loop is impossible on an odd board."
+publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
 
-Snake is often remembered as a classic arcade game, but it is also a compact system for teaching how small decisions accumulate. Each move changes the board state, and every new segment in the snake’s body narrows the path options that remain.
+Snake is a game about a single decision repeated a few hundred times: turn now, or don't. The snake never stops moving, it can only grow, and everything it has ever eaten is still on the board as body. Early on the board is enormous and nothing you do matters much. Later, the most dangerous thing on the board is you.
 
-## How the game works
+That makes Snake a clean little lesson in planning under a shrinking space. The food is never the hard part. The hard part is still having somewhere to go after you've eaten it.
 
-The player moves a snake around a grid to collect food. Every time the snake eats, it grows longer, which increases the challenge. The game ends when the snake hits a wall or runs into its own body.
+## How to play
 
-That rule set is simple enough for beginners, but it quickly introduces an important idea: a good move is not only about the next square. It is also about leaving room for the next five or ten moves.
+The board here is 17 squares by 17. You start three squares long in the middle of the board, facing right, and nothing moves until you press a direction.
 
-## Example
+- **Movement.** Once started, the snake advances one square per tick in the direction it's facing. You choose turns; you can't stop or slow down. The speed you picked (Slow, Normal or Fast) stays fixed for the whole round.
+- **Turning.** You can turn a quarter-turn left or right. A request to reverse straight back into your own neck is ignored. If you press two turns quickly, both are kept and applied on consecutive ticks, so "up, then left" really does go up one square and then left.
+- **Eating.** When the head lands on the diamond, you score one point and grow: the tail stays where it is for that tick, so you end up one square longer. A new diamond appears on a random empty square.
+- **Crashing.** The round ends if the head would move off the board or onto any square of your body. There's one exception, and it's important: the square your tail is vacating this tick is empty by the time your head arrives, so following your own tail is legal.
+- **Filling the board.** If you ever grow to cover all 289 squares, there's nowhere left to put food and you've finished the game outright. Nobody expects you to.
 
-Imagine the snake is moving right along the top edge of the board and a piece of food appears below it. A new player might turn down immediately because the food is close. A more careful player will ask a second question: if I go down now, will I still have a safe path back out once the snake is longer?
+Your score is the number of diamonds eaten. Each speed keeps its own best.
 
-This is exactly what makes Snake useful for teaching planning. Students can see that a short-term reward is not always the best long-term decision.
+## A worked example
 
-## Strategy tips
+Here's the top-left corner of a board mid-game. `H` is the head, heading right; the digits are body segments counted back from the head, so `4` is the tail. `F` is the food.
 
-- keep the center of the board open as long as possible
-- avoid creating tight loops that trap the snake’s head
-- read the path after the food, not just the path to the food
-- treat empty space as a resource that can be spent too quickly
+|   | a | b | c | d | e |
+|---|---|---|---|---|---|
+| 1 |   |   |   |   |   |
+| 2 | 4 | 3 | 2 | 1 | H |
+| 3 |   |   |   |   |   |
+| 4 |   | F |   |   |   |
 
-## Educational value
+The greedy move is to turn down now and then left along row 4. Let's trace it.
 
-Snake is a practical way to talk about coordinates, state changes, and feedback loops. Every input changes the system, and the consequences become visible immediately. That makes the game a good bridge between intuitive play and more formal computational ideas such as path planning or greedy decision-making.
+1. **Down** — head to e3. The tail leaves a2.
+2. **Down** — head to e4.
+3. **Left** — head to d4, then c4, then b4: eat. You're now six long, stretched from b4 back up column e and along row 2.
 
-<Callout title="Teaching prompt">
-  Ask learners to narrate not only what move they chose, but what future collision they were trying to avoid. That pushes the discussion from reaction to reasoning.
+That worked, but look at where you are: six squares long, lying along row 4 and up column e, with your head at b4 pointing at the wall one square away. The very next tick or the one after, you must turn up or down, and the food chose that for you. On an open board it's harmless. On a crowded one, "go straight at the food" is how you end up in a corner facing your own body.
+
+The patient alternative is to keep going right along row 2, loop down, and come back along row 4 from the right. It takes more ticks, but you arrive at the food travelling left with open space below and behind you, and the body you've laid down forms a straight wall at the edge instead of a hook in the middle.
+
+## Strategy
+
+### Stay away from the walls early, then use them late
+
+A wall is a side you can't escape through. With a short snake, hugging walls just throws away options. With a long snake, the opposite is true: laying your body flat along an edge wastes the least space, because the wall was never usable anyway.
+
+### Think about the exit, not the food
+
+Before turning toward food, ask where your head will be pointing once it gets there, and whether that direction has room. A diamond in a corner costs you nothing to reach and a lot to leave.
+
+### Chase your tail
+
+The tail is the one part of your body that is guaranteed to move out of the way. When you're boxed in, turning toward your own tail buys time: you can follow it indefinitely without crashing. Long runs are mostly tail-following with detours for food.
+
+### Don't cut the board in half
+
+If your body splits the empty squares into two regions and your head goes into the smaller one, you'll run out of room before the body that walls it in has moved away. Before a turn, glance at how much space each side of it leaves.
+
+### Lay the body in lanes
+
+Strong players zig-zag: sweep across a row, drop down one, sweep back. The body folds into tidy parallel lanes, the open area stays one big rectangle, and the head always has a known way out. It's slower per diamond and much safer per round.
+
+## The idea underneath
+
+Snake is a path-planning problem on a grid graph: squares are nodes, and neighbours are joined by edges. Each tick you pick one edge out of the head. Your body is a set of nodes you can't use, and it moves: every tick the tail frees one node and the head claims one. Eating breaks that balance in your disfavour.
+
+The perfect strategy would be a **Hamiltonian cycle**: a loop that visits every square exactly once and returns to its start. Follow such a loop forever and you can never crash, since your body always sits on the part of the loop you just left, and you'll eventually pass every diamond.
+
+Here's the catch. Colour the board like a chessboard. Every move goes from one colour to the other, so any closed loop alternates colours and uses equally many of each. A 17×17 board has 289 squares: 145 of one colour and 144 of the other. No loop can cover them all. On any board with an odd number of squares a perfect cycle is impossible, and some greed is forced on you. (On boards with an even number of squares, such as 16×16, a Hamiltonian cycle always exists.)
+
+So Snake is really a trade-off between two algorithms. Greedy shortest-path-to-food is fast but fragile. Cycle-following is safe but slow. Good play is greedy while the board is empty and increasingly cycle-like as it fills.
+
+## Common mistakes
+
+- **Leaving a one-square-wide corridor.** You can enter it, but you can't turn around inside it.
+- **Speeding up too soon.** Best scores are kept per speed, so there's no penalty for learning on Slow.
+
+<Callout title="Try this">
+  On Slow, eat ten diamonds without ever moving your head into the outer ring of squares. Then play a round where you only turn toward food once your snake is travelling in a row or column that will leave you facing open space.
 </Callout>
-
-## Related concepts
-
-Snake connects naturally to coordinate systems, spatial reasoning, algorithmic thinking, and even basic optimization. Once students understand how movement on the grid works, it becomes easier to connect the game to arrays, graph traversal, and decision trees later on.

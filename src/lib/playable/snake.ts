@@ -1,114 +1,127 @@
-export const SNAKE_BOARD_SIZE = 10;
-export const SNAKE_START_DELAY = 220;
+/**
+ * Snake: pure, framework-free rules. Every function returns a new state; randomness
+ * (food placement) is injectable so rounds can be replayed in tests.
+ */
+
+export const SNAKE_SIZE = 17;
+/** Turns waiting to be applied, one per tick. Lets "up, then left" land as two moves. */
+export const TURN_BUFFER = 3;
 
 export type Direction = 'up' | 'down' | 'left' | 'right';
+export type SnakeStatus = 'ready' | 'playing' | 'paused' | 'over';
 
-export interface CellPosition {
+export interface Cell {
   x: number;
   y: number;
 }
 
 export interface SnakeState {
-  snake: CellPosition[];
+  size: number;
+  /** Head first. */
+  snake: Cell[];
   direction: Direction;
-  food: CellPosition;
+  /** Buffered turns, oldest first. */
+  turns: Direction[];
+  /** `null` only when the snake fills the whole board. */
+  food: Cell | null;
   score: number;
-  status: 'idle' | 'playing' | 'paused' | 'lost';
+  status: SnakeStatus;
+  /** Why the round ended. */
+  end: 'wall' | 'self' | 'full' | null;
 }
 
-const directionOffsets: Record<Direction, CellPosition> = {
+export const OFFSETS: Record<Direction, Cell> = {
   up: { x: 0, y: -1 },
   down: { x: 0, y: 1 },
   left: { x: -1, y: 0 },
   right: { x: 1, y: 0 },
 };
 
-const oppositeDirections: Record<Direction, Direction> = {
-  up: 'down',
-  down: 'up',
-  left: 'right',
-  right: 'left',
-};
+const OPPOSITE: Record<Direction, Direction> = { up: 'down', down: 'up', left: 'right', right: 'left' };
 
-function positionsEqual(left: CellPosition, right: CellPosition) {
-  return left.x === right.x && left.y === right.y;
+export function placeFood(size: number, snake: Cell[], random = Math.random): Cell | null {
+  const taken = new Set(snake.map((cell) => cell.y * size + cell.x));
+  const open: number[] = [];
+  for (let index = 0; index < size * size; index += 1) if (!taken.has(index)) open.push(index);
+  if (open.length === 0) return null;
+  const index = open[Math.floor(random() * open.length)];
+  return { x: index % size, y: Math.floor(index / size) };
 }
 
-export function getInitialSnakeState(random = Math.random): SnakeState {
+/** A three-long snake in the middle row, facing right, waiting for the first input. */
+export function createSnake(size = SNAKE_SIZE, random = Math.random): SnakeState {
+  const y = Math.floor(size / 2);
+  const x = Math.floor(size / 4) + 2;
   const snake = [
-    { x: 4, y: 5 },
-    { x: 3, y: 5 },
-    { x: 2, y: 5 },
+    { x, y },
+    { x: x - 1, y },
+    { x: x - 2, y },
   ];
-
-  return {
-    snake,
-    direction: 'right',
-    food: getRandomOpenCell(snake, random),
-    score: 0,
-    status: 'idle',
-  };
+  return { size, snake, direction: 'right', turns: [], food: placeFood(size, snake, random), score: 0, status: 'ready', end: null };
 }
 
-export function getNextDirection(current: Direction, requested: Direction) {
-  return oppositeDirections[current] === requested ? current : requested;
-}
+/**
+ * Queue a turn. Turns are checked against the last queued direction, so a reversal
+ * (or a repeat) is ignored even when it arrives between ticks. Before the first move
+ * the snake is stationary, so asking for the opposite way simply turns it around.
+ * Any turn starts a ready round and resumes a paused one.
+ */
+export function turn(state: SnakeState, direction: Direction): SnakeState {
+  if (state.status === 'over') return state;
 
-export function getRandomOpenCell(occupied: CellPosition[], random = Math.random): CellPosition {
-  const openCells: CellPosition[] = [];
-
-  for (let y = 0; y < SNAKE_BOARD_SIZE; y += 1) {
-    for (let x = 0; x < SNAKE_BOARD_SIZE; x += 1) {
-      if (!occupied.some((cell) => cell.x === x && cell.y === y)) {
-        openCells.push({ x, y });
-      }
+  if (state.status === 'ready') {
+    if (direction === OPPOSITE[state.direction]) {
+      return { ...state, snake: [...state.snake].reverse(), direction, turns: [], status: 'playing' };
     }
+    return { ...state, turns: direction === state.direction ? [] : [direction], status: 'playing' };
   }
 
-  if (openCells.length === 0) {
-    return { x: 0, y: 0 };
+  const status = state.status === 'paused' ? 'playing' : state.status;
+  const last = state.turns.at(-1) ?? state.direction;
+  if (direction === last || direction === OPPOSITE[last] || state.turns.length >= TURN_BUFFER) {
+    return status === state.status ? state : { ...state, status };
   }
-
-  return openCells[Math.floor(random() * openCells.length)];
+  return { ...state, turns: [...state.turns, direction], status };
 }
 
-export function advanceSnake(state: SnakeState, random = Math.random): SnakeState {
-  if (state.status === 'lost') {
-    return state;
+export function togglePause(state: SnakeState): SnakeState {
+  if (state.status === 'playing') return { ...state, status: 'paused' };
+  if (state.status === 'paused') return { ...state, status: 'playing' };
+  return state;
+}
+
+/** Advance one tick: apply the next buffered turn, move, eat or collide. */
+export function step(state: SnakeState, random = Math.random): SnakeState {
+  if (state.status !== 'playing') return state;
+
+  const [nextTurn, ...turns] = state.turns;
+  const direction = nextTurn ?? state.direction;
+  const offset = OFFSETS[direction];
+  const head = { x: state.snake[0].x + offset.x, y: state.snake[0].y + offset.y };
+
+  if (head.x < 0 || head.y < 0 || head.x >= state.size || head.y >= state.size) {
+    return { ...state, direction, turns, status: 'over', end: 'wall' };
   }
 
-  const head = state.snake[0];
-  const offset = directionOffsets[state.direction];
-  const nextHead = { x: head.x + offset.x, y: head.y + offset.y };
-
-  const collidedWithWall =
-    nextHead.x < 0 ||
-    nextHead.y < 0 ||
-    nextHead.x >= SNAKE_BOARD_SIZE ||
-    nextHead.y >= SNAKE_BOARD_SIZE;
-
-  const willEatFood = positionsEqual(nextHead, state.food);
-  const bodyToCheck = willEatFood ? state.snake : state.snake.slice(0, -1);
-  const collidedWithSelf = bodyToCheck.some((cell) => positionsEqual(cell, nextHead));
-
-  if (collidedWithWall || collidedWithSelf) {
-    return {
-      ...state,
-      status: 'lost',
-    };
+  const eats = state.food !== null && head.x === state.food.x && head.y === state.food.y;
+  // The tail moves out of the way this tick unless the snake is growing.
+  const body = eats ? state.snake : state.snake.slice(0, -1);
+  if (body.some((cell) => cell.x === head.x && cell.y === head.y)) {
+    return { ...state, direction, turns, status: 'over', end: 'self' };
   }
 
-  const nextSnake = [nextHead, ...state.snake];
+  const snake = [head, ...body];
+  if (!eats) return { ...state, snake, direction, turns };
 
-  if (!willEatFood) {
-    nextSnake.pop();
-  }
-
+  const food = placeFood(state.size, snake, random);
   return {
     ...state,
-    snake: nextSnake,
-    food: willEatFood ? getRandomOpenCell(nextSnake, random) : state.food,
-    score: willEatFood ? state.score + 1 : state.score,
-    status: 'playing',
+    snake,
+    direction,
+    turns,
+    food,
+    score: state.score + 1,
+    status: food ? 'playing' : 'over',
+    end: food ? null : 'full',
   };
 }
