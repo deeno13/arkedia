@@ -1,67 +1,116 @@
 ---
-title: Wordle-style Game
+title: "Five-Letter Word Guess"
 slug: wordle-style-game
-excerpt: A word-guessing format that teaches deduction, vocabulary, and information use under tight constraints.
+excerpt: "Find the hidden five-letter word in six guesses. Every letter tells you something."
+description: "Guess a hidden five-letter word in six tries. After each guess, every letter tells you whether it is in the right spot, somewhere else in the word, or not in it at all."
 category: word
-tags:
-  - word patterns
-  - deduction
-  - vocabulary
-  - inference
-difficulty: intermediate
+ink: mustard
+difficulty: beginner
 minPlayers: 1
 maxPlayers: 1
-estimatedMinutes: 12
-educationalTopics:
-  - vocabulary development
-  - probabilistic reasoning
-  - elimination strategies
-  - pattern recognition
-isPlayable: true
-status: published
+estimatedMinutes: 5
+concept: "Information gain"
+skills:
+  - "deduction"
+  - "vocabulary"
+  - "choosing informative guesses"
+quickRules:
+  - "Type any real five-letter word and press Enter."
+  - "A tile with a corner notch (green) is the right letter in the right spot."
+  - "A tile with a ring (yellow) is in the word, but in a different spot."
+  - "A plain grey tile is not in the word, or not as many times as you used it."
+  - "Use the clues to guess again. Find the word within six guesses to win."
+controls:
+  - "Click the board, then type letters; Enter guesses, Backspace deletes."
+  - "Or tap the on-screen keys, including Enter and the delete key."
+  - "Keys take the best colour and mark each letter has earned so far."
+  - "Hard mode (switch it between rounds): every revealed hint must be reused."
+widget: "wordle"
 coverImage: ./cover.svg
-coverImageAlt: Letter tiles arranged in rows to represent a word-guessing puzzle.
+coverImageAlt: "Three rows of five letter tiles: some solid, some marked with corner notches and rings, the last row half typed."
 relatedGameSlugs:
+  - mastermind
   - crossword
   - sudoku
-seoTitle: Wordle-style game guide and strategy
-seoDescription: Explore how a Wordle-style game works, why it teaches deduction and vocabulary, and how to think through guesses more effectively.
-description: Word-guessing games reward careful information use, making them ideal for teaching elimination, vocabulary, and strategy.
-publishedAt: 2026-04-10
-updatedAt: 2026-04-10
-playableWidget: wordle-mini
-widgetHydration: visible
+seoTitle: "Five-Letter Word Guess: rules, strategy, and a free board to play"
+seoDescription: "Learn how the five-letter word guessing game works, how duplicate letters are scored, why some openers beat others, and play free in your browser."
+publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
 
-A Wordle-style game is built around a satisfying teaching pattern: guess, receive feedback, refine the next guess. That loop gives learners a concrete reason to think about what information a clue provides and how to use it efficiently.
+One hidden word, six guesses, and three kinds of feedback. The best-known version is Wordle, the daily puzzle that went viral in early 2022. The version here draws from its own list of everyday words and lets you play as many rounds as you like.
 
-## How the game works
+It looks like a vocabulary test. It is really a game about asking good questions. Every guess is a question put to the hidden word, and the art is choosing the question whose answer tells you the most.
 
-The player guesses a hidden word, usually with a fixed number of letters. After each guess, the game marks which letters are correct, which are present in the word but in the wrong position, and which letters are absent. The player uses those clues to improve the next attempt.
+## How to play
 
-This makes every guess a small reasoning exercise. A strong guess is not only a shot at the answer. It also collects information that narrows the search space.
+A five-letter answer is picked at random. You type a guess, which must be a real word from the game's dictionary, and press Enter. Each tile of your guess is then marked:
 
-## Example
+- **Green with a corner notch**: this letter is in the answer, in exactly this position.
+- **Yellow with a small ring**: this letter is in the answer, but not in this position.
+- **Grey**: this letter is not in the answer, or you have already been credited with every copy the answer contains.
 
-Suppose a learner guesses `TRAIN` and learns that `A` and `I` are in the target word, but only `I` is in the correct position. The next guess should not repeat the same uncertain structure blindly. It should place `A` somewhere new, preserve the confirmed `I`, and test fresh letters that could separate several candidate words at once.
+That last clause is where duplicate letters live. Marks are handed out in two passes. First every exact match turns green. Then, reading left to right, each remaining letter turns yellow only while the answer still has an unclaimed copy of it. So if the answer is THREE and you guess EERIE, you get: E yellow, E grey, R green, I grey, E green. The final E is green, the first E is yellow because THREE has a second E, and the middle E is grey because both of the answer's Es are now claimed.
 
-## Strategy tips
+Nonsense guesses are rejected with a shake and a message, and they do not cost you a turn. You win by getting all five green within six guesses. If the sixth guess misses, the answer is revealed and your win streak resets.
 
-- use early guesses to test high-value letters rather than chasing a lucky solve
-- pay close attention to letter position, not only letter presence
-- avoid repeating eliminated letters unless the game allows repeated characters and you are testing that case
-- use your remaining guesses to reduce possibilities, not merely to “try something”
+**Hard mode** adds one constraint: any green letter must stay in its spot, and any yellow letter must appear somewhere in every later guess. If a clue proved the answer has two Ls, later guesses need two Ls as well. Switch modes between rounds; bests are kept separately for each.
 
-## Educational value
+## A worked example
 
-Word-guessing games reward vocabulary knowledge, but they also teach deduction. Learners practice reading partial evidence, revising their assumptions, and balancing certainty against exploration. That makes the format useful in language classrooms and in general reasoning exercises.
+Suppose the hidden word is PLANT.
 
-<Callout title="Teaching prompt">
-  Ask students to explain why their second guess was better than their first. The goal is to make the feedback loop visible, not just the final answer.
+| Guess | P1 | P2 | P3 | P4 | P5 |
+| --- | --- | --- | --- | --- | --- |
+| CRANE | C grey | R grey | A green | N green | E grey |
+| SPILT | S grey | P yellow | I grey | L yellow | T green |
+| PLANT | P green | L green | A green | N green | T green |
+
+After CRANE, the answer must look like `_ _ A N _` with no C, R or E. In this game's answer list that leaves six words: BLANK, GIANT, PIANO, PLANT, STAND and THANK.
+
+The tempting move is to guess one of them. Guess PLANT and you might win on the spot, but if you are wrong you may not learn enough: STAND and THANK would colour PLANT in exactly the same way, so a miss could still leave you guessing between two.
+
+SPILT cannot possibly be the answer. It has no A and no N. But it tests S, P, I, L and T all at once, and each of the six candidates colours it differently. Whatever comes back, you know the word. Here P and L turn yellow and T turns green, which only PLANT fits. Solved in three, guaranteed, where the hopeful guess risked four.
+
+Note that SPILT is illegal in hard mode, because it drops the green A and N. That is the real price of hard mode: you give up the right to ask "wasted" questions that are actually the most useful ones.
+
+## Strategy
+
+### Open with common letters
+
+The first guess knows nothing, so it should cover the letters most likely to be there. E, A, R, O, T, L, I, S and N turn up in five-letter words far more often than the rest. Words like CRATE, TRACE and CRANE are strong openers here. A word stuffed with rare letters, like FUZZY, will usually come back almost all grey. That still tells you something, but far less.
+
+### Read the greys, not just the colours
+
+Grey letters shrink the search as much as the coloured ones do. Keep track of which letters are dead, and do not spend a guess retesting them unless you are checking for a double.
+
+### Move your yellows
+
+A yellow letter is in the word but not in that spot. Put it somewhere new next time. If you get a yellow E in position 2, the next guess that places E in position 4 tests two things at once.
+
+### Spend a guess to split the field
+
+When several candidates remain and you have guesses to spare, look for a word that separates them, even if it cannot be the answer. The example above is the pattern: six candidates, one splitting guess, a certain win on the next turn.
+
+### Remember doubles
+
+Answers like SHEEP, ALLOW or SKILL catch people who assume five different letters. If the candidates have run dry, ask whether a letter could appear twice.
+
+## The idea underneath
+
+Before your first guess there are 560 possible answers here. Pinning one down takes about log₂ 560 ≈ 9.1 bits of information, where a bit is one fair yes-or-no question.
+
+A guess is not a yes-or-no question. Each tile can come back three ways, so a guess has up to 3⁵ = 243 colour patterns. It splits the remaining candidates into groups, one per pattern, and you learn which group you are in. A guess that splits them into many small, even groups gives more information than one that leaves one huge group. Information theory measures this as entropy: the sum over patterns of −p·log₂ p, where p is the share of candidates giving that pattern.
+
+Against this game's answer list, TRACE and CRATE score about 6.1 bits as openers. CRANE gives about 6.0, AUDIO about 4.5, and FUZZY only 2.0. A 6-bit opener shrinks 560 words to a dozen or so on average, and a second good guess usually finishes the job. That is why skilled players win in three or four: not luck, but choosing questions with the most informative possible answers.
+
+## Common mistakes
+
+- **Guessing a candidate too early.** With four or more candidates left and guesses in hand, a splitting word is often faster overall.
+- **Forgetting where a yellow was.** A yellow in position 3 means the letter is *not* in position 3. Putting it back there wastes a slot.
+- **Misreading a grey double.** If you guess ALLOW and one L is yellow while the other is grey, the answer has exactly one L.
+
+<Callout title="Try this">
+  Play a round where your second guess must use five letters you have not tried yet, no matter what your first guess showed. Count how many candidates you can rule out before you start guessing possible answers. Then try the same idea in hard mode and notice what you can no longer ask.
 </Callout>
-
-## Related concepts
-
-This format connects to probability, constraint satisfaction, orthographic patterns, and information efficiency. It also pairs well with crossword-style clueing because both games ask learners to use partial evidence to refine possible answers.

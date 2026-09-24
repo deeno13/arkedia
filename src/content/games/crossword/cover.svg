@@ -1,40 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
-  <title id="title">Crossword cover</title>
-  <desc id="desc">A crossword-style grid with black and white squares and the title Crossword.</desc>
-  <rect width="1200" height="675" fill="#f8fafc"/>
-  <rect x="110" y="90" width="420" height="420" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="4"/>
-  <g>
-    <g fill="#0f172a">
-      <rect x="150" y="130" width="56" height="56" rx="8"/>
-      <rect x="262" y="130" width="56" height="56" rx="8"/>
-      <rect x="374" y="130" width="56" height="56" rx="8"/>
-      <rect x="206" y="186" width="56" height="56" rx="8"/>
-      <rect x="318" y="242" width="56" height="56" rx="8"/>
-      <rect x="150" y="298" width="56" height="56" rx="8"/>
-      <rect x="262" y="354" width="56" height="56" rx="8"/>
-      <rect x="374" y="410" width="56" height="56" rx="8"/>
-    </g>
-    <g fill="#e2e8f0">
-      <rect x="206" y="130" width="56" height="56" rx="8"/>
-      <rect x="318" y="130" width="56" height="56" rx="8"/>
-      <rect x="430" y="130" width="56" height="56" rx="8"/>
-      <rect x="150" y="186" width="56" height="56" rx="8"/>
-      <rect x="262" y="186" width="56" height="56" rx="8"/>
-      <rect x="374" y="186" width="56" height="56" rx="8"/>
-      <rect x="206" y="242" width="56" height="56" rx="8"/>
-      <rect x="430" y="242" width="56" height="56" rx="8"/>
-      <rect x="206" y="298" width="56" height="56" rx="8"/>
-      <rect x="262" y="298" width="56" height="56" rx="8"/>
-      <rect x="374" y="298" width="56" height="56" rx="8"/>
-      <rect x="430" y="298" width="56" height="56" rx="8"/>
-      <rect x="150" y="354" width="56" height="56" rx="8"/>
-      <rect x="318" y="354" width="56" height="56" rx="8"/>
-      <rect x="430" y="354" width="56" height="56" rx="8"/>
-      <rect x="150" y="410" width="56" height="56" rx="8"/>
-      <rect x="206" y="410" width="56" height="56" rx="8"/>
-      <rect x="318" y="410" width="56" height="56" rx="8"/>
-    </g>
-  </g>
-  <text x="620" y="255" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="700">Crossword</text>
-  <text x="620" y="320" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="30">Clues, vocabulary, and semantic reasoning</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-labelledby="crossword-cover-title">
+  <title id="crossword-cover-title">A five by five crossword grid, half filled, with the middle row highlighted and its empty square selected</title>
+  <rect x="100" y="12" width="40" height="40" fill="#1d1c1a"/>
+  <rect x="140" y="12" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="145" y="17" width="6" height="6" fill="#1d1c1a"/>
+  <rect x="180" y="12" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="185" y="17" width="6" height="6" fill="#1d1c1a"/>
+  <path d="M0 24L10 0L20 24M4.5 15H15.5" transform="translate(194.5 25.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="220" y="12" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="225" y="17" width="6" height="6" fill="#1d1c1a"/>
+  <rect x="260" y="12" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="265" y="17" width="6" height="6" fill="#1d1c1a"/>
+  <rect x="100" y="52" width="40" height="40" fill="#1d1c1a"/>
+  <rect x="140" y="52" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="145" y="57" width="6" height="6" fill="#1d1c1a"/>
+  <rect x="180" y="52" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M0 24L10 0L20 24M4.5 15H15.5" transform="translate(194.5 65.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="220" y="52" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M1 0V24H19" transform="translate(234.5 65.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="260" y="52" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="105" y="97" width="6" height="6" fill="#1d1c1a"/>
+  <rect x="220" y="92" width="40" height="40" fill="#1d1c1a"/><rect x="229" y="120" width="22" height="5" fill="#fbf9f4"/>
+  <rect x="100" y="132" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="105" y="137" width="6" height="6" fill="#1d1c1a"/>
+  <path d="M1 0V24H19" transform="translate(114.5 145.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="140" y="132" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M19 2H2V22H19M2 12H15" transform="translate(154.5 145.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="180" y="132" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M2 24V1L18 23V0" transform="translate(194.5 145.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="220" y="132" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M0 2H20M10 2V24" transform="translate(234.5 145.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="260" y="132" width="40" height="40" fill="#1d1c1a"/>
+  <rect x="100" y="172" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="105" y="177" width="6" height="6" fill="#1d1c1a"/>
+  <path d="M19 2H2V24M2 12H15" transform="translate(114.5 185.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="140" y="172" width="40" height="40" fill="#fbf9f4"/>
+  <rect x="180" y="172" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M0 24L10 0L20 24M4.5 15H15.5" transform="translate(194.5 185.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="220" y="172" width="40" height="40" fill="#fbf9f4"/>
+  <path d="M0 0L10 12L20 0M10 12V24" transform="translate(234.5 185.0) scale(0.75)" fill="none" stroke="#1d1c1a" stroke-width="5.60" stroke-linejoin="bevel"/>
+  <rect x="260" y="172" width="40" height="40" fill="#1d1c1a"/>
+  <path d="M140 12V212M100 52H300M180 12V212M100 92H300M220 12V212M100 132H300M260 12V212M100 172H300" stroke="#1d1c1a" stroke-width="4"/>
+  <rect x="100" y="12" width="200" height="200" fill="none" stroke="#1d1c1a" stroke-width="6"/>
 </svg>
