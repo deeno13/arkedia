@@ -1,0 +1,126 @@
+---
+title: "Lights Out"
+slug: lights-out
+excerpt: "Press a light to flip it and its neighbours. Turn the whole board dark."
+description: "Each press flips a square and the four next to it. Switch every light off. The order of your presses never matters — only which squares you press."
+category: puzzle
+ink: mustard
+difficulty: intermediate
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 6
+concept: "Linear algebra over switches"
+skills:
+  - "cause and effect"
+  - "order-independence"
+  - "systematic solving"
+quickRules:
+  - "Some squares start lit. Your goal is to turn every light off."
+  - "Press any square: it flips, and so do the squares directly above, below, left and right of it."
+  - "Flipping turns a lit square off and a dark square on. Edges and corners simply have fewer neighbours."
+  - "Press as often as you like. The board is solved the moment every square is dark; fewer presses is better."
+controls:
+  - "Click or tap a square to press it."
+  - "Keyboard: Tab to the board, arrow keys (plus Home and End) move, Enter or Space presses."
+  - "Show a hint marks one square from a shortest solution; Show solution marks them all."
+  - "Restart returns to the starting board; rounds with hints don't set a best."
+widget: "lights-out"
+coverImage: ./cover.svg
+coverImageAlt: "A five-by-five Lights Out board with a scattering of lit squares drawn as small suns among dark squares."
+relatedGameSlugs:
+  - sudoku
+  - tower-of-hanoi
+  - minesweeper
+seoTitle: "Lights Out: rules, the light-chasing method and a free board to play"
+seoDescription: "Learn Lights Out in a minute, then play 3×3 and 5×5 boards with a live minimum-move count. Why order never matters, and how GF(2) linear algebra solves it."
+publishedAt: 2026-09-25
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+Lights Out is a grid of switches wired badly on purpose. Every press flips the square you touched and its four neighbours, so fixing one light breaks others. It feels like whack-a-mole for about two minutes, until you notice two facts that turn it into a puzzle you can solve every time.
+
+Those two facts are the whole game, and they are also the doorway to a neat piece of mathematics: a board of light switches is a system of linear equations, and you can solve it the way you'd solve one at school — just with arithmetic where 1 + 1 = 0.
+
+## How to play
+
+The board is a 5×5 grid (or 3×3 in Warm-up). Some squares start lit. **Pressing** a square toggles it and each square directly above, below, left and right of it: lit becomes dark, dark becomes lit. Diagonals are not affected. A corner press flips three squares, an edge press four, a middle press five.
+
+There is no turn limit and no way to lose. The board is solved as soon as every square is dark. Every board here is made by starting from a dark grid and pressing random squares, so every board can be cleared. The **Minimum** stat tells you the fewest presses that can clear it; your challenge is to match it.
+
+## A worked example
+
+A Warm-up board. "on" is lit; a dot is dark. Rows and columns are counted from the top left.
+
+|   | c1 | c2 | c3 |
+|---|---|---|---|
+| **r1** | on | on | on |
+| **r2** | on | · | on |
+| **r3** | on | on | · |
+
+Seven lights are on. The minimum is three presses.
+
+1. **Press r1c1** (a corner). It flips r1c1, r1c2 and r2c1, all of which were on. Now only r1c3, r2c3, r3c1 and r3c2 are lit.
+2. **Press r2c3** (an edge). It flips r1c3 and r2c3 off, turns r2c2 on, and turns r3c3 on. Lit: r2c2, r3c1, r3c2, r3c3 — a T shape pointing up.
+3. **Press r3c2**. It flips exactly those four. Dark board, three presses.
+
+Now the surprise: press the same three squares in any other order on the original board and you get the same result.
+
+## Strategy
+
+### Order doesn't matter
+
+Each square ends up flipped once for every press that touches it. Only the *count* of touches matters, never when they happened. So stop thinking in sequences. A solution is a *set* of squares, and you can press them in whatever order is convenient.
+
+### Pressing twice is not pressing
+
+Two presses on one square flip the same five lights twice, returning them to how they were. So in a shortest solution, every square is pressed zero times or once. On 5×5, that means there are only 2²⁵ possible plans, and a solution is a choice of on/off for each square.
+
+### Chase the lights down
+
+A method that always works on 5×5:
+
+1. Look at row 1. For every lit square there, press the square **directly below it** in row 2. That clears row 1 without touching it again.
+2. Do the same for row 2 (pressing in row 3), then row 3, then row 4.
+3. Now only row 5 can have lights left. Look up its pattern ("on" = lit) and press the listed squares in **row 1**, then chase again from step 1. The board clears.
+
+| Row 5 left lit (c1–c5) | Press in row 1 |
+|---|---|
+| on on on · · | c2 |
+| · on · on · | c1, c4 |
+| on · on on · | c5 |
+| on · · · on | c1, c2 |
+| · on on · on | c1 |
+| on on · on on | c3 |
+| · · on on on | c4 |
+
+Chasing is reliable but rarely short. To get close to the minimum, look for presses you'd make twice and cross them out.
+
+### Look for shapes
+
+A lone lit plus sign is one press. So is a T of four lit squares against an edge, or an L of three in a corner. Learning the footprint of corner, edge and middle presses lets you read small patches of the board as single moves.
+
+## Common mistakes
+
+- **Undoing with the same square.** Pressing a square to "take it back" is correct — it cancels — but it costs two moves. Use Restart if you want a clean attempt at the minimum.
+- **Clearing one light at a time.** Every press touches up to five squares; aim to flip several lit squares at once, not one.
+- **Chasing the wrong way.** When chasing, press below a lit light, never on it.
+
+## The idea underneath
+
+Write each square as 1 if lit and 0 if dark. A press adds 1 to five squares, where addition wraps round: 1 + 1 = 0. That tiny number system, with just 0 and 1, is called **GF(2)**, the field with two elements. In GF(2), adding the same thing twice gives zero — which is exactly "pressing twice is not pressing" — and addition doesn't care about order — which is exactly "order doesn't matter".
+
+So a board is a list of 25 numbers, and choosing which squares to press is another list of 25 numbers, x. Each square's final state is its starting state plus the presses that touch it. Asking for a dark board gives **25 linear equations in 25 unknowns**: for every square, "the presses on me and my neighbours add up to my starting light". That's A·x = b, where A is the 25×25 matrix saying which presses touch which squares.
+
+You can solve it with **Gaussian elimination**, the same row-reduction taught for ordinary equations, using XOR instead of subtraction. That's what this board does behind the Minimum stat, the hint and the solution overlay.
+
+The 5×5 matrix is not quite invertible: its rank is 23, not 25. Two consequences:
+
+- Only 2²³ of the 2²⁵ possible boards — a quarter — can be solved at all. Random boards are usually impossible, which is why these puzzles are built by pressing from a dark board.
+- Every solvable board has exactly **4** press sets that clear it. They differ by the two "quiet" patterns that flip nothing overall. The board computes all four and shows you the one with the fewest presses. The worst 5×5 boards need 15.
+
+The 3×3 matrix *is* invertible, so every Warm-up board has exactly one solution.
+
+<Callout title="Try this">
+  Start a Classic 5×5 board and clear it using only the light-chasing method and the table above. Count your presses against the Minimum. Then press Restart and try to beat your count by crossing out any square you pressed twice.
+</Callout>

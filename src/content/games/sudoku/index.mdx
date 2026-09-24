@@ -1,67 +1,120 @@
 ---
-title: Sudoku
+title: "Sudoku"
 slug: sudoku
-excerpt: A logic puzzle that helps learners practice constraint reasoning, pattern detection, and patient elimination.
-category: logic
-tags:
-  - deduction
-  - logic puzzle
-  - elimination
-  - working memory
+excerpt: "Fill the 9×9 grid so every row, column and box holds 1–9 exactly once."
+description: "Place the digits 1 to 9 so that no row, column or 3×3 box repeats a number. There is no arithmetic in it: every digit is placed by ruling the others out."
+category: puzzle
+ink: violet
 difficulty: intermediate
 minPlayers: 1
 maxPlayers: 1
-estimatedMinutes: 20
-educationalTopics:
-  - constraint satisfaction
-  - logical elimination
-  - pattern recognition
-  - attention management
-isPlayable: false
-status: published
+estimatedMinutes: 15
+concept: "Constraint propagation"
+skills:
+  - "elimination"
+  - "logical deduction"
+  - "systematic scanning"
+  - "focus"
+quickRules:
+  - "Fill every empty square with a digit from 1 to 9."
+  - "Each row must hold 1 to 9 exactly once — no repeats, none missing."
+  - "Each column must hold 1 to 9 exactly once."
+  - "Each 3×3 box (inside the thick lines) must hold 1 to 9 exactly once."
+  - "The printed digits are fixed. Every puzzle here has exactly one solution, so it can always be reached by logic alone."
+controls:
+  - "Click or tap a square to select it; arrow keys move the selection."
+  - "Type 1–9 or tap the number pad to fill it. Backspace, Delete, 0 or Erase clears it."
+  - "N or the Notes button switches to pencil marks; Shift+digit adds a single note."
+  - "Ctrl+Z (Cmd+Z) or Undo takes back a change. Hint fills one correct square."
+  - "Rounds solved with hints count as solved but don't set a best time."
+widget: "sudoku"
 coverImage: ./cover.svg
-coverImageAlt: A stylized Sudoku grid with highlighted cells and number marks.
+coverImageAlt: "A nine-by-nine Sudoku grid with thick box lines, printed givens, one selected square and a square of pencil marks."
 relatedGameSlugs:
-  - snake
+  - lights-out
+  - minesweeper
   - crossword
-seoTitle: Sudoku educational guide and strategy
-seoDescription: Learn how Sudoku works, which strategies beginners can use, and why it is valuable for logic and constraint-based reasoning.
-description: Sudoku teaches how to reason through constraints one step at a time, making it a strong fit for content-driven explanation.
-publishedAt: 2026-04-10
-updatedAt: 2026-04-10
-playableWidget: sudoku-scaffold
-widgetHydration: visible
+seoTitle: "Sudoku: rules, solving techniques and a free board to play"
+seoDescription: "Learn Sudoku in a minute, then solve unique-solution puzzles with notes, undo and hints. Singles, locked candidates, pairs and the logic of constraint propagation."
+publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
 
-Sudoku is a good example of a puzzle that looks numeric but is really about structure. You do not need arithmetic to solve it. What matters is reading constraints clearly and using them to narrow what is still possible.
+Sudoku looks like a maths puzzle and isn't one. The digits could just as well be nine colours or nine letters; nothing gets added up. What you are really doing is bookkeeping about possibilities: every placed digit removes options from twenty other squares, and sooner or later some square has only one option left.
 
-## How the game works
+That is why a good Sudoku never needs a guess. Every puzzle on this board has exactly one solution, and each digit you place can be justified by pointing at the digits that forced it.
 
-A standard Sudoku grid is divided into rows, columns, and smaller boxes. The goal is to place the digits 1 through 9 so that each row, each column, and each box contains each digit exactly once.
+## How to play
 
-Every empty square is governed by overlapping rules. That makes the puzzle a practical lesson in reasoning under constraints: what can go here, what cannot, and what follows from that?
+The grid has 81 squares arranged in 9 rows, 9 columns and 9 boxes of 3×3 (the boxes are marked by the thick lines). Some squares start filled; these **givens** are printed in bold black and cannot change.
 
-## Example
+Fill every empty square with a digit from 1 to 9 so that each row, each column and each box contains every digit exactly once. Because each of those groups has nine squares, "no repeats" and "nothing missing" are the same rule.
 
-Suppose a cell sits in a row that already contains 1, 2, 3, 4, and 5. Its column contains 6 and 7. Its box contains 8. At that point only 9 can fit, even before any advanced technique appears. That one example helps learners see that Sudoku is often about ruling things out until one answer remains.
+You can write in anything you like while you work. The board marks a digit that clashes with another in its row, column or box with a wavy underline and a corner notch, and the status line says which group clashes. It does not tell you whether a non-clashing digit is *correct* — that part is yours. The round ends the moment all 81 squares match the solution.
 
-## Strategy tips
+**Notes** are pencil marks: small digits you keep in a square as a reminder of what could still go there. Placing a real digit automatically removes that digit from the notes of every square it can see.
 
-- scan rows, columns, and boxes for places with only one possible value
-- write down candidate numbers when the puzzle becomes dense
-- use elimination before reaching for advanced patterns
-- revisit earlier sections after every confirmed number because one answer can open several more
+## A worked example
 
-## Educational value
+Here is the top-left box of a puzzle in progress. Dots are empty squares.
 
-Sudoku teaches disciplined reasoning. Instead of guessing, learners practice checking conditions carefully and making claims that can be justified. That supports later work in mathematics, programming, and formal logic where intermediate steps matter as much as the final answer.
+|   | c1 | c2 | c3 |
+|---|---|---|---|
+| **r1** | 5 | 3 | · |
+| **r2** | 6 | · | · |
+| **r3** | · | 9 | 8 |
 
-<Callout title="Teaching prompt">
-  Invite learners to explain not just which number belongs in a cell, but which rules forced that conclusion. This shifts the activity from puzzle-solving toward proof.
+The box is missing 1, 2, 4 and 7. Suppose that, outside this box, row 1 has a 7 in column 5, column 1 has a 7 in row 6, and column 2 has a 7 in row 8.
+
+1. **Where does the 7 go?** Row 1 already has one, so not r1c3. Column 1 has one, so not r3c1. Column 2 has one, so not r2c2. The only square left in the box is **r2c3 = 7**. This is a *hidden single*: the square could hold several digits, but it is the only home for this one.
+2. **What goes in r1c3?** The box leaves 1, 2 and 4. Suppose column 3 already has a 1 (in row 5) and a 2 (in row 9). Only 4 survives, so **r1c3 = 4**. This is a *naked single*: one square, one candidate.
+3. **Keep the chain going.** The box now needs 1 and 2 in r2c2 and r3c1. If row 2 contains a 2 anywhere, r2c2 must be 1 and r3c1 must be 2.
+
+Each step used nothing but the three rules — and each placement feeds the next.
+
+## Strategy
+
+### Scan before you write
+
+Pick a digit, say 4, and look at every box that lacks it. Draw imaginary lines through every 4 already on the board; they cross off rows and columns. If a box has one square left un-crossed, the 4 goes there. Sweeping 1 through 9 like this (players call it cross-hatching) solves most Easy puzzles on its own.
+
+### Count what's left in each group
+
+A row with seven digits placed has two gaps and two missing digits; often only one arrangement fits. The number pad here shows how many of each digit are still to place, which tells you where to look: a digit with one left has exactly one box, row and column to find.
+
+### Pencil marks, but only when you're stuck
+
+Once scanning dries up, note every candidate in a box or row you're studying. Writing candidates for the whole grid at once is slow and error-prone; do it for the tight spots first. Easy and Medium puzzles here can always be finished with singles alone.
+
+### Locked candidates
+
+If, inside one box, every possible square for a 6 lies in the same row, then that box will put its 6 in that row — so no other square in that row, outside the box, can be a 6. The reverse works too: if a row's only candidates for a digit sit inside one box, eliminate that digit from the rest of the box. Hard puzzles here are generated so that singles alone usually stall and this or the next idea gets you moving again.
+
+### Naked pairs
+
+If two squares in the same group both have exactly the candidates {3, 8}, those two squares will take the 3 and the 8 between them. Remove 3 and 8 from every other square in that group. The same holds for three squares sharing three candidates.
+
+### Beyond
+
+Stronger techniques exist (X-wings, chains), but they are all the same move in bigger clothing: find a set of squares that must use up certain digits, then delete those digits elsewhere.
+
+## Common mistakes
+
+- **Guessing and carrying on.** A guess that's wrong produces contradictions several moves later, far from the cause. If you do guess, use Undo to get back cleanly.
+- **Forgetting the box.** Rows and columns are easy to see; boxes are where most missed eliminations hide.
+- **Stale notes.** A note left behind after its digit is placed nearby will mislead you. Here, placing a digit cleans its peers' notes for you, but notes you erase by hand stay erased.
+
+## The idea underneath
+
+Sudoku is a **constraint satisfaction problem**: 81 variables, each with the domain 1–9, and 27 groups (9 rows, 9 columns, 9 boxes) that must each be all-different. Every square belongs to three groups and shares a group with exactly 20 other squares, its *peers*.
+
+**Constraint propagation** means using each decision to shrink other variables' domains, then repeating until nothing changes. Naked singles, hidden singles, locked candidates and pairs are all propagation rules; the harder techniques are more powerful propagation rules. When propagation alone can't finish a puzzle, a program falls back on **search**: pick the square with the fewest candidates, try each one, propagate, and back up on a contradiction.
+
+This board's puzzles are made exactly that way. A random complete grid is built by search, then givens are removed one symmetric pair at a time; after each removal a solver counts solutions and stops as soon as it finds a second. If there are two, the pair goes back. What's left has one solution by construction, and a second pass checks which techniques it needs to decide Easy, Medium or Hard.
+
+Two facts worth knowing: there are 6,670,903,752,021,072,936,960 valid completed grids, and no puzzle with fewer than 17 givens has a unique solution — the second fact was settled by an exhaustive computer search published in 2012.
+
+<Callout title="Try this">
+  Start an Easy puzzle and solve it without writing a single note: scan one digit at a time, 1 through 9, and repeat the sweep. Then try a Hard puzzle the same way and notice the moment scanning stops working — that's where locked candidates begin.
 </Callout>
-
-## Related concepts
-
-Sudoku connects to constraint satisfaction, inference, combinatorics, and search strategy. It is also a useful contrast with arcade games like Snake because both involve planning, but one emphasizes space and movement while the other emphasizes elimination and consistency.
