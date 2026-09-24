@@ -38,6 +38,7 @@ publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
+import BoardDiagram from '../../../components/content/BoardDiagram.astro';
 
 You already know how to play tic-tac-toe. The interesting question is whether you know how to *not lose* it — every time, from either side, against anyone. The game is small enough that the answer can be written down completely, and the method for writing it down is the same one chess engines use.
 
@@ -57,33 +58,15 @@ On this board, squares are numbered 1 to 9 reading like a book: 1–2–3 is the
 
 X opens in the centre (5). O replies on an edge, top middle (2). That feels harmless. It is not — it already loses.
 
-```
- . | O | .
----+---+---
- . | X | .
----+---+---
- . | . | .
-```
+<BoardDiagram variant="marks" caption="X in the centre, O on the top edge." rows={['. O .', '. X .', '. . .']} />
 
 X takes the top-left corner (1). Now X threatens the diagonal 1–5–9, so O has no choice: O must play 9.
 
-```
- X | O | .
----+---+---
- . | X | .
----+---+---
- . | . | O
-```
+<BoardDiagram variant="marks" caption="X takes corner 1 and threatens 1–5–9; O is forced into corner 9." rows={['X O .', '. X .', '. . O']} />
 
 X plays the bottom-left corner (7). Count X's threats: the left column 1–4–7 needs only 4, and the diagonal 3–5–7 needs only 3. That is a **fork** — two ways to win at once — and O can block only one. Whichever O picks, X plays the other and wins on move seven.
 
-```
- X | O | .
----+---+---
- . | X | .
----+---+---
- X | . | O
-```
+<BoardDiagram variant="marks" caption="X takes corner 7: two threats at once, on 1–4–7 and 3–5–7." rows={['X O .', '. X .', 'X . O']} />
 
 The losing move was O's very first one. Against a centre opening, O has to take a corner; every edge reply can be forced into a fork like this.
 

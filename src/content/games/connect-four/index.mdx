@@ -38,6 +38,7 @@ publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
+import BoardDiagram from '../../../components/content/BoardDiagram.astro';
 
 Connect Four looks like tic-tac-toe with a bigger board. It isn't. Gravity changes everything: you can only ever play the lowest empty hole in a column, so every disc you drop also decides who gets the hole above it. Half the game is making threats; the other half is making sure your opponent is the one forced to play underneath them.
 
@@ -51,7 +52,7 @@ You win the moment you have four of your discs in a straight line: across a row,
 
 If all 42 holes are filled and nobody has four in a row, the game is a draw. Each player gets exactly 21 discs.
 
-Below, columns are numbered 1 to 7 from the left (the same numbers you can press on the keyboard), rows 1 to 6 from the bottom, **X** is the first player and **O** the second.
+Below, columns are numbered 1 to 7 from the left (the same numbers you can press on the keyboard), rows 1 to 6 from the bottom, **X** is the first player and **O** the second. In the diagrams, X discs are solid red and O discs are black with a pale ring, just like the rack above.
 
 ## A worked example
 
@@ -59,22 +60,23 @@ This is the fastest trap in the game, and it is played on the bottom row.
 
 X drops in the centre, column 4. O stacks on top of it. X drops in column 3, next to the first disc. O, not seeing the danger, stacks on column 3 as well.
 
-```
- .  .  .  .  .  .  .
- .  .  O  O  .  .  .
- .  .  X  X  .  .  .
- 1  2  3  4  5  6  7
-```
+<BoardDiagram
+  variant="discs"
+  caption="Bottom two rows after four moves: X in columns 3 and 4 on the bottom row, O stacked on top of both."
+  columns={[1, 2, 3, 4, 5, 6, 7]}
+  rows={['. . O O . . .', '. . X X . . .']}
+/>
 
 (Only the bottom two rows are shown; the rest are empty.)
 
 Now X drops in column 5. The bottom row reads X X X in columns 3–5, and *both* ends are open: column 2 and column 6 each complete four.
 
-```
- .  .  O  O  .  .  .
- .  .  X  X  X  .  .
- 1  2  3  4  5  6  7
-```
+<BoardDiagram
+  variant="discs"
+  caption="X adds column 5: three in a row on the bottom with columns 2 and 6 both open."
+  columns={[1, 2, 3, 4, 5, 6, 7]}
+  rows={['. . O O . . .', '. . X X X . .']}
+/>
 
 O can block only one end. X plays the other and wins with four discs. O's mistake was move four: after X held columns 3 and 4 on the bottom row, O had to take column 2 or column 5 straight away.
 
@@ -88,14 +90,11 @@ Every turn, ask three questions in order. Can I win now? Can my opponent win nex
 
 A hole is only useful if it can be part of a four. Count the possible fours through each hole and the middle of the rack dominates:
 
-```
- 3  4  5  7  5  4  3
- 4  6  8 10  8  6  4
- 5  8 11 13 11  8  5
- 5  8 11 13 11  8  5
- 4  6  8 10  8  6  4
- 3  4  5  7  5  4  3
-```
+<BoardDiagram
+  variant="numbers"
+  caption="How many of the 69 possible fours pass through each hole. The two busiest holes, 13 lines each, sit in column 4 and are highlighted."
+  rows={['3 4 5 7 5 4 3', '4 6 8 10 8 6 4', '5 8 11 13 11 8 5', '5 8 11 13 11 8 5', '4 6 8 10 8 6 4', '3 4 5 7 5 4 3']}
+/>
 
 There are 69 possible lines in total, and every horizontal one passes through column 4. Open in the centre and keep contesting it.
 
