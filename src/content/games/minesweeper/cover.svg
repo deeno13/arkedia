@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <title>Minesweeper field mid-game with numbers, flags and a mine</title>
+  <rect x="44" y="14" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="96" y="14" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="148" y="14" width="52" height="52" fill="#1d1c1a"/>
+  <path d="M169.0 25.0v27" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <path d="M171.0 25.0l16 7-16 7z" fill="#f2eee5"/>
+  <path d="M161.0 53.0h16" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="200" y="14" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="252" y="14" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="304" y="14" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="44" y="66" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="96" y="66" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="122.0" cy="92.0" r="6" fill="#1d1c1a"/>
+  <rect x="148" y="66" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="174.0" cy="92.0" r="6" fill="#1d1c1a"/>
+  <rect x="200" y="66" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="216.0" cy="82.0" r="6" fill="#1d1c1a"/>
+  <circle cx="236.0" cy="102.0" r="6" fill="#1d1c1a"/>
+  <rect x="252" y="66" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="266.0" cy="80.0" r="6" fill="#1d1c1a"/>
+  <circle cx="278.0" cy="92.0" r="6" fill="#1d1c1a"/>
+  <circle cx="290.0" cy="104.0" r="6" fill="#1d1c1a"/>
+  <rect x="304" y="66" width="52" height="52" fill="#1d1c1a"/>
+  <rect x="44" y="118" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="70.0" cy="144.0" r="6" fill="#1d1c1a"/>
+  <rect x="96" y="118" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="122.0" cy="144.0" r="6" fill="#1d1c1a"/>
+  <rect x="148" y="118" width="52" height="52" fill="#fbf9f4"/>
+  <rect x="200" y="118" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="226.0" cy="144.0" r="6" fill="#1d1c1a"/>
+  <rect x="252" y="118" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="268.0" cy="134.0" r="6" fill="#1d1c1a"/>
+  <circle cx="288.0" cy="154.0" r="6" fill="#1d1c1a"/>
+  <rect x="304" y="118" width="52" height="52" fill="#1d1c1a"/>
+  <path d="M325.0 129.0v27" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <path d="M327.0 129.0l16 7-16 7z" fill="#f2eee5"/>
+  <path d="M317.0 157.0h16" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="44" y="170" width="52" height="52" fill="#fbf9f4"/>
+  <rect x="96" y="170" width="52" height="52" fill="#fbf9f4"/>
+  <rect x="148" y="170" width="52" height="52" fill="#fbf9f4"/>
+  <rect x="200" y="170" width="52" height="52" fill="#fbf9f4"/>
+  <circle cx="226.0" cy="196.0" r="6" fill="#1d1c1a"/>
+  <rect x="252" y="170" width="52" height="52" fill="#fbf9f4"/>
+  <path d="M278.0 179.0v34M261.0 196.0h34M266.0 184.0l24 24M290.0 184.0l-24 24" stroke="#1d1c1a" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="278.0" cy="196.0" r="10" fill="#1d1c1a"/>
+  <circle cx="274.5" cy="192.5" r="3" fill="#fbf9f4"/>
+  <rect x="304" y="170" width="52" height="52" fill="#1d1c1a"/>
+  <path d="M96 14v208M148 14v208M200 14v208M252 14v208M304 14v208M44 66h312M44 118h312M44 170h312" stroke="#f2eee5" stroke-width="4"/>
+  <rect x="44" y="14" width="312" height="208" rx="6" fill="none" stroke="#1d1c1a" stroke-width="6"/>
+</svg>

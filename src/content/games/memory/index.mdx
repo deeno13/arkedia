@@ -1,0 +1,108 @@
+---
+title: "Memory"
+slug: memory
+excerpt: "Flip two cards at a time and find every matching pair in as few moves as you can."
+description: "Every card starts face down. Turn over two per move; a matching pair stays up. Clear the table in as few moves as you can."
+category: puzzle
+ink: cobalt
+difficulty: beginner
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 4
+concept: "Working memory"
+skills:
+  - "short-term memory"
+  - "attention"
+  - "systematic search"
+quickRules:
+  - "Every card has exactly one twin somewhere on the table."
+  - "Turn over any face-down card, then a second one. That's one move."
+  - "If the two symbols match, they stay face up for good."
+  - "If they don't, look hard: both turn back over."
+  - "Match every pair to clear the table. Fewer moves is better."
+controls:
+  - "Click or tap a card to turn it over."
+  - "A wrong pair turns back after a moment, or as soon as you pick your next card."
+  - "Keyboard: arrow keys move between cards, Enter or Space turns one over."
+  - "Choose 4×4 (8 pairs) or 6×6 (18 pairs) above the table."
+widget: "memory"
+coverImage: ./cover.svg
+coverImageAlt: "A table of face-down cards, with a matched pair of triangles and one circle turned face up."
+relatedGameSlugs:
+  - mastermind
+  - lights-out
+  - minesweeper
+seoTitle: "Memory (Concentration): rules, strategy and a free game to play"
+seoDescription: "Play the Memory card game free in your browser on a 4×4 or 6×6 table. Learn the rules in a minute, then why a system beats good recall."
+publishedAt: 2026-09-25
+---
+import Callout from '../../../components/ui/Callout.astro';
+
+Memory — also called Concentration, or Pairs — is the game most people learned before they could read. Cards lie face down; you turn over two; if they match, you keep them. It sounds like a test of raw recall, and partly it is. But the difference between an average score and a good one is mostly method: where you look, when you guess, and what you let yourself forget.
+
+Here you play alone against your own best. The only score is moves, so every card you turn over should either win a pair or teach you something.
+
+## How to play
+
+The table holds pairs of cards: 8 pairs on 4×4, 18 pairs on 6×6. Each symbol appears on exactly two cards, and the deck is shuffled for every round.
+
+- **A move is two cards.** Turn over one face-down card, then a second.
+- **A match stays.** If the two symbols are the same, both cards stay face up for the rest of the round.
+- **A mismatch goes back.** If they differ, both stay visible for a moment and then turn face down again. You can skip the wait by picking your next card; the pair flips back straight away.
+- **The round ends** when every pair is face up. Your score is the number of moves, and lower is better. The clock runs too, but your best is kept by moves, separately for each table size.
+
+There's no penalty for a mismatch beyond the move it costs. Nothing reshuffles, and nothing is hidden from you except what you've forgotten.
+
+## A worked example
+
+A 4×4 table, cards numbered 1–16 from the top-left, row by row.
+
+1. **Move 1:** you turn card 1 (**star**) and card 2 (**cross**). No match. Two facts learned.
+2. **Move 2:** card 3 is a **cross**. You've seen that one before: turn card 2 to finish the pair. Matched.
+3. **Move 3:** card 4 (**ring**) and card 5 (**star**). Card 5 is a star, but the move is already over — you can't use card 1 until your next turn. No match, and two more facts learned.
+4. **Move 4:** open with card 1 (**star**), the one you know, then turn card 5. Matched.
+5. **Move 5:** card 6 (**triangle**), then card 7 (**square**). No match.
+
+After five moves you have two pairs, and you know where a ring, a triangle and a square are. Every new card you turn from here has a real chance of finding a partner you've already seen.
+
+Notice move 4. Leading with a known card wastes nothing here, because you already know where its twin is. When you *don't* know a twin's location, lead with an **unknown** card instead. That first flip is free information; you choose the second card after seeing what it is.
+
+## Strategy
+
+### Open with a card you haven't seen
+
+If you already know where both cards of a pair are, take them. Otherwise, the first card of a move costs nothing to learn from, so turn an unseen card first. If its twin is one you've seen, finish the pair. If not, you have a choice for the second card.
+
+### The second card: known or unknown?
+
+If the first card's twin isn't known, turning a card you *have* seen gains no new information. You already know it doesn't match. Turning another unseen card might match by luck and reveals a new symbol either way. So flip a new card, unless you're near the end and simply can't hold any more.
+
+### Sweep in order
+
+Work across the table row by row instead of jumping around. Your memory then stores positions as "second row, near the right," a pattern, instead of a scatter of places. It also guarantees you never turn a card you've already seen by mistake.
+
+### Say it in words
+
+Name each symbol under your breath with its place: "star, top-left." Verbal labels use a different memory channel from the picture itself, and the two back each other up. That's why every card here has a one-word name.
+
+### Know your target
+
+With perfect memory, a 4×4 table is typically cleared in about 12 moves. Perfect play means turning unseen cards and never forgetting one. Luck can make it fewer; the absolute minimum is 8, one per pair. Much above 20 on 4×4 means cards are slipping out of memory, and sweeping in order is the fix to try first.
+
+## The idea underneath
+
+Working memory is the small, short-lived workspace your mind uses to hold things you're actively using. It has a well-known limit: studies suggest adults hold roughly four meaningful chunks at once, give or take. A 6×6 table routinely asks you to track more loose cards than that.
+
+Good players don't have bigger memories. They cut the load with **chunking** and **structure**. Chunking means "the two triangles are both in the corner column," one idea instead of two. Structure means sweeping in order, so each location is predictable. It's the same reason a phone number is easier to remember as 3-3-4 than as ten digits.
+
+There's search here too. Each move either spends information (finishing a known pair) or buys it (turning an unseen card). The strategy above is a simple rule for which to do when: buy information until you can spend it.
+
+## Common mistakes
+
+- **Leading with a known card.** Unless you know where its twin is, it tells you nothing new.
+- **Re-turning a card you've already seen as the second card.** You know it doesn't match. Turn an unseen card instead.
+- **Rushing the mismatch.** Clicking straight on is allowed, but look at the pair first. That glance is the only chance you get.
+
+<Callout title="Try this">
+Clear a 4×4 table in 14 moves or fewer, sweeping strictly row by row. Then try 6×6, where flawless recall averages about 28 moves, and see how far above that you land. The gap is working memory running out. Your best for each table is saved on this device.
+</Callout>

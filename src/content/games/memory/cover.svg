@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <title>Memory cards face down with a matched pair of triangles and a circle turned up</title>
+  <rect x="27.0" y="18" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M37.0 47.0l19.0 -19.0M37.0 66l38 -38M56.0 66l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="99.0" y="18" width="58" height="58" rx="6" fill="#fbf9f4" stroke="#1d1c1a" stroke-width="4"/>
+  <path d="M128.0 32.0l17 29h-34z" fill="#1d1c1a"/>
+  <rect x="171.0" y="18" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M181.0 47.0l19.0 -19.0M181.0 66l38 -38M200.0 66l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="243.0" y="18" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M253.0 47.0l19.0 -19.0M253.0 66l38 -38M272.0 66l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="315.0" y="18" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M325.0 47.0l19.0 -19.0M325.0 66l38 -38M344.0 66l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="27.0" y="90" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M37.0 119.0l19.0 -19.0M37.0 138l38 -38M56.0 138l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="99.0" y="90" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M109.0 119.0l19.0 -19.0M109.0 138l38 -38M128.0 138l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="171.0" y="90" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M181.0 119.0l19.0 -19.0M181.0 138l38 -38M200.0 138l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="243.0" y="90" width="58" height="58" rx="6" fill="#fbf9f4" stroke="#1d1c1a" stroke-width="4"/>
+  <circle cx="272.0" cy="119.0" r="15" fill="#1d1c1a"/>
+  <rect x="315.0" y="90" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M325.0 119.0l19.0 -19.0M325.0 138l38 -38M344.0 138l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="27.0" y="162" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M37.0 191.0l19.0 -19.0M37.0 210l38 -38M56.0 210l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="99.0" y="162" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M109.0 191.0l19.0 -19.0M109.0 210l38 -38M128.0 210l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="171.0" y="162" width="58" height="58" rx="6" fill="#fbf9f4" stroke="#1d1c1a" stroke-width="4"/>
+  <path d="M200.0 176.0l17 29h-34z" fill="#1d1c1a"/>
+  <rect x="243.0" y="162" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M253.0 191.0l19.0 -19.0M253.0 210l38 -38M272.0 210l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+  <rect x="315.0" y="162" width="58" height="58" rx="6" fill="#1d1c1a"/>
+  <path d="M325.0 191.0l19.0 -19.0M325.0 210l38 -38M344.0 210l19.0 -19.0" stroke="#f2eee5" stroke-width="4" stroke-linecap="round"/>
+</svg>
