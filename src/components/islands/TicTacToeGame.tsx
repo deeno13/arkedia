@@ -279,12 +279,12 @@ export default function TicTacToeGame({ slug }: { slug: string }) {
             );
           })}
         </div>
-        <label className="mt-4 flex cursor-pointer items-start gap-2.5 text-sm leading-5 text-ink-soft">
+        <label className="mt-4 flex min-h-10 cursor-pointer items-center gap-2.5 text-sm leading-5 text-ink-soft">
           <input
             type="checkbox"
             checked={showValues}
             onChange={(event) => setShowValues(event.target.checked)}
-            className="mt-0.5 size-4 shrink-0 accent-ink"
+            className="size-5 shrink-0 accent-ink"
           />
           <span>
             <span className="font-semibold text-ink">Show what the computer sees.</span> Each empty square is labelled with how the game ends for the

@@ -68,8 +68,17 @@ function PuzzlePicker({ value, solved, onChange }: PickerProps) {
             >
               {puzzle.id}
               {state && (
-                <svg aria-hidden="true" viewBox="0 0 10 10" className="absolute right-0 top-0 size-3">
-                  <path d="M1 0.8H9.2V9Z" fill={state === 'c' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+                // Inset from the corner so the stamp never reads as part of a neighbouring selected (black) button.
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 10 10"
+                  className="absolute right-[3px] top-[3px] size-2.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1.4 5.3 3.9 7.8 8.6 2.2" strokeWidth={state === 'c' ? 2 : 1.2} opacity={state === 'c' ? 1 : 0.7} />
                 </svg>
               )}
             </button>
@@ -123,6 +132,17 @@ export default function CrosswordGame({ slug }: { slug: string }) {
   const elapsed = result ? finalSeconds : startedAt === null ? 0 : Math.max(0, Math.floor((now - startedAt) / 1000));
   const best = progress.best[puzzle.id];
   const size = puzzle.size;
+  const entryName = (entry: CrosswordEntry) => `${entry.number} ${DIRECTION_LABEL[entry.direction]}`;
+  /** "Row 2, column 3" — for the start of a status line. */
+  const here = (cell: number) => `Row ${Math.floor(cell / size) + 1}, column ${(cell % size) + 1}`;
+  const filledIn = (entry: CrosswordEntry, snapshot: string[]) => entry.cells.filter((cell) => snapshot[cell]).length;
+  /** Where the cursor landed and how the clue under it stands; short enough to read out on every move. */
+  const placeStatus = (cell: number, dir: Direction, snapshot: string[]) => {
+    const entry = entryAt(puzzle, cell, dir) ?? puzzle.entries[0];
+    return `${here(cell)}. ${entryName(entry)}, ${filledIn(entry, snapshot)} of ${entry.cells.length} filled.`;
+  };
+  /** Announced whenever the active clue changes: switching direction, Tab, the clue list, the arrows. */
+  const clueStatus = (entry: CrosswordEntry) => `Now on ${entryName(entry)}: ${entry.clue}.`;
 
   function startOver(id: string) {
     const next = loadPuzzle(id);
@@ -158,8 +178,8 @@ export default function CrosswordGame({ slug }: { slug: string }) {
     return puzzle.entries[(index + puzzle.entries.length) % puzzle.entries.length];
   }
 
-  /** Stores the grid and finishes the round when it matches the solution. Returns true when solved. */
-  function commit(nextLetters: string[], nextMarks: Mark[], usedReveal: boolean) {
+  /** Stores the grid and finishes the round when it matches the solution. Reports when it has taken over the status line. */
+  function commit(nextLetters: string[], nextMarks: Mark[], usedReveal: boolean): 'solved' | 'full' | null {
     setLetters(nextLetters);
     setMarks(nextMarks);
     const complete = puzzle.solution.every((answer, cell) => answer === null || nextLetters[cell] === answer);
@@ -178,12 +198,13 @@ export default function CrosswordGame({ slug }: { slug: string }) {
           : `Puzzle ${puzzle.id} in ${formatTime(seconds)}${isNewBest ? ' — a new best.' : '.'}`,
         tone: 'win',
       });
-      return true;
+      return 'solved';
     }
     if (puzzle.solution.every((answer, cell) => answer === null || nextLetters[cell])) {
       setStatus('Every square is filled, but something is off. Try Check puzzle.');
+      return 'full';
     }
-    return false;
+    return null;
   }
 
   function typeLetter(letter: string) {
@@ -194,19 +215,28 @@ export default function CrosswordGame({ slug }: { slug: string }) {
     }
     const nextLetters = [...letters];
     const nextMarks = [...marks];
-    if (marks[cursor] !== 'revealed') {
+    const revealed = marks[cursor] === 'revealed';
+    if (!revealed) {
       nextLetters[cursor] = letter.toUpperCase();
       if (nextMarks[cursor] === 'wrong') nextMarks[cursor] = null;
     }
+    // commit answers for the whole grid: a solved or full-but-wrong grid keeps its own message.
     if (commit(nextLetters, nextMarks, assisted)) return;
     const position = activeEntry.cells.indexOf(cursor);
+    let message = revealed
+      ? `${here(cursor)} is a revealed letter; it stays. ${entryName(activeEntry)}, ${filledIn(activeEntry, nextLetters)} of ${activeEntry.cells.length} filled.`
+      : `${here(cursor)}: ${letter.toUpperCase()}. ${entryName(activeEntry)}, ${filledIn(activeEntry, nextLetters)} of ${activeEntry.cells.length} filled.`;
     if (position < activeEntry.cells.length - 1) {
       setCursor(activeEntry.cells[position + 1]);
       setDirection(activeEntry.direction);
     } else {
       const next = neighbourEntry(1, true);
-      if (next) goToEntry(next, nextLetters);
+      if (next) {
+        goToEntry(next, nextLetters);
+        message += ` ${clueStatus(next)}`;
+      }
     }
+    setStatus(message);
   }
 
   function erase() {
@@ -232,24 +262,36 @@ export default function CrosswordGame({ slug }: { slug: string }) {
     }
     setLetters(nextLetters);
     setMarks(nextMarks);
+    setStatus(
+      marks[target] === 'revealed'
+        ? `${here(target)} is a revealed letter; it stays.`
+        : letters[target]
+          ? `Cleared ${here(target).toLowerCase()}.`
+          : `${here(target)} is already empty.`,
+    );
   }
 
-  function select(cell: number, preferred: Direction) {
+  function select(cell: number, preferred: Direction): Direction {
+    const applied = entryAt(puzzle, cell, preferred) ? preferred : preferred === 'across' ? 'down' : 'across';
     setCursor(cell);
-    setDirection(entryAt(puzzle, cell, preferred) ? preferred : preferred === 'across' ? 'down' : 'across');
+    setDirection(applied);
+    return applied;
   }
 
   function move(rowStep: number, colStep: number) {
     const axis: Direction = colStep !== 0 ? 'across' : 'down';
-    if (activeEntry.direction !== axis && entryAt(puzzle, cursor, axis)) {
+    const crosswise = entryAt(puzzle, cursor, axis);
+    if (activeEntry.direction !== axis && crosswise) {
       setDirection(axis);
+      setStatus(clueStatus(crosswise));
       return;
     }
     let row = Math.floor(cursor / size) + rowStep;
     let col = (cursor % size) + colStep;
     while (row >= 0 && col >= 0 && row < size && col < size) {
       if (puzzle.solution[row * size + col] !== null) {
-        select(row * size + col, axis);
+        const cell = row * size + col;
+        setStatus(placeStatus(cell, select(cell, axis), letters));
         return;
       }
       row += rowStep;
@@ -271,18 +313,23 @@ export default function CrosswordGame({ slug }: { slug: string }) {
       if (result || marks[cursor] === 'revealed') return;
       setLetters(letters.map((letter, cell) => (cell === cursor ? '' : letter)));
       setMarks(marks.map((mark, cell) => (cell === cursor ? null : mark)));
+      setStatus(letters[cursor] ? `Cleared ${here(cursor).toLowerCase()}.` : `${here(cursor)} is already empty.`);
     } else if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowUp' || key === 'ArrowDown') {
       event.preventDefault();
       move(key === 'ArrowUp' ? -1 : key === 'ArrowDown' ? 1 : 0, key === 'ArrowLeft' ? -1 : key === 'ArrowRight' ? 1 : 0);
     } else if (key === ' ' || key === 'Enter') {
       event.preventDefault();
-      if (crossEntry) setDirection(crossEntry.direction);
+      if (crossEntry) {
+        setDirection(crossEntry.direction);
+        setStatus(clueStatus(crossEntry));
+      }
     } else if (key === 'Tab') {
       // Past the first or last clue, Tab leaves the grid as usual.
       const next = neighbourEntry(event.shiftKey ? -1 : 1, false);
       if (!next) return;
       event.preventDefault();
       goToEntry(next);
+      setStatus(clueStatus(next));
     }
   }
 
@@ -302,8 +349,9 @@ export default function CrosswordGame({ slug }: { slug: string }) {
     if (puzzle.solution[cell] === null) return;
     if (cell === cursor && crossEntry) {
       setDirection(crossEntry.direction);
+      setStatus(clueStatus(crossEntry));
     } else {
-      select(cell, activeEntry.direction);
+      setStatus(placeStatus(cell, select(cell, activeEntry.direction), letters));
     }
     focusBoard();
   }
@@ -338,7 +386,6 @@ export default function CrosswordGame({ slug }: { slug: string }) {
     );
   }
 
-  const entryName = (entry: CrosswordEntry) => `${entry.number} ${DIRECTION_LABEL[entry.direction]}`;
   const position = activeEntry.cells.indexOf(cursor);
   const markWords = (mark: Mark) => (mark === 'wrong' ? ', marked wrong' : mark === 'revealed' ? ', revealed' : '');
   const inputLabel = `${entryName(activeEntry)}: ${activeEntry.clue}. ${activeEntry.cells.length} letters, square ${position + 1}${
@@ -374,7 +421,11 @@ export default function CrosswordGame({ slug }: { slug: string }) {
               type="button"
               aria-label="Previous clue"
               tabIndex={-1}
-              onClick={() => goToEntry(neighbourEntry(-1, true) ?? activeEntry)}
+              onClick={() => {
+                const next = neighbourEntry(-1, true) ?? activeEntry;
+                goToEntry(next);
+                setStatus(clueStatus(next));
+              }}
               className="flex w-10 shrink-0 items-center justify-center rounded-die text-ink hover:bg-rule"
             >
               <Chevron />
@@ -390,7 +441,11 @@ export default function CrosswordGame({ slug }: { slug: string }) {
               type="button"
               aria-label="Next clue"
               tabIndex={-1}
-              onClick={() => goToEntry(neighbourEntry(1, true) ?? activeEntry)}
+              onClick={() => {
+                const next = neighbourEntry(1, true) ?? activeEntry;
+                goToEntry(next);
+                setStatus(clueStatus(next));
+              }}
               className="flex w-10 shrink-0 items-center justify-center rounded-die text-ink hover:bg-rule"
             >
               <Chevron flip />
@@ -450,6 +505,7 @@ export default function CrosswordGame({ slug }: { slug: string }) {
             <input
               ref={inputRef}
               value=" "
+              data-board-focus
               onChange={handleInput}
               onKeyDown={handleKeyDown}
               onSelect={(event) => event.currentTarget.setSelectionRange(1, 1)}
@@ -515,6 +571,7 @@ export default function CrosswordGame({ slug }: { slug: string }) {
                           aria-current={isActive ? 'true' : undefined}
                           onClick={() => {
                             goToEntry(entry);
+                            setStatus(clueStatus(entry));
                             focusBoard();
                           }}
                           className={[

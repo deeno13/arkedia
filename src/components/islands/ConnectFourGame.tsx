@@ -145,6 +145,8 @@ export default function ConnectFourGame({ slug }: { slug: string }) {
 
   const sideName = (disc: Disc) =>
     vsComputer ? (disc === humanDisc ? 'You' : 'The computer') : `Player ${disc} (${disc === mineDisc ? 'solid' : 'ringed'})`;
+  /** How a disc's owner reads inside a column summary: "yours, computer, yours" or "Player 1, Player 2". */
+  const discOwner = (disc: Disc) => (vsComputer ? (disc === humanDisc ? 'yours' : 'computer') : `Player ${disc}`);
   const lastText = last ? `${sideName(board[last.row * COLS + last.col] as Disc)} dropped in column ${last.col + 1}. ` : '';
   const status = cpuTurn
     ? `${lastText}The computer is thinking…`
@@ -300,8 +302,9 @@ export default function ConnectFourGame({ slug }: { slug: string }) {
           style={{ paddingInline: `${(PAD / WIDTH) * 100}%` }}
         >
           {Array.from({ length: COLS }, (_, col) => {
-            const count = Array.from({ length: ROWS }, (_, row) => board[row * COLS + col]).filter(Boolean).length;
-            const full = count === ROWS;
+            // Read the column bottom to top: the order the discs were dropped in.
+            const stack = Array.from({ length: ROWS }, (_, row) => board[(ROWS - 1 - row) * COLS + col]).filter((cell): cell is Disc => cell !== 0);
+            const full = stack.length === ROWS;
             const blocked = over || cpuTurn || full;
             return (
               <button
@@ -312,9 +315,9 @@ export default function ConnectFourGame({ slug }: { slug: string }) {
                 type="button"
                 tabIndex={col === focused ? 0 : -1}
                 aria-disabled={blocked}
-                aria-label={`Column ${col + 1}, ${full ? 'full' : `${count} of ${ROWS} filled`}${
-                  winLine?.some((index) => index % COLS === col) ? ', part of the winning line' : ''
-                }`}
+                aria-label={`Column ${col + 1}: ${stack.length > 0 ? stack.map(discOwner).join(', ') : 'empty'}. ${stack.length} of ${ROWS} filled${
+                  full ? ', column full' : ''
+                }${winLine?.some((index) => index % COLS === col) ? ', part of the winning line' : ''}.`}
                 onFocus={() => setFocused(col)}
                 onPointerEnter={(event) => {
                   if (event.pointerType === 'mouse') setHovered(col);

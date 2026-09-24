@@ -379,7 +379,7 @@ export default function MastermindGame({ slug }: { slug: string }) {
             </div>
 
             <div className="border-t-2 border-ink pt-3 text-sm">
-              <label className="flex cursor-pointer items-center gap-2 font-semibold">
+              <label className="flex min-h-10 cursor-pointer items-center gap-2 font-semibold">
                 <input
                   type="checkbox"
                   checked={showCount}

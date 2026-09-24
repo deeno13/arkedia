@@ -163,6 +163,9 @@ export default function WordleGame({ slug }: { slug: string }) {
     if (key === 'enter' || key === 'backspace' || /^[a-z]$/.test(key)) {
       event.preventDefault();
       press(key);
+    } else if (key === ' ') {
+      // Space does nothing here: swallow it so the page never scrolls under the board.
+      event.preventDefault();
     }
   }
 
@@ -221,6 +224,7 @@ export default function WordleGame({ slug }: { slug: string }) {
         <div
           ref={boardRef}
           tabIndex={0}
+          data-board-focus
           aria-label="Word board. Type letters, press Enter to guess, Backspace to delete."
           aria-describedby={`${slug}-mode-note`}
           className="mx-auto w-full max-w-[17.5rem] rounded-die outline-offset-4"
@@ -264,7 +268,8 @@ export default function WordleGame({ slug }: { slug: string }) {
           {mode === 'hard' ? 'Hard mode: every revealed hint must be used in later guesses.' : 'Normal mode.'}
         </p>
 
-        <div aria-label="On-screen keyboard" role="group" className="flex flex-col gap-1.5">
+        {/* 4px key gaps and no side padding of its own: on a 375px screen the keys take the whole frame width. */}
+        <div aria-label="On-screen keyboard" role="group" className="-mx-3 flex flex-col gap-1.5 sm:mx-0">
           {KEY_ROWS.map((keys, rowIndex) => (
             <div key={keys} className="flex justify-center gap-1">
               {rowIndex === 2 && (

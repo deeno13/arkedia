@@ -86,6 +86,8 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
   const elapsed = startedAt === null ? 0 : Math.max(1, Math.ceil(((endedAt ?? now) - startedAt) / 1000));
   const minesLeft = board.mines - flagCount(board);
   const over = board.status === 'won' || board.status === 'lost';
+  // A round is under way from the first reveal or flag; changing level would silently discard it.
+  const roundUnderWay = startedAt !== null || board.cells.some((cell) => cell.state !== 'hidden');
   const best = record.best[difficulty];
 
   function newGame(next: MinesweeperDifficulty = difficulty) {
@@ -97,8 +99,14 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
     setStatus('Pick any square to start. The first one is always safe.');
   }
 
+  /** "Row 3, column 5" — for the start of a status line. */
   function place(index: number) {
-    return `row ${Math.floor(index / board.cols) + 1}, column ${(index % board.cols) + 1}`;
+    return `Row ${Math.floor(index / board.cols) + 1}, column ${(index % board.cols) + 1}`;
+  }
+
+  /** "row 3, column 5" — mid-sentence. */
+  function spot(index: number) {
+    return place(index).toLowerCase();
   }
 
   function commit(next: MinesweeperBoard, message: string) {
@@ -126,7 +134,7 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
         const wrongFlags = next.cells.filter((cell) => cell.state === 'flagged' && !cell.mine).length;
         setResult({
           title: 'Mine hit',
-          detail: `At ${place(next.explodedIndex ?? 0)}. All mines are shown${wrongFlags > 0 ? `; ${wrongFlags} crossed flag${wrongFlags === 1 ? ' was' : 's were'} wrong` : ''}.`,
+          detail: `At ${spot(next.explodedIndex ?? 0)}. All mines are shown${wrongFlags > 0 ? `; ${wrongFlags} crossed flag${wrongFlags === 1 ? ' was' : 's were'} wrong` : ''}.`,
           tone: 'loss',
         });
       }
@@ -155,7 +163,7 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
     commit(
       next,
       count > 1
-        ? `Opened ${count} squares from ${place(index)}.`
+        ? `Opened ${count} squares from ${spot(index)}.`
         : `${place(index)}: ${shown.adjacent === 0 ? 'empty' : `${shown.adjacent} mine${shown.adjacent === 1 ? '' : 's'} touching`}.`,
     );
   }
@@ -169,7 +177,7 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
     }
     const next = toggleFlag(board, index);
     const left = next.mines - flagCount(next);
-    commit(next, `${cell.state === 'flagged' ? 'Removed flag from' : 'Flagged'} ${place(index)}. ${left} mine${left === 1 ? '' : 's'} left.`);
+    commit(next, `${cell.state === 'flagged' ? 'Removed flag from' : 'Flagged'} ${spot(index)}. ${left} mine${left === 1 ? '' : 's'} left.`);
   }
 
   function doChord(index: number) {
@@ -184,7 +192,7 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
       setStatus(`${place(index)} needs exactly ${cell.adjacent} flag${cell.adjacent === 1 ? '' : 's'} around it before it can chord.`);
       return;
     }
-    commit(next, `Chorded ${place(index)}: opened ${opened(next)} square${opened(next) === 1 ? '' : 's'}.`);
+    commit(next, `Chorded ${spot(index)}: opened ${opened(next)} square${opened(next) === 1 ? '' : 's'}.`);
   }
 
   function focusCell(index: number) {
@@ -276,6 +284,7 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
             label="Level"
             options={LEVEL_OPTIONS}
             value={difficulty}
+            disabled={roundUnderWay && !over}
             onChange={(value) => {
               setDifficulty(value);
               newGame(value);
@@ -317,7 +326,7 @@ export default function MinesweeperGame({ slug }: { slug: string }) {
             const lost = board.status === 'lost';
             const exploded = board.explodedIndex === index;
             const wrongFlag = lost && cell.state === 'flagged' && !cell.mine;
-            const where = `Row ${Math.floor(index / board.cols) + 1}, column ${(index % board.cols) + 1}`;
+            const where = place(index);
             let label = `${where}, covered`;
             let content = null;
             let tone = 'bg-paper-deep hover:bg-rule';

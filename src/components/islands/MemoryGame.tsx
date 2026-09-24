@@ -155,6 +155,7 @@ export default function MemoryGame({ slug }: { slug: string }) {
           label="Table"
           options={SIZE_OPTIONS}
           value={size}
+          disabled={playing}
           onChange={(value) => {
             setSize(value);
             newGame(value);

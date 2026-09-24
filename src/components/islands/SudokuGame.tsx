@@ -214,7 +214,7 @@ export default function SudokuGame({ slug }: { slug: string }) {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') undo();
     else if (event.metaKey || event.ctrlKey) return;
     else if (event.key in arrows) move(arrows[event.key]);
-    else if (digit) enter(Number(digit), notesMode !== event.shiftKey);
+    else if (digit) enter(Number(digit), notesMode || event.shiftKey);
     else if (['Backspace', 'Delete', '0'].includes(event.key)) erase();
     else if (event.key.toLowerCase() === 'n') {
       setNotesMode(!notesMode);
