@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <title>A Tower of Hanoi mid-solve: three pegs, the largest disks still on the first peg, a smaller tower growing on the middle peg and one disk lifted in the air</title>
+  <rect x="24" y="196" width="352" height="14" rx="4" fill="#1d1c1a"/>
+  <g fill="#1d1c1a">
+    <rect x="80" y="70" width="8" height="126" rx="4"/>
+    <rect x="196" y="70" width="8" height="126" rx="4"/>
+    <rect x="312" y="70" width="8" height="126" rx="4"/>
+  </g>
+  <g stroke="#1d1c1a" stroke-width="5">
+    <rect x="32" y="172" width="104" height="24" rx="4" fill="#fbf9f4"/>
+    <rect x="44" y="148" width="80" height="24" rx="4" fill="#f2eee5"/>
+    <rect x="164" y="172" width="72" height="24" rx="4" fill="#fbf9f4"/>
+    <rect x="174" y="148" width="52" height="24" rx="4" fill="#f2eee5"/>
+    <rect x="294" y="24" width="44" height="24" rx="4" fill="#1d1c1a"/>
+  </g>
+  <path d="M276 36c-30 0-50 14-60 40" fill="none" stroke="#fbf9f4" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 12"/>
+</svg>

@@ -1,0 +1,113 @@
+---
+title: "Tower of Hanoi"
+slug: tower-of-hanoi
+excerpt: "Move the whole tower to another peg, one disk at a time, never big on small."
+description: "Move a stack of disks from the first peg to the last, one disk at a time, never putting a bigger disk on a smaller one. The shortest solution is a lesson in recursion."
+category: puzzle
+ink: brick
+difficulty: beginner
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 5
+concept: "Recursion"
+skills:
+  - "breaking problems down"
+  - "recursion"
+  - "counting moves"
+quickRules:
+  - "Start with every disk stacked on peg 1, largest at the bottom."
+  - "Move one disk at a time: take the top disk of any peg and put it on another peg."
+  - "Never put a disk on top of a smaller one. An empty peg takes any disk."
+  - "Rebuild the whole tower on peg 3 to finish. The fewest moves possible is 2ⁿ − 1 for n disks."
+controls:
+  - "Click or tap a peg to lift its top disk, then click or tap the peg to drop it on. Dragging works too."
+  - "Keyboard: press 1, 2 or 3 to pick the source peg, then the target peg. Escape puts the disk back."
+  - "Left and Right arrows move focus between pegs; Enter or Space picks the focused peg."
+  - "U or the Undo button takes back a move."
+  - "Watch the solution plays the shortest finish from wherever the disks are now, with Pause and Stop."
+widget: "tower-of-hanoi"
+coverImage: ./cover.svg
+coverImageAlt: "Three pegs mid-solve: two big disks on the first peg, a smaller tower growing on the middle peg, and the smallest disk lifted over the third."
+relatedGameSlugs:
+  - nim
+  - lights-out
+  - "2048"
+seoTitle: "Tower of Hanoi: rules, the 2ⁿ − 1 solution and a free puzzle to play"
+seoDescription: "Learn the Tower of Hanoi in a minute, then solve it with 3 to 8 disks in your browser. See why the minimum is 2ⁿ − 1 moves and how recursion finds it."
+publishedAt: 2026-09-25
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+Three pegs, a stack of disks, and one rule that looks harmless: never put a big disk on a small one. With three disks you'll solve it by fiddling. With six you'll get lost, undo half your work and wonder how anyone does it in the minimum 63 moves.
+
+The answer is one of the neatest ideas in computing: to move a tower, pretend you already know how to move a slightly smaller one. Once that clicks, eight disks is no harder than three. It just takes longer.
+
+## How to play
+
+All the disks start on **peg 1**, stacked by size with the largest at the bottom. Your job is to rebuild the same tower on **peg 3**.
+
+- On each move, take the **top** disk from any peg and place it on a different peg.
+- A disk may go on an empty peg or on a **larger** disk, never on a smaller one.
+- Only one disk moves at a time, and it never stays in the air. Lifting it and putting it back is not a move.
+
+The puzzle ends when every disk is on peg 3. There's no way to lose: any legal position can still be finished. The question is how efficiently. The fewest possible moves for *n* disks is **2ⁿ − 1**, so 7 for three disks, 31 for five and 255 for eight. The move counter shows how you're doing against that minimum, and your best is kept for each tower size.
+
+If you use **Watch the solution**, the board plays the shortest finish from the current position. That round is recorded as completed, not won, so solve it again on your own to set a best.
+
+## A worked example
+
+Three disks, numbered 1 (smallest) to 3 (largest). Here is the minimum, 7 moves:
+
+| Move | Disk | From → to | Peg 1 | Peg 2 | Peg 3 |
+|---|---|---|---|---|---|
+| start | | | 3 2 1 | | |
+| 1 | 1 | 1 → 3 | 3 2 | | 1 |
+| 2 | 2 | 1 → 2 | 3 | 2 | 1 |
+| 3 | 1 | 3 → 2 | 3 | 2 1 | |
+| 4 | 3 | 1 → 3 | | 2 1 | 3 |
+| 5 | 1 | 2 → 1 | 1 | 2 | 3 |
+| 6 | 2 | 2 → 3 | 1 | | 3 2 |
+| 7 | 1 | 1 → 3 | | | 3 2 1 |
+
+Read the table in three blocks. Moves 1–3 shift the two-disk tower (disks 1 and 2) out of the way onto peg 2. Move 4 is the only move disk 3 ever makes. Moves 5–7 carry the two-disk tower back on top of it. That shape is the whole puzzle.
+
+## Strategy
+
+### Think about the biggest disk
+
+The largest disk can only move when every other disk is out of its way, stacked on the one peg it isn't moving to. So the first real goal isn't "move the tower"; it's "get everything else onto the spare peg".
+
+### Recurse
+
+To move a tower of *n* disks from A to C: move the top *n* − 1 disks from A to B, move the biggest disk from A to C, then move the *n* − 1 disks from B to C. Each "move *n* − 1 disks" is the same puzzle, one size smaller, with the pegs swapped around. Keep shrinking until you're moving a single disk, which is easy.
+
+### The smallest disk sets the rhythm
+
+The smallest disk moves on every odd-numbered move (1st, 3rd, 5th…), always travelling in the same cycle. With an **odd** number of disks it goes 1 → 3 → 2 → 1 → …; with an **even** number it goes 1 → 2 → 3 → 1 → … On every even-numbered move there is exactly one legal move that doesn't involve the smallest disk, so make it. This gives the perfect solution without planning ahead.
+
+### Recover from a slip
+
+Made a detour? Don't rush to undo everything. Find the largest disk that's not yet on peg 3. The disks smaller than it need to gather on whichever peg it's *not* on and not heading to; then it moves, and they follow. The solution player uses exactly this reasoning, so pause it after a move or two and compare with what you'd have done.
+
+## The idea underneath
+
+This is **recursion**: solving a problem by assuming you can already solve a smaller copy of it. Write T(*n*) for the fewest moves to shift *n* disks.
+
+**Why it can't be done faster.** The largest disk has to move at least once. At that moment it's alone on its peg and its destination is empty, so the other *n* − 1 disks must all be stacked on the third peg, which costs at least T(*n* − 1) moves. After its last move they all still have to come across onto it, which costs at least T(*n* − 1) again. So T(*n*) ≥ 2·T(*n* − 1) + 1.
+
+**Why that's enough.** The recursive method above uses exactly 2·T(*n* − 1) + 1 moves, so the bound is met: T(*n*) = 2·T(*n* − 1) + 1, with T(1) = 1.
+
+**The formula.** If T(*n* − 1) = 2ⁿ⁻¹ − 1, then T(*n*) = 2(2ⁿ⁻¹ − 1) + 1 = 2ⁿ − 1. It holds for one disk, so by induction it holds for all. Each extra disk doubles the work and adds one. Disk *k* (counting from the smallest) moves 2ⁿ⁻ᵏ times, which is why the smallest disk is always busy and the largest moves once.
+
+The puzzle was published by the French mathematician Édouard Lucas in 1883, and it came with a legend. As the story goes, priests in a great temple are moving a tower of 64 golden disks by these rules, one move per second, and when they finish the world will end. Even if that were true, there's no rush: 2⁶⁴ − 1 seconds is about 585 billion years.
+
+## Common mistakes
+
+- **Moving the smallest disk twice in a row.** That's always wasted: the second move could have been the first.
+- **Starting in the wrong direction.** With an odd number of disks the first move goes to peg 3; with an even number, to peg 2. Get it wrong and you build the tower on the middle peg first.
+- **Undoing too far.** Any position can still be finished. Often the shortest way out is forward.
+
+<Callout title="Try this">
+Pick 4 disks and solve it in exactly 15 moves using only the rhythm rule: odd moves go to the smallest disk, stepping 1 → 2 → 3 → 1, and even moves make the only other legal move. Then try 5 disks, where the smallest disk has to cycle the other way.
+</Callout>

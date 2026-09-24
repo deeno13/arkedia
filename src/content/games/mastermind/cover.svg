@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <title>A Mastermind decoding board mid-game: three guesses of four pegs, each with its black and white key pegs, below a hidden code</title>
+  <rect x="78" y="18" width="244" height="44" rx="8" fill="#1d1c1a"/>
+  <g fill="none" stroke="#f2eee5" stroke-width="4">
+    <circle cx="112" cy="40" r="13"/><circle cx="152" cy="40" r="13"/><circle cx="192" cy="40" r="13"/><circle cx="232" cy="40" r="13"/>
+  </g>
+  <path d="M270 32h36M270 48h36" stroke="#f2eee5" stroke-width="5" stroke-linecap="round"/>
+  <g stroke="#1d1c1a" stroke-width="5">
+    <circle cx="112" cy="94" r="14" fill="#fbf9f4"/><circle cx="152" cy="94" r="14" fill="#1d1c1a"/><circle cx="192" cy="94" r="14" fill="#fbf9f4"/><circle cx="232" cy="94" r="14" fill="#f2eee5"/>
+    <circle cx="112" cy="140" r="14" fill="#1d1c1a"/><circle cx="152" cy="140" r="14" fill="#fbf9f4"/><circle cx="192" cy="140" r="14" fill="#1d1c1a"/><circle cx="232" cy="140" r="14" fill="#fbf9f4"/>
+    <circle cx="112" cy="186" r="14" fill="#f2eee5"/><circle cx="152" cy="186" r="14" fill="#1d1c1a"/><circle cx="192" cy="186" r="14" fill="#1d1c1a"/><circle cx="232" cy="186" r="14" fill="#fbf9f4"/>
+  </g>
+  <g fill="#1d1c1a">
+    <path d="M112 86l8 14h-16z"/><rect x="226" y="88" width="12" height="12"/>
+    <path d="M112 132v16M104 140h16" stroke="#f2eee5" stroke-width="5"/>
+    <path d="M232 177l9 9-9 9-9-9z"/>
+  </g>
+  <g stroke="#1d1c1a" stroke-width="4">
+    <circle cx="276" cy="86" r="6" fill="#1d1c1a"/><circle cx="296" cy="86" r="6" fill="#fbf9f4"/><circle cx="276" cy="104" r="6" fill="none" stroke-opacity="0.35"/><circle cx="296" cy="104" r="6" fill="none" stroke-opacity="0.35"/>
+    <circle cx="276" cy="132" r="6" fill="#1d1c1a"/><circle cx="296" cy="132" r="6" fill="#1d1c1a"/><circle cx="276" cy="150" r="6" fill="#fbf9f4"/><circle cx="296" cy="150" r="6" fill="none" stroke-opacity="0.35"/>
+    <circle cx="276" cy="178" r="6" fill="#1d1c1a"/><circle cx="296" cy="178" r="6" fill="#1d1c1a"/><circle cx="276" cy="196" r="6" fill="#1d1c1a"/><circle cx="296" cy="196" r="6" fill="none" stroke-opacity="0.35"/>
+  </g>
+</svg>
