@@ -15,20 +15,18 @@ interface Props {
   noindex?: boolean;
   publishedTime?: Date | string;
   modifiedTime?: Date | string;
-  mainClass?: string;
 }
 
-const {
-  title,
-  description,
-  image,
-  imageAlt,
-  type = 'website',
-  noindex = false,
-  publishedTime,
-  modifiedTime,
-  mainClass = '',
-} = Astro.props;
+const { title, description, image, imageAlt, type = 'website', noindex = false, publishedTime, modifiedTime } = Astro.props;
+
+const directionContract = `<!--
+  Arkedia direction contract (seed: a7c31e09)
+  THESIS: Arkedia is a shelf of game boxes; each game page is an opened box, board and rule sheet side by side. Refuses the SaaS hero and the identical card grid.
+  OWN-WORLD: chipboard paper ground (#f2eee5), black ink (#1d1c1a), one process ink per game used as solid fills. Archivo expanded black for lids and titles, Source Serif 4 for rule-sheet prose. Die-cut 6px corners, 2px ink rules, boards drawn as crisp printed geometry.
+  FIRST VIEWPORT: a short headline ("Learn it in a minute. Then play it.") with the shelf of all 14 box lids in their inks.
+  SIGNATURE: numbered quick rules beside a live board, and progress stamps (Played / Won / Best) printed onto lids from localStorage.
+  RISK: 14 inks turning into confetti. Ink fills only on lids, title bands, pieces and active or win states; everything else is paper and black.
+-->`;
 ---
 
 <!doctype html>
@@ -47,26 +45,17 @@ const {
       modifiedTime={modifiedTime}
     />
   </head>
-  <body class="min-h-screen antialiased">
+  <body class="flex min-h-screen flex-col overflow-x-clip antialiased"><Fragment set:html={directionContract} />
     <a
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-die focus:border-2 focus:border-ink focus:bg-card focus:px-4 focus:py-2 focus:font-semibold focus:text-ink"
       href="#content"
     >
       Skip to content
     </a>
-
-    <div class="relative min-h-screen overflow-x-clip">
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
-        <div class="absolute inset-x-0 top-0 h-[36rem] bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.16),transparent_55%)]"></div>
-        <div class="absolute right-0 top-32 h-72 w-72 rounded-full bg-amber-100/45 blur-3xl"></div>
-        <div class="absolute left-0 top-[28rem] h-72 w-72 rounded-full bg-sky-100/55 blur-3xl"></div>
-      </div>
-
-      <SiteHeader />
-      <main id="content" tabindex="-1" class:list={['pb-20', mainClass]}>
-        <slot />
-      </main>
-      <SiteFooter />
-    </div>
+    <SiteHeader />
+    <main id="content" tabindex="-1" class="flex-1 focus:outline-none">
+      <slot />
+    </main>
+    <SiteFooter />
   </body>
 </html>

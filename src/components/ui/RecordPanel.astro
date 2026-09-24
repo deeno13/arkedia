@@ -1,0 +1,113 @@
+---
+/* "Your record" on a game page: this device's rounds, results and bests, filled client-side. */
+interface Props {
+  slug: string;
+  title: string;
+}
+
+const { slug, title } = Astro.props;
+---
+
+<div data-record={slug} data-record-title={title}>
+  <p data-record-empty class="text-[0.9375rem] leading-snug text-ink-soft">
+    No rounds yet. Finish one and your results and bests are kept here, in this browser only.
+  </p>
+  <div data-record-filled hidden>
+    <p data-record-summary class="text-[0.9375rem] font-semibold"></p>
+    <dl data-record-list class="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 text-[0.9375rem] tabular-nums"></dl>
+    <button
+      type="button"
+      data-record-reset
+      class="mt-4 inline-flex min-h-10 items-center rounded-die border-2 border-ink px-3 text-sm font-semibold font-stretch-semi-expanded text-ink transition-colors duration-150 hover:bg-paper-deep data-[armed]:bg-ink data-[armed]:text-paper"
+    >
+      Reset record
+    </button>
+  </div>
+  <p data-record-announce aria-live="polite" class="sr-only"></p>
+</div>
+
+<script>
+  import { clearProgress, onProgressChange, readProgress, type ProgressRecord } from '../../lib/progress';
+  import { bestLabel, finishedRounds, formatLastPlayed, numberFormat, recordSummary } from '../../lib/record-format';
+
+  function rows(record: ProgressRecord): [string, string, string?][] {
+    const list: [string, string, string?][] = [];
+    if (record.wins + record.losses + record.draws > 0) {
+      list.push(['Won', numberFormat.format(record.wins)], ['Lost', numberFormat.format(record.losses)], ['Drawn', numberFormat.format(record.draws)]);
+    }
+    const finished = finishedRounds(record);
+    if (finished > 0 && finished !== record.plays) list.push(['Finished', numberFormat.format(finished)]);
+    if (record.bestStreak > 0) {
+      list.push(['Win streak', numberFormat.format(record.streak)], ['Longest streak', numberFormat.format(record.bestStreak)]);
+    }
+    for (const [bucket, value] of Object.entries(record.best)) {
+      list.push([bestLabel(bucket), numberFormat.format(value), record.bestOrder[bucket] === 'lower' ? 'lower is better' : 'higher is better']);
+    }
+    const last = formatLastPlayed(record.lastPlayedAt);
+    if (last) list.push(['Last played', last]);
+    return list;
+  }
+
+  for (const panel of document.querySelectorAll<HTMLElement>('[data-record]')) {
+    const slug = panel.dataset.record!;
+    const empty = panel.querySelector<HTMLElement>('[data-record-empty]')!;
+    const filled = panel.querySelector<HTMLElement>('[data-record-filled]')!;
+    const summary = panel.querySelector<HTMLElement>('[data-record-summary]')!;
+    const list = panel.querySelector<HTMLElement>('[data-record-list]')!;
+    const reset = panel.querySelector<HTMLButtonElement>('[data-record-reset]')!;
+    const announce = panel.querySelector<HTMLElement>('[data-record-announce]')!;
+    let disarmTimer: number | undefined;
+
+    const disarm = () => {
+      window.clearTimeout(disarmTimer);
+      delete reset.dataset.armed;
+      reset.textContent = 'Reset record';
+    };
+
+    const paint = () => {
+      const record = readProgress(slug);
+      const played = record.plays > 0;
+      empty.hidden = played;
+      filled.hidden = !played;
+      if (!played) return;
+      summary.textContent = recordSummary(record);
+      list.replaceChildren(
+        ...rows(record).flatMap(([label, value, note]) => {
+          const dt = document.createElement('dt');
+          dt.className = 'text-ink-soft';
+          dt.textContent = label;
+          const dd = document.createElement('dd');
+          dd.className = 'text-right font-bold';
+          dd.textContent = value;
+          if (note) {
+            const small = document.createElement('span');
+            small.className = 'block text-xs font-normal text-ink-muted';
+            small.textContent = note;
+            dd.append(small);
+          }
+          return [dt, dd];
+        }),
+      );
+    };
+
+    reset.addEventListener('click', () => {
+      if (reset.dataset.armed !== 'true') {
+        reset.dataset.armed = 'true';
+        reset.textContent = 'Click again to reset';
+        announce.textContent = `Click Reset again to erase your ${panel.dataset.recordTitle} record.`;
+        disarmTimer = window.setTimeout(disarm, 4000);
+        return;
+      }
+      disarm();
+      clearProgress(slug);
+      announce.textContent = 'Record reset.';
+      empty.setAttribute('tabindex', '-1');
+      empty.focus();
+    });
+    reset.addEventListener('blur', disarm);
+
+    paint();
+    onProgressChange(paint);
+    window.addEventListener('pageshow', paint);
+  }
+</script>

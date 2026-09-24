@@ -1,138 +1,169 @@
 ---
-import Callout from '../../components/ui/Callout.astro';
-import GameCard from '../../components/ui/GameCard.astro';
-import LinkButton from '../../components/ui/LinkButton.astro';
-import MetadataPills from '../../components/ui/MetadataPills.astro';
-import PageHero from '../../components/ui/PageHero.astro';
-import Section from '../../components/ui/Section.astro';
-import Badge from '../../components/ui/Badge.astro';
-import {
-  getGameDifficultySummaries,
-  getGameCategorySummaries,
-  getPlayableGameCount,
-  getPopularGameTags,
-  groupGamesByCategory,
-  getPublishedGames,
-} from '../../lib/games';
+import Container from '../../components/layout/Container.astro';
+import BoxLid from '../../components/ui/BoxLid.astro';
 import MainLayout from '../../layouts/MainLayout.astro';
+import { GAME_CATEGORY_LABELS, GAME_DIFFICULTY_LABELS, getPublishedGames } from '../../lib/games';
 
 const games = await getPublishedGames();
-const categorySummaries = getGameCategorySummaries(games);
-const categoryGroups = groupGamesByCategory(games);
-const difficultySummaries = getGameDifficultySummaries(games);
-const popularTags = getPopularGameTags(games, 8);
-const playableGameCount = getPlayableGameCount(games);
+
+const filterGroups = [
+  { name: 'category', legend: 'Kind', options: [['', 'All'], ...Object.entries(GAME_CATEGORY_LABELS)] },
+  { name: 'difficulty', legend: 'Difficulty', options: [['', 'Any'], ...Object.entries(GAME_DIFFICULTY_LABELS)] },
+  { name: 'players', legend: 'Players', options: [['', 'Any'], ['solo', 'Solo'], ['two', 'Two players']] },
+  { name: 'yours', legend: 'Yours', options: [['', 'All'], ['new', 'New to you'], ['played', 'Played'], ['won', 'Won']] },
+];
 ---
 
 <MainLayout
-  title="Educational game guides"
-  description="Browse Arkedia’s educational game guides, built from Astro content collections with typed metadata, optimized local cover images, and optional playable islands."
+  title="All games"
+  description={`Browse all ${games.length} Arkedia games by kind, difficulty and players. Each one opens to its rules, a board to play on and a guide to playing it well.`}
 >
-  <PageHero
-    eyebrow="Games library"
-    title="Browse educational game guides by category, difficulty, and format"
-    description="This listing stays static-first and collection-driven. Every entry is authored in MDX, validated through Astro’s content system, and surfaced here automatically at build time."
-  >
-    <MetadataPills
-      slot="meta"
-      label="Games library summary"
-      items={[
-        `${games.length} published guides`,
-        `${playableGameCount} playable`,
-        `${categorySummaries.length} categories`,
-      ]}
-    />
-    <Fragment slot="actions">
-      <LinkButton href="/about/" variant="secondary">How Arkedia is built</LinkButton>
-    </Fragment>
-  </PageHero>
+  <Container class="pt-8 sm:pt-12">
+    <h1 class="text-[clamp(2.25rem,5vw,3.75rem)] leading-[0.95] font-black font-stretch-expanded tracking-[-0.03em] text-balance">
+      Every game on the shelf
+    </h1>
+    <p class="mt-4 max-w-[52ch] text-lg leading-snug text-ink-soft">
+      Each box opens to the rules in a minute, a board to play on and a guide to playing it well.
+    </p>
 
-  <Section
-    eyebrow="Browse cues"
-    title="A lightweight way to scan the collection"
-    description="The v1 browse experience stays static and readable. You can jump to a category, inspect difficulty coverage, and spot common topics without hydrating a search UI."
-  >
-    <div class="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
-        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Jump to category</p>
-        <ul class="mt-5 flex flex-wrap gap-2">
-          {categorySummaries.map((item) => (
-            <li>
-              <a
-                class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-900"
-                href={`#category-${item.slug}`}
-              >
-                {item.label}
-                <span class="ml-2 rounded-full bg-white px-2 py-0.5 text-xs text-slate-500">{item.count}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div class="mt-6 rounded-2xl bg-slate-50 p-4">
-          <p class="text-sm font-semibold text-slate-950">Difficulty coverage</p>
-          <ul class="mt-3 flex flex-wrap gap-2">
-            {difficultySummaries.map((item) => (
-              <li>
-                <Badge tone="warm">{item.label} · {item.count}</Badge>
-              </li>
+    <form data-filters hidden aria-label="Filter games" class="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-y-2 border-ink py-4">
+      {filterGroups.map((group) => (
+        <fieldset class="min-w-0">
+          <legend class="float-left mr-3 flex min-h-10 items-center text-sm font-bold font-stretch-semi-expanded">{group.legend}</legend>
+          <div class="flex flex-wrap gap-1.5">
+            {group.options.map(([value, label]) => (
+              <label class="relative">
+                <input class="peer sr-only" type="radio" name={group.name} value={value} checked={value === ''} />
+                <span class="inline-flex min-h-10 cursor-pointer items-center rounded-die border-2 border-ink px-3 text-sm font-semibold font-stretch-semi-expanded transition-colors duration-150 select-none peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink hover:bg-paper-deep peer-checked:hover:bg-ink">
+                  {label}
+                </span>
+              </label>
             ))}
-          </ul>
-        </div>
-      </div>
+          </div>
+        </fieldset>
+      ))}
+    </form>
 
-      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
-        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Popular tags</p>
-        <ul class="mt-5 flex flex-wrap gap-2">
-          {popularTags.map((item) => (
-            <li>
-              <Badge>{item.tag} · {item.count}</Badge>
-            </li>
-          ))}
-        </ul>
-        <p class="mt-5 text-sm leading-7 text-slate-600">
-          The card metadata and content schema already support future progressive enhancement. If search or richer
-          filters arrive later, they can layer onto the same authoring model instead of replacing it.
-        </p>
-      </div>
-    </div>
-  </Section>
+    <p data-count aria-live="polite" class="mt-5 min-h-6 text-[0.9375rem] font-semibold tabular-nums text-ink-soft">
+      {games.length} games
+    </p>
 
-  {games.length === 0 ? (
-    <Section eyebrow="Collection status" title="No published games yet" description="The collection is wired up, but there are no published entries to display right now." size="narrow">
-      <Callout title="What to do next" tone="neutral">
-        <p>
-          Add a new folder in <code>src/content/games/</code> with an <code>index.mdx</code> entry, then rebuild the
-          site to have it appear automatically.
-        </p>
-      </Callout>
-    </Section>
-  ) : (
-    categoryGroups.map((group) => (
-      <Section
-        id={`category-${group.slug}`}
-        eyebrow="Category"
-        title={group.label}
-        description={`${group.count} guide${group.count === 1 ? '' : 's'} currently published in this category.`}
+    <ul data-shelf class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+      {games.map((game) => (
+        <li><BoxLid entry={game} headingLevel="h2" /></li>
+      ))}
+    </ul>
+
+    <div data-empty hidden class="mt-3 flex flex-col items-start gap-4 rounded-die border-2 border-dashed border-ink px-6 py-10 sm:px-10">
+      <p class="text-2xl leading-tight font-black font-stretch-expanded">No box matches all of that.</p>
+      <p class="max-w-[48ch] text-ink-soft">Loosen one of the filters above, or clear them all and start from the full shelf.</p>
+      <button
+        type="button"
+        data-reset
+        class="inline-flex min-h-11 items-center rounded-die border-2 border-ink bg-ink px-4 font-semibold font-stretch-semi-expanded text-paper transition-colors duration-150 hover:bg-ink-soft"
       >
-        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {group.entries.map((game) => <GameCard entry={game} />)}
-        </div>
-      </Section>
-    ))
-  )}
-
-  <Section
-    eyebrow="Static-first default"
-    title="The listing page stays fast on purpose"
-    description="This page is fully static. Search and richer filtering can arrive later as progressive enhancement, not as a requirement for reading the collection."
-    size="narrow"
-  >
-    <Callout title="Why this matters">
-      <p>
-        Arkedia should feel quick to load, easy to scan, and dependable on low-power devices. Astro’s native page
-        rendering is the default, not the fallback.
-      </p>
-    </Callout>
-  </Section>
+        Clear filters
+      </button>
+    </div>
+  </Container>
 </MainLayout>
+
+<script>
+  import { onProgressChange, readAllProgress } from '../../lib/progress';
+
+  const KEYS = ['category', 'difficulty', 'players', 'yours'] as const;
+  type Key = (typeof KEYS)[number];
+
+  const form = document.querySelector<HTMLFormElement>('[data-filters]')!;
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const shelf = document.querySelector<HTMLElement>('[data-shelf]')!;
+  const lids = [...shelf.querySelectorAll<HTMLElement>('[data-lid]')];
+
+  const allowed = (key: Key) => [...form.querySelectorAll<HTMLInputElement>(`input[name="${key}"]`)].map((input) => input.value);
+
+  function readForm() {
+    const data = new FormData(form);
+    return Object.fromEntries(KEYS.map((key) => [key, String(data.get(key) ?? '')])) as Record<Key, string>;
+  }
+
+  function writeForm(state: Record<Key, string>) {
+    for (const key of KEYS) {
+      const input = form.querySelector<HTMLInputElement>(`input[name="${key}"][value="${CSS.escape(state[key])}"]`);
+      if (input) input.checked = true;
+    }
+  }
+
+  function stateFromUrl() {
+    const params = new URLSearchParams(location.search);
+    return Object.fromEntries(
+      KEYS.map((key) => {
+        const value = params.get(key) ?? '';
+        return [key, allowed(key).includes(value) ? value : ''];
+      }),
+    ) as Record<Key, string>;
+  }
+
+  function apply(state: Record<Key, string>) {
+    const records = readAllProgress();
+    let shown = 0;
+    for (const lid of lids) {
+      const record = records[lid.dataset.slug ?? ''];
+      const played = Boolean(record && record.plays > 0);
+      const yours =
+        state.yours === '' ||
+        (state.yours === 'new' && !played) ||
+        (state.yours === 'played' && played) ||
+        (state.yours === 'won' && Boolean(record && record.wins > 0));
+      const match =
+        yours &&
+        (state.category === '' || lid.dataset.category === state.category) &&
+        (state.difficulty === '' || lid.dataset.difficulty === state.difficulty) &&
+        (state.players === '' || lid.dataset.players === state.players);
+      lid.closest('li')!.hidden = !match;
+      if (match) shown += 1;
+    }
+    const filtered = KEYS.some((key) => state[key] !== '');
+    count.textContent = filtered ? `${shown} of ${lids.length} games` : `All ${lids.length} games`;
+    empty.hidden = shown > 0;
+    shelf.hidden = shown === 0;
+  }
+
+  function syncUrl(state: Record<Key, string>) {
+    const params = new URLSearchParams();
+    for (const key of KEYS) if (state[key]) params.set(key, state[key]);
+    const query = params.toString();
+    const next = `${location.pathname}${query ? `?${query}` : ''}${location.hash}`;
+    if (next !== `${location.pathname}${location.search}${location.hash}`) history.replaceState(history.state, '', next);
+  }
+
+  function restore() {
+    const state = stateFromUrl();
+    writeForm(state);
+    apply(state);
+  }
+
+  form.hidden = false;
+  restore();
+
+  form.addEventListener('change', () => {
+    const state = readForm();
+    apply(state);
+    syncUrl(state);
+  });
+  form.addEventListener('submit', (event) => event.preventDefault());
+
+  document.querySelector('[data-reset]')!.addEventListener('click', () => {
+    const cleared = Object.fromEntries(KEYS.map((key) => [key, ''])) as Record<Key, string>;
+    writeForm(cleared);
+    apply(cleared);
+    syncUrl(cleared);
+    form.querySelector<HTMLInputElement>('input:checked')?.focus();
+  });
+
+  window.addEventListener('popstate', restore);
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) restore();
+  });
+  onProgressChange(() => apply(readForm()));
+</script>

@@ -1,0 +1,31 @@
+---
+/* A lid-sized paper slot on the shelf for a way onward (the whole library, a random pick). */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  title: string;
+  text: string;
+}
+
+const { href, title, text, class: className = '', ...rest } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'group @container flex aspect-[4/3] flex-col justify-end rounded-die border-2 border-dashed border-ink bg-paper p-[5cqi] text-ink transition-colors duration-150 hover:border-solid hover:bg-paper-deep',
+    className,
+  ]}
+  {...rest}
+>
+  <span class="text-[clamp(0.9375rem,7cqi,1.625rem)] leading-[0.98] font-black font-stretch-expanded tracking-[-0.015em] text-balance">
+    {title}
+  </span>
+  <span class="mt-[1.6cqi] flex items-end justify-between gap-2 text-[clamp(0.75rem,4cqi,0.9375rem)] leading-snug text-ink-soft">
+    <span>{text}</span>
+    <svg class="h-[1.1em] w-[1.1em] shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" />
+    </svg>
+  </span>
+</a>

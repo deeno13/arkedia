@@ -1,22 +1,13 @@
 export const siteConfig = {
   name: 'Arkedia',
-  tagline: 'Educational games, explained clearly',
+  tagline: 'Classic games to learn and play',
   description:
-    'Arkedia is a static-first educational games library built with Astro. It pairs structured guides, thoughtful metadata, and optional playable islands without turning the whole site into a client-heavy app.',
+    'Fourteen classic games, each on one page: the rules in a minute, a worked example, the strategy and the idea underneath, and a board to play on right beside them.',
   locale: 'en',
-  defaultOgImageAlt: 'Preview image for Arkedia educational game guides',
+  defaultOgImageAlt: 'Arkedia: classic games to learn and play',
 } as const;
 
 export const mainNavigation = [
-  { href: '/', label: 'Home' },
   { href: '/games/', label: 'Games' },
   { href: '/about/', label: 'About' },
 ] as const;
-
-export const editorialPrinciples = [
-  'Explain the game before adding interface complexity.',
-  'Keep most pages static and content-driven by default.',
-  'Use islands only when interaction clearly improves learning.',
-] as const;
-
-export const roadmapGames = ['Snake', 'Wordle-style games', 'Sudoku', 'Crossword', 'Rock Paper Scissors'] as const;

@@ -1,43 +1,63 @@
 ---
 import Container from './Container.astro';
+import Mark from '../ui/Mark.astro';
 import { mainNavigation, siteConfig } from '../../data/site';
+import { getPublishedGames } from '../../lib/games';
 
 const pathname = Astro.url.pathname;
+const slugs = (await getPublishedGames()).map((game) => game.data.slug);
+const linkClass =
+  'relative inline-flex min-h-11 items-center gap-2 px-2 text-[0.9375rem] font-semibold font-stretch-semi-expanded text-ink transition-colors duration-150 hover:bg-paper-deep rounded-die sm:px-3';
 ---
 
-<header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-  <Container class="flex flex-wrap items-center justify-between gap-4 py-4">
-    <a class="inline-flex items-center gap-3 text-slate-950" href="/" aria-label={`${siteConfig.name} home`}>
-      <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-base font-semibold text-sky-800">
-        A
-      </span>
-      <span>
-        <span class="block text-base font-semibold tracking-tight">{siteConfig.name}</span>
-        <span class="block text-sm text-slate-600">{siteConfig.tagline}</span>
-      </span>
+<header class="border-b-2 border-ink bg-paper">
+  <Container class="flex items-center justify-between gap-3 py-2.5">
+    <a href="/" class="-ml-1 inline-flex min-h-11 items-center gap-2.5 rounded-die px-1 text-ink" aria-label={`${siteConfig.name}, home`}>
+      <Mark class="h-6 w-7 shrink-0" />
+      <span class="text-xl leading-none font-black font-stretch-expanded tracking-[-0.02em] sm:text-2xl">{siteConfig.name}</span>
     </a>
 
-    <nav aria-label="Primary" class="flex flex-wrap items-center gap-2">
-      {mainNavigation.map((item) => {
-        const isCurrent = item.href === '/'
-          ? pathname === '/'
-          : pathname === item.href || pathname.startsWith(item.href);
-
-        return (
-          <a
-            href={item.href}
-            aria-current={isCurrent ? 'page' : undefined}
-            class:list={[
-              'rounded-full px-4 py-2 text-sm font-medium transition',
-              isCurrent
-                ? 'bg-slate-950 text-white'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-950',
-            ]}
-          >
-            {item.label}
+    <nav aria-label="Main">
+      <ul class="flex items-center gap-0.5 sm:gap-1">
+        {mainNavigation.map((item) => {
+          const isCurrent = pathname === item.href || pathname.startsWith(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isCurrent ? 'page' : undefined}
+                class:list={[linkClass, isCurrent && 'after:absolute after:inset-x-2 after:-bottom-[12px] after:h-1 after:bg-ink sm:after:inset-x-3']}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+        <li>
+          <a href="/games/" class={`${linkClass} max-sm:min-w-11 max-sm:justify-center`} title="Random game" data-random-game={JSON.stringify(slugs)}>
+            <svg class="h-[1.125rem] w-[1.125rem] shrink-0 sm:h-4 sm:w-4" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <rect x="1" y="1" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2" />
+              <circle cx="5" cy="5" r="1.5" fill="currentColor" />
+              <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+              <circle cx="11" cy="11" r="1.5" fill="currentColor" />
+            </svg>
+            <span class="max-sm:sr-only">Random game</span>
           </a>
-        );
-      })}
+        </li>
+      </ul>
     </nav>
   </Container>
 </header>
+
+<script>
+  /* Without JavaScript these links go to the library; with it, each goes straight to a random game other than this one. */
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-random-game]')) {
+    const current = location.pathname.split('/')[2];
+    const pool = (JSON.parse(link.dataset.randomGame ?? '[]') as string[]).filter((slug) => slug !== current);
+    const pick = () => {
+      if (pool.length) link.href = `/games/${pool[Math.floor(Math.random() * pool.length)]}/`;
+    };
+    pick();
+    window.addEventListener('pageshow', pick);
+  }
+</script>

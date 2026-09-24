@@ -1,53 +1,30 @@
 # Arkedia
 
-Arkedia is a static-first educational games site built with Astro. Each game page is treated as a learning resource first: the rules, examples, strategies, and related concepts live in typed MDX content, while React is reserved for page-scoped playable widgets only where interaction adds real value.
+Arkedia is a shelf of fourteen classic games you can learn and play on the same page: Snake, Rock Paper Scissors, a Wordle-style word game, Sudoku, a mini crossword, Tic-Tac-Toe, Connect Four, Minesweeper, 2048, Mastermind, Nim, Tower of Hanoi, Memory and Lights Out.
 
-## v1 scope
+Every game page is an opened box. The board sits beside a rule sheet with the complete rules in a few numbered steps, the controls, and the player's own record. Below it is a guide: the full rules, a worked example, strategy, and the idea underneath the game (search, probability, constraint reasoning, recursion and so on).
 
-Arkedia v1 includes:
-
-- a static Astro site shell with reusable layouts and UI components
-- a typed `games` content collection powered by MDX
-- dynamic game detail pages generated from content entries
-- optimized local cover images through Astro assets
-- related-game editorial links
-- playable React islands for Snake, Rock Paper Scissors, and a Wordle-style mini game
-- scaffold placeholders for future Sudoku and Crossword widgets
-
-Intentionally deferred to v2:
-
-- backend features
-- accounts, persistence, or leaderboards
-- CMS integration
-- site-wide SPA behavior
-- heavier browse tooling beyond the current static-first experience
-- full playable implementations for every game
+It is a static site. There is no backend, no accounts and no tracking; a player's record is kept in their own browser. See [PRODUCT.md](PRODUCT.md) for the audience, voice and principles.
 
 ## Stack
 
-- Astro
-- TypeScript
+- [Astro](https://astro.build) 6, static output
+- MDX content collections with typed frontmatter
 - Tailwind CSS 4
-- MDX
-- React for islands only
+- React 19, only for the game boards (one island per game page)
 
-## Run locally
+## Run it
+
+Node must satisfy the `engines` range in `package.json`.
 
 ```sh
 npm install
-npm run dev
+npm run dev       # http://localhost:4321
+npm run build     # static site in dist/
+npm run preview   # serve the build
 ```
 
-Open the local URL shown by Astro in your terminal.
-
-## Build for production
-
-```sh
-npm run build
-npm run preview
-```
-
-If you want canonical URLs and share metadata to use the production domain, provide `SITE_URL` before building:
+Set `SITE_URL` when building for production so canonical and social URLs are absolute:
 
 ```sh
 SITE_URL=https://example.com npm run build
@@ -56,142 +33,73 @@ SITE_URL=https://example.com npm run build
 ## Project structure
 
 ```text
-/
-├── public/
-│   ├── favicon.ico
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   ├── content/
-│   │   ├── islands/
-│   │   ├── layout/
-│   │   └── ui/
-│   ├── content/
-│   │   └── games/
-│   │       └── <slug>/
-│   │           ├── cover.svg
-│   │           └── index.mdx
-│   ├── data/
-│   ├── layouts/
-│   ├── lib/
-│   ├── pages/
-│   └── styles/
-├── astro.config.mjs
-├── package.json
-└── src/content.config.ts
+src/
+├── components/
+│   ├── content/InteractiveWidget.astro  # maps a widget key to its React island
+│   ├── islands/                         # one React board per game, plus kit/
+│   │   └── kit/                         # GameFrame, Button, Segmented, useProgress…
+│   ├── layout/                          # SiteHead, SiteHeader, SiteFooter, Container
+│   └── ui/                              # BoxLid, ShelfTile, RecordPanel, Callout, Mark
+├── content/games/<slug>/                # index.mdx + cover.svg per game
+├── content.config.ts                    # the games collection schema
+├── data/site.ts                         # site name, description, navigation
+├── layouts/MainLayout.astro
+├── lib/
+│   ├── games.ts                         # collection queries and formatting
+│   ├── inks.ts                          # the twelve process inks and inkStyle()
+│   ├── playable-games.ts                # widget keys accepted by the schema
+│   ├── playable/                        # framework-free game logic
+│   ├── progress.ts                      # per-device record in localStorage
+│   └── record-format.ts                 # words for stamps and "Your record"
+├── pages/
+│   ├── index.astro                      # the shelf
+│   ├── games/index.astro                # library with filters
+│   ├── games/[slug].astro               # a game page
+│   ├── about.astro
+│   └── 404.astro
+└── styles/global.css                    # tokens, browser surfaces, guide prose
 ```
 
 ## Content model
 
-Game content lives in the `games` collection under `src/content/games/`. Each game gets its own folder so local assets can stay next to the MDX entry.
+Each game is a folder in `src/content/games/` holding `index.mdx` and `cover.svg`. The schema in `src/content.config.ts` validates:
 
-Example:
+| Field | What it is for |
+| --- | --- |
+| `title`, `slug` | Name and URL (`/games/<slug>/`). Quote numeric slugs: `slug: "2048"`. |
+| `excerpt` | One-line hook (max 110 characters) for listings. |
+| `description` | One or two sentences under the title on the game page. |
+| `category` | `arcade`, `word`, `puzzle` or `strategy`. |
+| `ink` | The game's process ink, one of the names in `src/lib/inks.ts`. |
+| `difficulty` | `beginner`, `intermediate` or `advanced`. |
+| `minPlayers`, `maxPlayers` | Player range. `maxPlayers >= 2` marks the game as two-player capable in the library filter. |
+| `estimatedMinutes` | Typical round length. |
+| `concept` | The idea underneath, as a short noun phrase. Listed in the home page concept index. |
+| `skills` | 2–5 thinking skills the game trains. |
+| `quickRules` | 3–6 short imperative steps that are the complete rules. Shown numbered beside the board. |
+| `controls` | 1–6 lines covering keyboard and pointer/touch. `Lead: text` renders the lead in bold. |
+| `widget` | Key of the React board, from `src/lib/playable-games.ts`. |
+| `coverImage`, `coverImageAlt` | `./cover.svg` and its description (alt is required when a cover is set). |
+| `relatedGameSlugs` | Games offered under "Play next". |
+| `seoTitle`, `seoDescription` | Page title and meta description. |
+| `status` | `published` (default) or `draft`. Drafts get no route and no lid. |
+| `publishedAt`, `updatedAt` | Dates. |
 
-```text
-src/content/games/snake/
-├── cover.svg
-└── index.mdx
-```
+The MDX body is the guide. Use this order: one or two intro paragraphs, `## How to play`, `## A worked example`, `## Strategy` (with `###` steps from beginner to advanced), `## The idea underneath`, optionally `## Common mistakes`, and one `<Callout title="Try this">` challenge. Level-two headings become the "On this page" list, and a heading containing "The idea underneath" is linked from the Concept fact in the title band.
 
-The collection schema validates fields such as:
+## Adding a game
 
-- `title`
-- `slug`
-- `excerpt`
-- `category`
-- `tags`
-- `difficulty`
-- `minPlayers`
-- `maxPlayers`
-- `estimatedMinutes`
-- `educationalTopics`
-- `isPlayable`
-- `status`
-- `coverImage`
-- `coverImageAlt`
-- `relatedGameSlugs`
-- `seoTitle`
-- `seoDescription`
-- `description`
-- `publishedAt`
-- `updatedAt`
-- `playableWidget`
-- `widgetHydration`
+1. **Content.** Create `src/content/games/<slug>/index.mdx` with the frontmatter above and the guide body. Import the callout with `import Callout from '../../../components/ui/Callout.astro';`.
+2. **Cover.** Draw `cover.svg` as the box-lid motif: `viewBox="0 0 400 300"`, a `<title>`, transparent background, no text, gradients, filters or shadows. Use only `#f2eee5`, `#1d1c1a` and `#fbf9f4`, strokes at least 4 units, and keep the drawing in the upper three quarters (the title is set along the bottom in HTML over the game's ink). It must read on every ink.
+3. **Logic.** Put pure rules in `src/lib/playable/<widget>.ts`, deterministic given an injectable `random`.
+4. **Board.** Write `src/components/islands/<Name>.tsx` (default export, props `{ slug: string }`) using the kit's `GameFrame`. Call `recordRound(slug, …)` exactly once per finished round and persist options with `usePref`.
+5. **Register.** Add the widget key to `PLAYABLE_WIDGET_OPTIONS` in `src/lib/playable-games.ts`, then add an import and one `client:only="react"` line for it in `src/components/content/InteractiveWidget.astro`.
+6. Run `npm run build` to validate the frontmatter and generate the route.
 
-## How to add a new game
+## Player progress
 
-1. Create a folder in `src/content/games/` using a lowercase, hyphen-separated slug.
-2. Add an `index.mdx` file with the required frontmatter.
-3. Add an optional local cover image such as `cover.svg` beside the entry.
-4. Write the educational body content in MDX.
-5. Add `relatedGameSlugs` so the page can suggest useful next reads.
-6. Run `npm run build` to validate the schema and generate the route.
+`src/lib/progress.ts` keeps one JSON object in `localStorage` under `arkedia:progress:v1`, keyed by game slug: rounds played, wins, losses, draws, streaks, best scores per bucket (with whether higher or lower is better), last played time and saved options. Nothing is sent anywhere. The lid stamps, the home page's "Continue where you left off", the library's "Yours" filter and each page's "Your record" read it on the client and update on `onProgressChange`. Players can clear one game from its page or everything from `/about/#progress`.
 
-Minimal example:
+## Design
 
-```mdx
----
-title: Example Game
-slug: example-game
-excerpt: A short summary for cards and listings.
-category: logic
-tags:
-  - reasoning
-difficulty: beginner
-minPlayers: 1
-maxPlayers: 1
-estimatedMinutes: 10
-educationalTopics:
-  - pattern recognition
-isPlayable: false
-status: published
-seoTitle: Example Game guide
-seoDescription: Learn how Example Game works and why it is educational.
-description: A longer sentence for the page hero.
-publishedAt: 2026-04-10
-relatedGameSlugs: []
----
-
-## How the game works
-
-Write the guide here.
-```
-
-## How to attach a playable widget
-
-Playable widgets are intentionally isolated from the rest of the site shell.
-
-1. Create the React island in `src/components/islands/`.
-2. Add any small logic helpers in `src/lib/playable/` if needed.
-3. Register the widget key and metadata in `src/lib/playable-games.ts`.
-4. Extend the widget mapping in `src/components/content/InteractiveWidget.astro`.
-5. Set `isPlayable: true` and `playableWidget: <key>` in the game entry frontmatter.
-6. Choose the lightest useful hydration mode, usually `visible`.
-
-## Architecture notes
-
-- Astro handles routing, layout, metadata, and static rendering by default.
-- MDX is the source of truth for long-form educational content.
-- React is limited to interactive islands inside game pages.
-- Local cover images live in `src/content/` so Astro can optimize them.
-- Page metadata flows through the shared layout and supports canonical URLs when `SITE_URL` is configured.
-- The games index stays static-first and uses collection metadata for browse cues instead of a heavy search UI.
-
-## v1 checklist
-
-- Static Astro site shell
-- Typed content collection for games
-- MDX-authored educational game pages
-- Dynamic routes generated from content
-- Optimized local cover images
-- Related games
-- Playable islands for selected games
-- Shared SEO and accessibility foundations
-
-## Suggested v2 next steps
-
-- Add more game entries and richer editorial examples
-- Replace the Sudoku and Crossword scaffolds with focused playable widgets
-- Add progressive browse enhancements such as lightweight filtering
-- Configure the production domain through `SITE_URL`
-- Add an official sitemap integration once the final public domain is fixed
+The direction is a tabletop compendium: chipboard paper, black ink, one solid process ink per game, Archivo (expanded black for lids and titles) and Source Serif 4 for the guides. Product and voice rules live in [PRODUCT.md](PRODUCT.md); a DESIGN.md with the full system will sit beside it.
