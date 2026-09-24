@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img">
+  <title>A tic-tac-toe grid mid-game: X holds three corners and has set up a fork</title>
+  <path d="M172 20V206M110 82H296M234 20V206M110 144H296" fill="none" stroke="#f2eee5" stroke-width="9" stroke-linecap="round"/>
+  <path d="M124.0 34.0L158.0 68.0M158.0 34.0L124.0 68.0" fill="none" stroke="#fbf9f4" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="203.0" cy="113.0" r="19" fill="none" stroke="#f2eee5" stroke-width="16"/><circle cx="203.0" cy="113.0" r="19" fill="none" stroke="#1d1c1a" stroke-width="8"/>
+  <path d="M248.0 158.0L282.0 192.0M282.0 158.0L248.0 192.0" fill="none" stroke="#fbf9f4" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="265.0" cy="51.0" r="19" fill="none" stroke="#f2eee5" stroke-width="16"/><circle cx="265.0" cy="51.0" r="19" fill="none" stroke="#1d1c1a" stroke-width="8"/>
+  <path d="M124.0 158.0L158.0 192.0M158.0 158.0L124.0 192.0" fill="none" stroke="#fbf9f4" stroke-width="10" stroke-linecap="round"/>
+</svg>
