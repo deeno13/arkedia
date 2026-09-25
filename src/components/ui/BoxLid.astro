@@ -1,0 +1,85 @@
+---
+/*
+  The box lid: the site's repeated unit. A solid field of the game's ink with its cover motif,
+  the title set along the bottom, and a rubber stamp for this device's record (filled client-side).
+*/
+import { GAME_CATEGORY_LABELS, formatPlayerRange, gameHref, type GameEntry } from '../../lib/games';
+import { inkStyle } from '../../lib/inks';
+
+interface Props {
+  entry: GameEntry;
+  headingLevel?: 'h2' | 'h3';
+  class?: string;
+}
+
+const { entry, headingLevel: Heading = 'h3', class: className = '' } = Astro.props;
+const { slug, title, category, difficulty, minPlayers, maxPlayers, estimatedMinutes, coverImage, ink } = entry.data;
+---
+
+<a
+  href={gameHref(entry)}
+  class:list={[
+    'group block rounded-die transition-[translate,box-shadow] duration-200 ease-out',
+    'hover:-translate-y-1 hover:shadow-[0_16px_28px_-14px_rgb(29_28_26/0.6)] motion-reduce:hover:translate-y-0',
+    className,
+  ]}
+  style={inkStyle(ink)}
+  data-lid
+  data-slug={slug}
+  data-category={category}
+  data-difficulty={difficulty}
+  data-players={maxPlayers >= 2 ? 'two' : 'solo'}
+>
+  <div class="ink-field @container relative flex aspect-[4/3] flex-col overflow-hidden rounded-die bg-game text-on-game">
+    <div class="relative min-h-0 flex-1">
+      {coverImage && (
+        <img
+          src={coverImage.src}
+          width={coverImage.width}
+          height={coverImage.height}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          class="absolute inset-x-0 top-0 h-[133.4%] w-full object-contain object-top"
+        />
+      )}
+    </div>
+    <div class="relative px-[5cqi] pb-[4.5cqi]">
+      <Heading class="text-[clamp(0.9375rem,7.6cqi,1.875rem)] leading-[0.98] font-black font-stretch-expanded tracking-[-0.015em] text-balance">
+        {title}
+      </Heading>
+      <p class="mt-[1.6cqi] text-[clamp(0.6875rem,3.9cqi,0.875rem)] leading-tight font-semibold font-stretch-semi-expanded">
+        {GAME_CATEGORY_LABELS[category]} · {estimatedMinutes} min<span class="@max-[13rem]:hidden"> · {formatPlayerRange(minPlayers, maxPlayers)}</span>
+      </p>
+    </div>
+    <span
+      data-progress-slug={slug}
+      hidden
+      class="absolute top-[4.5cqi] right-[4.5cqi] -rotate-6 rounded-[3px] bg-paper px-[0.6em] py-[0.55em] text-[clamp(0.625rem,3.7cqi,0.8125rem)] leading-none font-black font-stretch-expanded tracking-[0.05em] text-ink uppercase tabular-nums shadow-[inset_0_0_0_2px_var(--color-ink),inset_0_0_0_3.5px_var(--color-paper),inset_0_0_0_4.5px_var(--color-ink)]"
+    >
+      <span aria-hidden="true" data-stamp-text></span>
+      <span class="sr-only" data-stamp-summary></span>
+    </span>
+  </div>
+</a>
+
+<script>
+  import { onProgressChange, readAllProgress } from '../../lib/progress';
+  import { recordSummary, stampLabel } from '../../lib/record-format';
+
+  function paintStamps() {
+    const records = readAllProgress();
+    for (const stamp of document.querySelectorAll<HTMLElement>('[data-progress-slug]')) {
+      const record = records[stamp.dataset.progressSlug ?? ''];
+      const label = stampLabel(record);
+      stamp.hidden = !label;
+      if (!label || !record) continue;
+      stamp.querySelector('[data-stamp-text]')!.textContent = label;
+      stamp.querySelector('[data-stamp-summary]')!.textContent = `, your record: ${recordSummary(record)}`;
+    }
+  }
+
+  paintStamps();
+  onProgressChange(paintStamps);
+  window.addEventListener('pageshow', paintStamps);
+</script>

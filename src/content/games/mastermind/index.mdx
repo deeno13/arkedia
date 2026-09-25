@@ -1,0 +1,113 @@
+---
+title: "Mastermind"
+slug: mastermind
+excerpt: "Crack a hidden four-peg code in ten guesses, using only right-place and wrong-place clues."
+description: "A hidden code of four coloured pegs, ten guesses to find it. Every guess earns a clue: how many pegs are exactly right, and how many are the right colour in the wrong place."
+category: puzzle
+ink: plum
+difficulty: intermediate
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 8
+concept: "Hypothesis testing"
+skills:
+  - "deduction"
+  - "systematic elimination"
+  - "information gain"
+quickRules:
+  - "The computer hides a code of four pegs, chosen from six colours. Colours may repeat unless you switch repeats off."
+  - "Guess by filling all four slots with colours, then submit."
+  - "A black key peg means one peg is the right colour in the right place."
+  - "A white key peg means one more peg is the right colour but in the wrong place. Key pegs don't say which pegs they refer to."
+  - "Crack the code within ten guesses to win. Run out and the code is revealed."
+controls:
+  - "Click or tap a colour to drop it into the selected slot; tap a filled slot to clear it."
+  - "Keyboard: keys 1–6 place a colour, Backspace clears, Enter submits."
+  - "Left and Right arrows move between slots."
+  - "Each colour also carries a shape (dot, triangle, square, diamond, cross, bar) and a number."
+  - "Tick “Count codes still possible” to see how many codes fit every clue so far."
+widget: "mastermind"
+coverImage: ./cover.svg
+coverImageAlt: "A Mastermind board mid-game: a hidden code above three guesses of four pegs, each row scored with small black and white key pegs."
+relatedGameSlugs:
+  - wordle-style-game
+  - minesweeper
+  - rock-paper-scissors
+seoTitle: "Mastermind: rules, code-breaking strategy and a free board to play"
+seoDescription: "Learn Mastermind in a minute and play it free in your browser. Read black and white key pegs correctly, use repeats, and see how many codes each guess eliminates."
+publishedAt: 2026-09-25
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+
+Somebody has hidden four coloured pegs behind a screen. You get ten guesses, and after each one you're told only two numbers: how many pegs are exactly right, and how many are the right colour in the wrong spot. No pointing, no "warmer, colder". Just two numbers.
+
+It sounds stingy, and it is. That's the fun. Every guess is an experiment, every clue rules out whole families of codes, and a good player cracks the code in five or six guesses. The trick is learning to ask questions whose answers you can actually use.
+
+## How to play
+
+The code is four pegs long, each peg one of six colours. On this board the colours are red, yellow, green, blue, purple and pink, and each also has its own shape and number, so you never have to rely on colour alone. With **repeats allowed** (the default) a colour can appear more than once, even four times. There are 6 × 6 × 6 × 6 = **1,296** possible codes. Switch repeats off and every peg is a different colour, which leaves 6 × 5 × 4 × 3 = **360**.
+
+Build a guess by filling all four slots, then submit it. The board scores it with up to four key pegs:
+
+- **Black**: one of your pegs is the right colour in the right slot.
+- **White**: one of your pegs is the right colour, but in a different slot.
+- Nothing: the rest don't count.
+
+The key pegs are a tally. They don't say *which* of your pegs earned them, and that's what makes the game.
+
+**Repeated colours** are where people get confused, so here is the exact rule. First count the black pegs. Then, for each colour, take the smaller of "how many times it's in the code" and "how many times it's in your guess", and add those up across all colours. That total, minus the black pegs, is the number of white pegs. In short, one peg in the code can pay out at most once. If the code has one red and you guess four reds, you get one black and no whites, not one black and three whites.
+
+You win the moment you score four blacks. If your tenth guess misses, the round ends and the code is revealed. Your best score is the fewest guesses you've needed, kept separately for games with and without repeats.
+
+## A worked example
+
+Say the hidden code is **Blue Blue Pink Yellow**, with repeats allowed.
+
+| Guess | Pegs | Clue | What you learn |
+|---|---|---|---|
+| 1 | Red Red Yellow Yellow | 1 black, 0 white | Exactly one of those four pegs counts, and it's already in the right slot. |
+| 2 | Red Green Green Green | 0, 0 | No red, no green anywhere. So the hit in guess 1 was a **yellow**, in slot 3 or 4. |
+| 3 | Blue Blue Yellow Blue | 2 black, 1 white | Two blues are right. The yellow is right but misplaced, so yellow belongs in **slot 4**. |
+| 4 | Blue Blue Purple Yellow | 3 black, 0 white | Purple is wrong. Guess 3 already ruled out a third blue (it would have scored another white) and a yellow in slot 3, so only pink is left. |
+| 5 | Blue Blue Pink Yellow | 4 black | Cracked. |
+
+Look at guess 2. It seems wasted, since it scores nothing, but a zero is one of the most useful clues in the game. It clears two colours in one go and tells you which yellow scored in guess 1.
+
+## Strategy
+
+### Start broad
+
+A first guess with two pairs, like **Red Red Yellow Yellow**, is a solid opener with repeats on. It tests two colours at once, and its possible answers split the 1,296 codes into fairly even groups. The biggest group left after it is 256 codes. Opening with four of one colour tells you almost nothing if it misses, which it usually will.
+
+### Read zeros and totals first
+
+Add black and white together. That sum tells you how many of your colours are in the code, whatever their positions. Two guesses that cover all six colours between them often pin down the colour content before you've worked on positions at all.
+
+### Move one thing at a time, then two
+
+Once you know the colours, rearrange them. If you swap two pegs and the black count goes up by two, both new spots are right. If it drops by two, both old spots were right. A change of one means one peg moved into or out of place, and you can find out which with a single follow-up.
+
+### Only play codes that could still win
+
+Beginners often guess something they already know is wrong, "just to test". Sometimes that's clever, but usually you're better off playing a code that fits every clue so far. It can still win, and its clue still cuts the field. Before you submit, check your guess against each earlier row: would it have produced exactly those key pegs?
+
+### Advanced: pick the guess with the worst worst-case
+
+The strong players' question isn't "is this likely right?" but "whatever answer comes back, how many codes will be left?" Choose the guess whose *largest* leftover group is smallest. Donald Knuth showed in 1977 that playing this way solves every code with repeats in **five guesses or fewer**. The counter on the board lets you watch the field shrink as you play.
+
+## The idea underneath
+
+Mastermind is **hypothesis testing**. At the start, all 1,296 codes are live hypotheses. A guess is an experiment, the key pegs are the result, and every code that would have given a different result is ruled out. The "codes still possible" counter does exactly that: for each candidate code it asks, "if this were the secret, would every guess so far have scored what it did?", and keeps only the ones that fit.
+
+A good experiment is one where you can't predict the answer. If nearly every code would give the same clue, you learn almost nothing. The clue carries the most **information** when the possible answers split the field into many small, evenly sized groups. Information theory measures this in bits: halving the field is one bit. Getting from 1,296 codes down to 1 takes log₂ 1296 ≈ 10.3 bits. A single clue can come back in at most 14 different ways, so it can never deliver more than log₂ 14 ≈ 3.8 bits. That's why no strategy can promise to finish in three guesses, and why a good strategy needs four or five.
+
+## Common mistakes
+
+- **Counting a code peg twice.** One red in the code can earn one key peg at most, black or white, never both.
+- **Assuming key pegs line up with slots.** The first key peg is not about your first slot. The clue is a count.
+- **Forgetting old clues.** Every new guess has to fit *every* earlier row, not just the last one.
+
+<Callout title="Try this">
+Turn on the counter and play Red Red Yellow Yellow as your first guess. Before you press Enter, predict roughly how many codes will survive. Then try to finish in five guesses by only ever playing codes the counter says are still possible.
+</Callout>

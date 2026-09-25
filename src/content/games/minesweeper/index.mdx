@@ -1,0 +1,115 @@
+---
+title: "Minesweeper"
+slug: minesweeper
+excerpt: "Clear the field using the numbers. Each one counts the mines touching it."
+description: "Uncover every safe square without setting off a mine. Each number tells you how many mines touch that square — usually enough to know exactly where they are."
+category: puzzle
+ink: teal
+difficulty: intermediate
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 10
+concept: "Logical inference and probability"
+skills:
+  - "deduction"
+  - "reasoning about risk"
+  - "pattern recognition"
+quickRules:
+  - "Open any square. The first one is always safe and opens up an area."
+  - "A number counts the mines hidden in the eight squares touching it."
+  - "Flag a square you know hides a mine, so you can't open it by accident."
+  - "Click an open number whose mines are all flagged to open its other neighbours at once."
+  - "Open every square that isn't a mine to win. Open a mine and the round is over."
+controls:
+  - "Mouse: click opens a square; right-click places or removes a flag."
+  - "Touch: tap opens; long-press flags, or set Tap to Flag."
+  - "Click or tap an open number to chord once its flags are placed."
+  - "Keyboard: arrows move, Enter or Space opens, F flags, C chords."
+  - "On a narrow screen the Intermediate field scrolls sideways inside the board."
+widget: "minesweeper"
+coverImage: ./cover.svg
+coverImageAlt: "A Minesweeper field mid-game: open squares with numbers, covered squares, two planted flags and one mine."
+relatedGameSlugs:
+  - sudoku
+  - lights-out
+  - mastermind
+seoTitle: "Minesweeper: rules, patterns and a free board to play"
+seoDescription: "Learn Minesweeper in a minute, then play it free in your browser. The 1-1, 1-2-1 and 1-2-2-1 patterns, when you must guess, and the odds behind a guess."
+publishedAt: 2026-09-25
+---
+import Callout from '../../../components/ui/Callout.astro';
+
+Minesweeper looks like a game of luck and plays like a logic puzzle. Nearly every square you open hands you a number, and that number is a small, exact fact about the squares around it. Put two or three of those facts side by side and the mines often have nowhere left to hide.
+
+The luck is real but rarer than it looks. Learn a handful of patterns and most of a board solves outright; the rest is choosing the least bad odds.
+
+## How to play
+
+The field is a grid of covered squares. Some hide mines: 10 on the 9×9 Beginner field, 40 on the 16×16 Intermediate one. You don't know where they are.
+
+- **Open a square.** If it hides a mine, you lose. Otherwise it shows a number from 1 to 8: how many of its up to eight neighbours (sideways, up and down, and diagonal) are mines. A square with no mining neighbours shows nothing, and the game opens all its neighbours for you. That spreads until it reaches numbers, which is why one click can clear half a board.
+- **Your first square is always safe.** Here, the mines are laid only after your first click, and never on or next to that square. You always start on an empty patch.
+- **Flag the mines you've found.** A flag is your note-to-self. It stops stray clicks opening that square. The Mines counter shows mines minus flags, and trusts you: a wrong flag still counts.
+- **Chord to save clicks.** Click an open number that already has exactly that many flags touching it, and all its other covered neighbours open at once. If one of your flags was wrong, chording opens a mine.
+- **The round ends** when every safe square is open (you win, and the remaining mines are flagged for you) or when you open a mine (you lose, and the board shows every mine and crosses out any wrong flags). You never have to flag anything to win.
+
+## A worked example
+
+Here's the top edge of a field, five squares wide. Row 1 is covered (`?`), row 2 shows numbers, row 3 is open and empty. The board edge is on both sides.
+
+|   | A | B | C | D | E |
+|---|---|---|---|---|---|
+| 1 | ? | ? | ? | ? | ? |
+| 2 | 1 | 1 | 2 | 1 | 1 |
+| 3 |   |   |   |   |   |
+
+1. **A2 is 1.** Against the wall, it touches only two covered squares, A1 and B1. One of them is a mine.
+2. **B2 is also 1.** It touches A1, B1 and C1. Its one mine is already accounted for in A1 or B1, so **C1 is safe**. Open it.
+3. **C2 is 2** and touches B1, C1 and D1. C1 is now open, so B1 and D1 are both mines. Flag them.
+4. **A2's 1 is used up by B1**, so A1 is safe. **D2's 1 is used up by D1**, so E1 is safe. With D1 flagged, you can chord D2 to open C1 and E1 in one click.
+
+Five squares, zero guesses. Steps 1 and 2 are the **1-1 pattern**, and the row B2–C2–D2 is the **1-2-1 pattern**. Both are explained below.
+
+## Strategy
+
+### Read before you click
+
+Before every click, find a number and count two things around it: flags and covered squares. If the flags already equal the number, every other covered neighbour is safe. If the flags plus covered squares equal the number, every covered neighbour is a mine.
+
+### Compare neighbouring numbers
+
+When one number's covered squares all belong to a neighbouring number's covered squares too, subtract. That's the whole trick behind the named patterns. Each one is shown along a straight edge of covered squares, with open squares on the other side:
+
+- **1-1 from a wall or corner:** a 1 that touches only two covered squares, next to another 1 that touches those two plus one more. The extra square is safe.
+- **1-2-1:** the mines sit directly opposite the two 1s. The square opposite the 2 is safe.
+- **1-2-2-1:** the mines sit directly opposite the two 2s. The squares opposite the 1s are safe.
+
+Learn to spot these by shape; it beats doing the arithmetic each time.
+
+### Use the mine count late
+
+Near the end, the Mines counter becomes information. If two unresolved areas are left and only one mine remains, it can't be in both, and that often settles one of them.
+
+### When guessing is unavoidable
+
+Some positions have no logical answer. The classic case is two covered squares that share exactly the same numbered neighbours, with one mine between them. Nothing on the board separates them, so it's a true 50/50. Before guessing, check that you've missed nothing. Then guess **early** rather than late, because losing a coin flip at the end costs you the whole board.
+
+Not all guesses are equal. A covered square deep in unexplored territory, far from any number, has odds of about *(mines not yet placed by the numbers) ÷ (such squares)*. At the start of Beginner that's roughly 1 in 8, since 10 mines sit among 81 squares, and it's often better than the 1 in 2 on the frontier. A guess that could open an empty area is worth more than one that could only reveal a single number.
+
+## The idea underneath
+
+Every number is an equation. Give each covered square an unknown that is 1 for a mine and 0 for safe. A 2 then says "these neighbours add up to 2." The patterns above are the same move each time: subtract one equation from an overlapping one. In the worked example, B2 minus A2 says "C1 = 0."
+
+Solving an entire board this way is hard in general. Deciding whether a Minesweeper position is even consistent has been proven NP-complete (Richard Kaye, 2000). No known method is fast on every possible board, but real boards are small enough for pattern-matching to go a long way.
+
+When logic runs out, probability takes over. Count every mine layout that fits all the numbers; a square's chance of being a mine is the share of layouts that put one there. The best players make exactly that estimate, roughly and quickly.
+
+## Common mistakes
+
+- **Flagging instead of reading.** Flags are optional. Time spent flagging obvious mines is time not spent finding safe squares.
+- **Chording on a hunch.** A chord trusts every flag around that number. One doubtful flag makes it a blind click.
+- **Saving the guess for last.** An unavoidable 50/50 costs the same whenever you take it. Take it before you've invested ten minutes.
+
+<Callout title="Try this">
+Play a Beginner round without a single flag: open only squares you can prove are safe, and chord nothing. Then play another with flags and chording, and compare your times on the board's clock. The best run for each level is saved on this device.
+</Callout>

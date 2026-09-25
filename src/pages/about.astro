@@ -1,71 +1,155 @@
 ---
-import Callout from '../components/ui/Callout.astro';
-import LinkButton from '../components/ui/LinkButton.astro';
-import PageHero from '../components/ui/PageHero.astro';
-import Section from '../components/ui/Section.astro';
-import { editorialPrinciples } from '../data/site';
+import Container from '../components/layout/Container.astro';
 import MainLayout from '../layouts/MainLayout.astro';
+import { siteConfig } from '../data/site';
+import { getPublishedGames } from '../lib/games';
+import { PROGRESS_STORAGE_KEY } from '../lib/progress';
+
+const games = await getPublishedGames();
 ---
 
 <MainLayout
   title="About Arkedia"
-  description="Learn how Arkedia is built as a static-first educational games site with Astro, typed content collections, optimized local images, and selective React islands."
+  description="What Arkedia is, how each game page works, where your record is kept (only in your browser), and who made the fonts and games."
 >
-  <PageHero
-    eyebrow="About Arkedia"
-    title="A content-first educational games site with a static-first core"
-    description="Arkedia is designed to teach through game pages that pair readable explanations with optional interactive practice. The site architecture aims to stay understandable for authors, fast for readers, and flexible for future content collections."
-  >
-    <Fragment slot="actions">
-      <LinkButton href="/games/">Explore the games</LinkButton>
-    </Fragment>
-  </PageHero>
+  <Container class="pt-8 sm:pt-12">
+    <h1 class="max-w-[18ch] text-[clamp(2.25rem,5vw,3.75rem)] leading-[0.95] font-black font-stretch-expanded tracking-[-0.03em] text-balance">
+      A shelf of classic games, each with its rules inside the box
+    </h1>
 
-  <Section
-    eyebrow="Mission"
-    title="Use game pages to teach underlying ideas clearly"
-    description="The goal is not just to host games. Each page should help learners understand rules, strategies, concepts, and examples around the game itself."
-  >
-    <div class="grid gap-4 lg:grid-cols-3">
-      <Callout title="Content-first">
-        <p>Most value should come from the page itself: explanation, structure, and examples, even before interaction is added.</p>
-      </Callout>
-      <Callout title="Static-first" tone="neutral">
-        <p>Astro handles routing and rendering by default so pages remain quick, resilient, and easy to cache.</p>
-      </Callout>
-      <Callout title="Selective islands">
-        <p>React is reserved for playable widgets or teaching interactions that genuinely benefit from local state.</p>
-      </Callout>
-    </div>
-  </Section>
+    <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
+      <div class="content-prose">
+        <p>
+          {siteConfig.name} is a collection of {games.length} classic games you can learn and play on the same page. Some you
+          half-remember from a school desk or the back of a newspaper; some you may never have played at all. Each one comes
+          with the rules, a worked example, strategy that actually helps, and the idea underneath: the bit of probability,
+          logic or search that makes the game tick.
+        </p>
+        <p>
+          It is built for playing on your own, in a spare few minutes, on a laptop or a phone. Nobody is marking you and
+          nothing is timed unless you start the clock.
+        </p>
 
-  <Section
-    eyebrow="Principles"
-    title="How the project should evolve"
-    description="These are the defaults guiding later phases as more content, richer media, and optional game widgets are added."
-  >
-    <div class="grid gap-4 lg:grid-cols-3">
-      {editorialPrinciples.map((principle) => (
-        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60">
-          <p class="text-base leading-7 text-slate-700">{principle}</p>
+        <h2 id="how-it-works">How each page works</h2>
+        <ol>
+          <li>
+            <strong>Learn it in a minute.</strong> Beside every board is a short numbered list: the complete rules, written
+            so that you can make a legal first move straight after reading them.
+          </li>
+          <li>
+            <strong>Play it.</strong> The board is right there. Every game works with a keyboard as well as a mouse or touch
+            screen, and says what is happening in words as well as colour. The two-player games can be played against the
+            computer or with a friend at the same screen.
+          </li>
+          <li>
+            <strong>Go deeper.</strong> Below the board is the guide: the rules in full with edge cases, a position walked
+            through move by move, strategy from first steps to strong play, and the idea the game is quietly teaching.
+          </li>
+        </ol>
+
+        <h2 id="progress">Your record stays on this device</h2>
+        <p>
+          When you finish a round, {siteConfig.name} writes a small record into your browser's local storage, under the key
+          <code>{PROGRESS_STORAGE_KEY}</code>: how many rounds you have played, won, lost and drawn, your streaks, your best
+          scores, and options such as the difficulty you last picked. That is what prints the stamps on the box lids and fills
+          in "Your record" on each game page.
+        </p>
+        <p>
+          The record never leaves your device. There are no accounts, no servers keeping score and no leaderboards. It also
+          means the record belongs to this browser only: another browser, another device or a private window starts from an
+          empty shelf, and clearing your browser's site data erases it.
+        </p>
+
+        <div class="my-6 rounded-die border-2 border-ink bg-card px-5 py-4 font-sans" data-clear-all>
+          <p data-clear-summary class="my-0 text-[0.9375rem] font-semibold">Nothing recorded in this browser yet.</p>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              data-clear-button
+              class="inline-flex min-h-11 items-center rounded-die border-2 border-ink px-4 font-semibold font-stretch-semi-expanded text-ink transition-colors duration-150 hover:bg-paper-deep disabled:cursor-not-allowed disabled:opacity-45 data-[armed]:bg-ink data-[armed]:text-paper"
+            >
+              Clear all progress
+            </button>
+            <p data-clear-status aria-live="polite" class="my-0 text-sm text-ink-soft"></p>
+          </div>
+          <noscript><p class="mb-0 mt-2 text-sm text-ink-soft">Clearing needs JavaScript. You can also clear this site's data in your browser settings.</p></noscript>
         </div>
-      ))}
-    </div>
-  </Section>
 
-  <Section
-    eyebrow="Architecture"
-    title="Built to stay readable for both authors and developers"
-    description="Layouts, cards, prose wrappers, metadata components, and page heroes are all Astro components. That keeps the shell simple while giving content pages a consistent design language."
-    size="narrow"
-  >
-    <Callout title="Why this helps later phases">
-      <ul class="space-y-3">
-        <li>New game pages can plug into a stable layout and card system.</li>
-        <li>MDX content can expand without changing the surrounding shell.</li>
-        <li>Future cover images can use Astro’s image workflow naturally.</li>
-        <li>Optional widgets can stay page-scoped rather than becoming a site requirement.</li>
-      </ul>
-    </Callout>
-  </Section>
+        <h2 id="credits">Credits</h2>
+        <p>
+          The games themselves are classic designs that belong to everyone. The puzzles, word lists and clues on
+          {siteConfig.name} are made for it; the word games use common dictionary words, not anyone's copied puzzle archive.
+        </p>
+        <p>
+          Headings and the interface are set in <strong>Archivo</strong> by Omnibus-Type, and the guides in
+          <strong>Source Serif 4</strong> by Frank Grießhammer for Adobe. Both are published under the SIL Open Font License.
+        </p>
+      </div>
+
+      <nav aria-labelledby="about-contents" class="lg:sticky lg:top-6 lg:self-start">
+        <h2 id="about-contents" class="text-sm font-extrabold font-stretch-semi-expanded">On this page</h2>
+        <ul class="mt-3 space-y-1 border-l border-rule text-[0.9375rem]">
+          <li><a class="-ml-px block border-l-2 border-transparent py-1 pl-3 text-ink-soft hover:border-ink hover:text-ink" href="#how-it-works">How each page works</a></li>
+          <li><a class="-ml-px block border-l-2 border-transparent py-1 pl-3 text-ink-soft hover:border-ink hover:text-ink" href="#progress">Your record</a></li>
+          <li><a class="-ml-px block border-l-2 border-transparent py-1 pl-3 text-ink-soft hover:border-ink hover:text-ink" href="#credits">Credits</a></li>
+          <li><a class="-ml-px block border-l-2 border-transparent py-1 pl-3 font-semibold text-ink hover:border-ink" href="/games/">Browse all games</a></li>
+        </ul>
+      </nav>
+    </div>
+  </Container>
 </MainLayout>
+
+<script>
+  import { clearProgress, onProgressChange, readAllProgress } from '../lib/progress';
+
+  const panel = document.querySelector<HTMLElement>('[data-clear-all]');
+  if (panel) {
+    const summary = panel.querySelector<HTMLElement>('[data-clear-summary]')!;
+    const button = panel.querySelector<HTMLButtonElement>('[data-clear-button]')!;
+    const status = panel.querySelector<HTMLElement>('[data-clear-status]')!;
+    let timer: number | undefined;
+
+    const disarm = () => {
+      window.clearTimeout(timer);
+      delete button.dataset.armed;
+      button.textContent = 'Clear all progress';
+    };
+
+    const paint = () => {
+      const records = Object.values(readAllProgress());
+      const played = records.filter((record) => record.plays > 0).length;
+      const rounds = records.reduce((sum, record) => sum + record.plays, 0);
+      summary.textContent = played
+        ? `This browser holds your record for ${played} game${played === 1 ? '' : 's'}: ${rounds} round${rounds === 1 ? '' : 's'} in all.`
+        : records.length
+          ? 'No finished rounds yet, only your saved options.'
+          : 'Nothing recorded in this browser yet.';
+      button.disabled = records.length === 0;
+    };
+
+    button.addEventListener('click', () => {
+      if (button.dataset.armed !== 'true') {
+        button.dataset.armed = 'true';
+        button.textContent = 'Click again to erase everything';
+        status.textContent = 'This erases every game’s record and saved options in this browser.';
+        timer = window.setTimeout(() => {
+          disarm();
+          status.textContent = '';
+        }, 5000);
+        return;
+      }
+      disarm();
+      clearProgress();
+      status.textContent = 'All progress cleared.';
+    });
+    button.addEventListener('blur', () => {
+      if (button.dataset.armed === 'true') {
+        disarm();
+        status.textContent = '';
+      }
+    });
+
+    paint();
+    onProgressChange(paint);
+  }
+</script>

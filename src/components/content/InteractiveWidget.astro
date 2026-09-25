@@ -1,64 +1,53 @@
 ---
-import PlayableGameScaffold from './PlayableGameScaffold.astro';
-import PlayableGameShell from './PlayableGameShell.astro';
+import ConnectFourGame from '../islands/ConnectFourGame';
+import CrosswordGame from '../islands/CrosswordGame';
+import Game2048 from '../islands/Game2048';
+import LightsOutGame from '../islands/LightsOutGame';
+import MastermindGame from '../islands/MastermindGame';
+import MemoryGame from '../islands/MemoryGame';
+import MinesweeperGame from '../islands/MinesweeperGame';
+import NimGame from '../islands/NimGame';
 import RockPaperScissorsGame from '../islands/RockPaperScissorsGame';
 import SnakeGame from '../islands/SnakeGame';
-import WordleMiniGame from '../islands/WordleMiniGame';
-import { PLAYABLE_WIDGET_META, type PlayableWidgetKey } from '../../lib/playable-games';
+import SudokuGame from '../islands/SudokuGame';
+import TicTacToeGame from '../islands/TicTacToeGame';
+import TowerOfHanoiGame from '../islands/TowerOfHanoiGame';
+import WordleGame from '../islands/WordleGame';
+import type { PlayableWidgetKey } from '../../lib/playable-games';
 
+/*
+  Boards render client-only: they start from random or device-stored state
+  (localStorage progress and preferences), so server HTML would only mismatch.
+  The page around the board, including the rules, stays static.
+  Astro needs a static import per hydrated component, hence one line per game.
+*/
 interface Props {
-  isPlayable?: boolean;
-  widget?: PlayableWidgetKey;
-  hydration?: 'visible' | 'idle' | 'load';
+  widget: PlayableWidgetKey;
+  slug: string;
+  title: string;
 }
 
-const { isPlayable = false, widget, hydration = 'visible' } = Astro.props;
-const meta = widget ? PLAYABLE_WIDGET_META[widget] : undefined;
+const { widget, slug, title } = Astro.props;
 ---
 
-{meta && meta.type === 'playable' && widget && (
-  <PlayableGameShell eyebrow={meta.eyebrow} title={meta.title} description={meta.description} controlHints={meta.controlHints}>
-    <Fragment slot="aside">
-      These controls hydrate only when the widget scrolls into view, keeping the rest of the page fully static.
-    </Fragment>
-
-    {widget === 'snake' && hydration === 'load' && <SnakeGame client:load />}
-    {widget === 'snake' && hydration === 'idle' && <SnakeGame client:idle />}
-    {widget === 'snake' && hydration === 'visible' && <SnakeGame client:visible />}
-
-    {widget === 'rock-paper-scissors' && hydration === 'load' && <RockPaperScissorsGame client:load />}
-    {widget === 'rock-paper-scissors' && hydration === 'idle' && <RockPaperScissorsGame client:idle />}
-    {widget === 'rock-paper-scissors' && hydration === 'visible' && <RockPaperScissorsGame client:visible />}
-
-    {widget === 'wordle-mini' && hydration === 'load' && <WordleMiniGame client:load />}
-    {widget === 'wordle-mini' && hydration === 'idle' && <WordleMiniGame client:idle />}
-    {widget === 'wordle-mini' && hydration === 'visible' && <WordleMiniGame client:visible />}
-  </PlayableGameShell>
-)}
-
-{meta && meta.type === 'scaffold' && widget && (
-  <PlayableGameShell eyebrow={meta.eyebrow} title={meta.title} description={meta.description} controlHints={meta.controlHints}>
-    <Fragment slot="aside">
-      The content mapping is already in place, so replacing this scaffold with a real island later is a focused change.
-    </Fragment>
-    <PlayableGameScaffold
-      title="Future playable module"
-      summary="Arkedia can attach a richer widget here later without changing the route or the rest of the page shell."
-      nextSteps={meta.controlHints}
-    />
-  </PlayableGameShell>
-)}
-
-{isPlayable && !widget && (
-  <PlayableGameShell
-    eyebrow="Playable version"
-    title="Interactive widget planned"
-    description="This guide is ready for a playable widget in a later phase. The content entry already exposes the metadata needed to attach one cleanly."
-    controlHints={['Add a widget key in content frontmatter', 'Map the key to a React island', 'Keep the rest of the page static']}
-  >
-    <PlayableGameScaffold
-      title="Widget slot reserved"
-      summary="The page shell and content model already support islands, but no interactive component has been attached yet."
-    />
-  </PlayableGameShell>
-)}
+<div class="game-widget" data-widget={widget}>
+  {widget === 'snake' && <SnakeGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></SnakeGame>}
+  {widget === 'rock-paper-scissors' && <RockPaperScissorsGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></RockPaperScissorsGame>}
+  {widget === 'wordle' && <WordleGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></WordleGame>}
+  {widget === 'sudoku' && <SudokuGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></SudokuGame>}
+  {widget === 'crossword' && <CrosswordGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></CrosswordGame>}
+  {widget === 'tic-tac-toe' && <TicTacToeGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></TicTacToeGame>}
+  {widget === 'connect-four' && <ConnectFourGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></ConnectFourGame>}
+  {widget === 'minesweeper' && <MinesweeperGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></MinesweeperGame>}
+  {widget === '2048' && <Game2048 client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></Game2048>}
+  {widget === 'mastermind' && <MastermindGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></MastermindGame>}
+  {widget === 'nim' && <NimGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></NimGame>}
+  {widget === 'tower-of-hanoi' && <TowerOfHanoiGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></TowerOfHanoiGame>}
+  {widget === 'memory' && <MemoryGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></MemoryGame>}
+  {widget === 'lights-out' && <LightsOutGame client:only="react" slug={slug}><slot name="fallback" slot="fallback" /></LightsOutGame>}
+  <noscript>
+    <p class="rounded-die border-2 border-ink bg-card p-4 text-sm">
+      The {title} board needs JavaScript. The rules and guide on this page work without it.
+    </p>
+  </noscript>
+</div>

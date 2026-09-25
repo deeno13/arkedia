@@ -1,65 +1,132 @@
 ---
-title: Crossword
+title: "Mini Crossword"
 slug: crossword
-excerpt: A clue-driven word puzzle that builds vocabulary, semantic reasoning, and persistence through partial knowledge.
+excerpt: "Small grids, fair clues. Every crossing letter helps you solve the next word."
+description: "Fill a 5×5 grid from Across and Down clues. Every square belongs to two answers, so each word you get hands you letters for the words that cross it."
 category: word
-tags:
-  - clues
-  - vocabulary
-  - semantic reasoning
-  - pattern completion
+ink: cobalt
 difficulty: intermediate
 minPlayers: 1
-maxPlayers: 4
-estimatedMinutes: 25
-educationalTopics:
-  - vocabulary retrieval
-  - clue interpretation
-  - semantic networks
-  - collaborative reasoning
-isPlayable: false
-status: published
+maxPlayers: 1
+estimatedMinutes: 8
+concept: "Crossing constraints"
+skills:
+  - "vocabulary"
+  - "lateral thinking"
+  - "using partial information"
+quickRules:
+  - "Each numbered clue has an answer that fills the white squares from that number."
+  - "Across answers run left to right; Down answers run top to bottom."
+  - "Where an Across and a Down answer cross, they share one letter."
+  - "Black squares stay empty. Every white square takes one letter."
+  - "Fill every square correctly to solve the puzzle."
+controls:
+  - "Click or tap a square to select it; click it again to switch Across/Down."
+  - "Type to fill and advance. Backspace deletes and steps back."
+  - "Arrow keys move; Space switches direction; Tab and Shift+Tab change clue."
+  - "Tap a clue, or the arrows on the clue bar, to jump to its answer."
+  - "Check marks wrong letters with a slash; Reveal fills a letter or word and stamps it."
+widget: "crossword"
 coverImage: ./cover.svg
-coverImageAlt: A crossword-style grid with clue markers and title text.
+coverImageAlt: "A small crossword grid with black squares and a highlighted row of filled letter boxes."
 relatedGameSlugs:
   - wordle-style-game
   - sudoku
-seoTitle: Crossword guide, strategy, and educational value
-seoDescription: Discover how crosswords support vocabulary, clue interpretation, and pattern-based reasoning, with practical tips for solving more effectively.
-description: Crosswords ask players to connect clues, word patterns, and prior knowledge, making them ideal for educational content.
-publishedAt: 2026-04-10
-updatedAt: 2026-04-10
-playableWidget: crossword-scaffold
-widgetHydration: visible
+  - memory
+seoTitle: "Mini Crossword: how to solve, strategy, and eight free puzzles"
+seoDescription: "Learn how to solve crosswords with eight original 5×5 mini puzzles you can play in your browser, plus a worked solve and tips on using crossing letters."
+publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
 
-Crosswords are more than vocabulary drills. A good crossword asks the solver to use clues, letter patterns, and partial certainty all at once. That combination makes the format especially valuable for teaching flexible thinking.
+A full-size crossword can take an afternoon. A mini takes a few minutes and teaches the same trick: you almost never solve a word from its clue alone. You solve it from its clue plus the letters other words have already given you.
 
-## How the game works
+Every puzzle here is a 5×5 grid, written for Arkedia, with eight to pick from. Each white square sits in both an Across and a Down answer, so every letter you place is checked twice.
 
-The puzzle presents a grid and a set of clues. Each answer fits into a row or column, and crossing answers share letters. When one answer becomes clearer, it often makes another answer easier. That means solving is rarely linear. Progress in one part of the grid can unlock progress somewhere else.
+## How to play
 
-## Example
+The grid has white squares for letters and black squares that stay empty. Some white squares carry a small number. A number starts an **Across** answer if the word runs rightward from that square, a **Down** answer if it runs downward, or both.
 
-If a clue reads “planet known for rings” and the answer length is six, a learner might think of `SATURN`. If crossing letters later confirm `S`, `T`, and `N`, the answer grows more certain. This interplay between clue meaning and letter evidence is what makes the format educationally strong.
+Each clue gives its number and direction, like "4 Across". Its answer fills the white squares from that number to the next black square or the edge of the grid. Answers are ordinary words and phrases, one letter per square, with no spaces or punctuation. When an Across answer crosses a Down answer, the shared square must hold a letter that works for both.
 
-## Strategy tips
+Clues come in a few flavours:
 
-- start with the clues you know well to create anchor letters
-- use crossing letters to narrow uncertain answers
-- pay attention to clue tense, plurality, and wordplay
-- leave hard clues and return after the grid gives you more evidence
+- **Definitions.** "Not asleep" is AWAKE.
+- **Fill in the blank.** "Once ___ a time" wants the missing word: UPON.
+- **Double duty.** "Place to keep money, or the side of a river" gives two meanings of one word: BANK.
 
-## Educational value
+A clue matches its answer's form. A plural clue has a plural answer, and a past-tense clue has a past-tense answer.
 
-Crosswords help learners practice vocabulary retrieval, reading nuance, and connecting semantic clues to formal word patterns. They also encourage persistence because even partial progress can create useful momentum elsewhere in the puzzle.
+The puzzle is solved when every white square holds the right letter. The timer starts with your first letter. **Check** strikes through wrong letters without fixing them. **Reveal** fills in the right letter or word and stamps the square with a corner mark. A solve that used Reveal still counts as solved, but only clean solves set a best time.
 
-<Callout title="Teaching prompt">
-  Ask learners to identify whether a clue is testing factual knowledge, vocabulary, or wordplay. That helps them see why different clues require different reasoning strategies.
+## A worked example
+
+Here is a grid that is not one of the eight, so nothing is spoiled.
+
+| | | | | |
+| --- | --- | --- | --- | --- |
+| ■ | 1 | 2 | 3 | 4 |
+| ■ | 5 | | | |
+| 6 | | | | |
+| 7 | | | | ■ |
+| 8 | | | | ■ |
+
+**Across:** 1 Hats with peaks · 5 Spoken, not written · 6 Each and ___ · 7 Loaned · 8 Wear thin at the edges
+
+**Down:** 1 Duvet, or a band's take on someone else's song · 2 Stadium · 3 Birthday celebration · 4 Crafty, like a fox · 6 Santa's helper
+
+1. **Start with the sure thing.** 3 Down, "Birthday celebration", five letters: PARTY. It crosses every Across answer, so it seeds P, A, R, T and Y into five different words.
+2. **Cash in the crossings.** 1 Across is now `_ _ P _`, hats with peaks: CAPS. 5 Across is `_ _ A _`, spoken not written: ORAL.
+3. **Follow the new letters down.** 1 Down now starts `C O`, a duvet or a band's version of a song: COVER. 2 Down starts `A R`, a stadium: ARENA. 4 Down starts `S L`, crafty: SLY.
+4. **The last row falls out.** 6 Across reads `_ V E R Y`: EVERY. 7 Across is `_ E N T`, loaned: LENT. 8 Across is `_ R A Y`, wear thin: FRAY. And 6 Down, Santa's helper, reads E-L-F down the left edge, confirming all three.
+
+| | | | | |
+| --- | --- | --- | --- | --- |
+| ■ | C | A | P | S |
+| ■ | O | R | A | L |
+| E | V | E | R | Y |
+| L | E | N | T | ■ |
+| F | R | A | Y | ■ |
+
+Notice how few clues were answered cold. PARTY was the only one. Every other word came at least partly from crossings.
+
+## Strategy
+
+### Take the gimmes first
+
+Fill-in-the-blank clues and short answers are the easiest way in. A three-letter answer with one crossing letter usually has only a few candidates.
+
+### Pick the answer that crosses the most
+
+When two clues feel equally sure, enter the one whose letters feed more unsolved words. A long Down that crosses every Across answer, like PARTY above, can crack the whole grid.
+
+### Let the pattern suggest the word
+
+Stuck on a clue? Look at what you have, like `_ E N T`, and list words that fit: BENT, DENT, LENT, RENT, SENT, TENT. Then reread the clue. A pattern plus a clue is much stronger than either alone.
+
+### Match the clue's grammar
+
+"Takes a seat" is present tense and ends in S, so the answer probably does too: SITS, not SIT or SAT. This one habit prevents a lot of wrong entries.
+
+### Distrust a stuck corner
+
+If a region will not fill, one of your entries there is probably wrong. Check the word you were least sure of before hammering at the others.
+
+## The idea underneath
+
+A crossword is a **constraint satisfaction problem**. Each square is a variable that must take one letter. Each answer is a constraint: its squares must spell a word that fits the clue. Every square here sits in two constraints at once, which makes the grid tightly locked.
+
+The numbers show why crossings are so powerful. There are 26⁵, about 11.9 million, ways to fill five squares with letters, yet only a few thousand of them are common English words. Take the roughly 2,800 five-letter words that Arkedia's word-guess game accepts. Knowing one letter in a fixed position leaves about 230 of them on average. Knowing two, say the second and fourth, leaves about 27. The clue then only has to pick from a short list instead of thousands.
+
+Solving well is the same strategy a computer uses: work on the most constrained answer first, spread each new letter to every word it touches, and back up when a contradiction shows you went wrong. The grids here were built that way, by a program that filled the most constrained slot first and backtracked from dead ends. Every clue was then written by hand.
+
+## Common mistakes
+
+- **Typing a guess and forgetting it.** A wrong guess poisons its crossings. Use Check on a word when its crossings stop making sense.
+- **Ignoring direction.** Clicking a selected square switches between Across and Down. Watch the clue bar above the grid to see which answer you are filling.
+- **Revealing too soon.** One revealed letter often unlocks a whole word, so start with Reveal letter, not Reveal word.
+
+<Callout title="Try this">
+  Pick a puzzle you have not played and solve it using only the Down clues. Read an Across clue only when a word is completely stuck, then see how many Across answers you can fill from crossings alone.
 </Callout>
-
-## Related concepts
-
-Crosswords connect well to Wordle-style games because both rely on incomplete evidence and letter-level reasoning. They also connect to Sudoku because both reward patient accumulation of small certainties rather than impulsive guesses.

@@ -1,0 +1,119 @@
+---
+title: "Tic-Tac-Toe"
+slug: tic-tac-toe
+excerpt: "Three in a row on a 3×3 grid. Perfect play always ends in a draw — can you get there?"
+description: "Take turns marking a 3×3 grid; three in a row wins. It is small enough to solve completely, which makes it the perfect first lesson in game-tree thinking."
+category: strategy
+ink: pink
+difficulty: beginner
+minPlayers: 1
+maxPlayers: 2
+estimatedMinutes: 2
+concept: "Solved games and minimax"
+skills:
+  - "looking ahead"
+  - "forcing moves"
+  - "spotting forks"
+quickRules:
+  - "Two players take turns. X always goes first, then O."
+  - "On your turn, put your mark in any empty square."
+  - "Make three of your marks in a line — across, down or diagonally — to win."
+  - "If all nine squares fill up and nobody has a line, the game is a draw."
+controls:
+  - "Click or tap an empty square to play there."
+  - "Keyboard: arrow keys move between squares; Enter or Space plays."
+  - "Number keys 1–9 play directly, counting left to right from the top-left square."
+  - "Opponent: Computer (Easy, Medium or Hard) or Two players sharing one screen."
+  - "Tick “Show what the computer sees” to label each empty square Win, Draw or Lose."
+widget: "tic-tac-toe"
+coverImage: ./cover.svg
+coverImageAlt: "A tic-tac-toe grid mid-game: X holds three corners and has set up a fork against O."
+relatedGameSlugs:
+  - connect-four
+  - nim
+  - rock-paper-scissors
+seoTitle: "Tic-Tac-Toe: rules, unbeatable strategy and a free board to play"
+seoDescription: "Learn tic-tac-toe in a minute, then play the computer on Easy, Medium or a Hard level that never loses. See why perfect play is always a draw."
+publishedAt: 2026-09-25
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+import BoardDiagram from '../../../components/content/BoardDiagram.astro';
+
+You already know how to play tic-tac-toe. The interesting question is whether you know how to *not lose* it — every time, from either side, against anyone. The game is small enough that the answer can be written down completely, and the method for writing it down is the same one chess engines use.
+
+So treat this page as a lesson in looking ahead, with a very forgiving teacher. Nine squares, at most nine moves, and a Hard computer that has already worked out every one of them.
+
+## How to play
+
+The board is a 3×3 grid. One player is **X**, the other is **O**, and X always moves first. Players alternate, each placing one mark in any empty square. Marks never move and are never removed.
+
+You win the moment you have three of your marks in a straight line: one of the three rows, one of the three columns, or one of the two diagonals — eight possible lines in all. The game stops as soon as someone wins, so there is never a position with two winners.
+
+If all nine squares are filled and nobody has a line, the game is a draw. X gets five marks and O four in a full board, which is why X is the side with the initiative.
+
+On this board, squares are numbered 1 to 9 reading like a book: 1–2–3 is the top row, 4–5–6 the middle, 7–8–9 the bottom. Square 5 is the centre; 1, 3, 7 and 9 are corners; 2, 4, 6 and 8 are edges.
+
+## A worked example
+
+X opens in the centre (5). O replies on an edge, top middle (2). That feels harmless. It is not — it already loses.
+
+<BoardDiagram variant="marks" caption="X in the centre, O on the top edge." rows={['. O .', '. X .', '. . .']} />
+
+X takes the top-left corner (1). Now X threatens the diagonal 1–5–9, so O has no choice: O must play 9.
+
+<BoardDiagram variant="marks" caption="X takes corner 1 and threatens 1–5–9; O is forced into corner 9." rows={['X O .', '. X .', '. . O']} />
+
+X plays the bottom-left corner (7). Count X's threats: the left column 1–4–7 needs only 4, and the diagonal 3–5–7 needs only 3. That is a **fork** — two ways to win at once — and O can block only one. Whichever O picks, X plays the other and wins on move seven.
+
+<BoardDiagram variant="marks" caption="X takes corner 7: two threats at once, on 1–4–7 and 3–5–7." rows={['X O .', '. X .', 'X . O']} />
+
+The losing move was O's very first one. Against a centre opening, O has to take a corner; every edge reply can be forced into a fork like this.
+
+## Strategy
+
+### Win, then block
+
+Before anything else, check two things every turn: can you complete a line right now, and can your opponent complete one on their next move? Win if you can; block if you must. This alone is the Medium computer's whole brain, and it beats most casual players.
+
+### Openings
+
+As X, open in the centre or a corner. Both are draws with best play, but they set more traps than an edge.
+
+As O, your first reply is the most important move you will make:
+
+- If X takes a **corner**, you must take the **centre**. Every other reply loses.
+- If X takes the **centre**, you must take a **corner**. Every edge loses, as the worked example shows.
+- If X takes an **edge**, you have several safe replies, including the centre.
+
+### Forks, and how to stop them
+
+Almost every decisive game is won by a fork. Two threats beat one block. So the defender's job is not just to block the current threat, but to block it *in a way that doesn't hand over a fork*.
+
+The classic trap: X plays 1, O takes the centre, and X takes the opposite corner, 9. If O now grabs another corner (3 or 7), X takes the last corner and forks. The only safe replies are the edges (2, 4, 6 or 8), which force X to respond to O's new threat instead of building their own. Defending with a threat of your own is the most useful habit in this game — and in Connect Four.
+
+### Make your block do double duty
+
+When you have to block, look for the blocking square that also lines up two of your own marks. A block that creates a threat forces your opponent to answer you, and the player answering threats is not the player making forks.
+
+## The idea underneath
+
+Tic-tac-toe is a **solved game**: we know the result with perfect play from the very first move. It is a draw. Neither side can force a win if the other side never slips.
+
+The way we know is **minimax**. Picture every possible game as a tree: the empty board at the root, a branch for each move, and a finished game at every leaf. Label each leaf win, draw or loss. Then work backwards. At a position where it's your turn, the position is worth the *best* of its children, because you get to choose. Where it's your opponent's turn, it is worth the *worst* of its children for you, because they choose. Repeat until you reach the root.
+
+The tree is small by computer standards. There are 255,168 possible complete games — 131,184 won by X, 77,904 by O and 46,080 drawn — but only 5,478 distinct positions, so a program that remembers positions it has already scored can solve the whole thing in a blink. That is exactly what the Hard computer does: it scores every empty square with minimax and plays one of the best. It never loses.
+
+Tick **Show what the computer sees** under the board to watch this happen. Each empty square is labelled with the result for the player to move *if they play there and both sides then play perfectly*. On an empty board, every square says Draw. After one careless move, you will see Win appear on your opponent's turn — that's the moment a game was lost, even though nobody has three in a row yet.
+
+Chess engines use the same idea. The difference is size: chess has far too many positions to search to the end, so engines stop a few moves deep and *estimate* who is better. Tic-tac-toe is one of the rare games where no estimate is needed.
+
+## Common mistakes
+
+- **Playing an edge as O against a centre opening.** It looks modest and loses by force.
+- **Blocking with the wrong square.** Against opposite corners, a corner block walks into the fork.
+- **Only looking at your own lines.** Before each move, scan all eight lines for the two-in-a-row your opponent just made.
+
+<Callout title="Try this">
+  Set the computer to Hard and choose Computer to move first. Keep "Show what the computer sees" switched off and draw ten games in a row. Then switch to Medium, move first, and win by building a fork — two threats at once — because Medium will always block a single one.
+</Callout>

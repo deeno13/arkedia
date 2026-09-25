@@ -1,0 +1,133 @@
+---
+title: "Connect Four"
+slug: connect-four
+excerpt: "Drop discs into seven columns and line up four before your opponent does."
+description: "Drop discs into a seven-column rack, taking turns. Four in a row — across, up and down or diagonal — wins. Gravity makes every move a promise about the square above it."
+category: strategy
+ink: vermilion
+difficulty: intermediate
+minPlayers: 1
+maxPlayers: 2
+estimatedMinutes: 8
+concept: "Threats, tempo and zugzwang"
+skills:
+  - "looking ahead"
+  - "creating double threats"
+  - "controlling the centre"
+quickRules:
+  - "Two players take turns dropping one disc into any column that isn't full."
+  - "The disc falls to the lowest empty hole in that column."
+  - "Line up four of your discs — across, up and down, or diagonally — to win."
+  - "If all 42 holes fill with no four in a row, the game is a draw."
+controls:
+  - "Click or tap anywhere in a column to drop a disc there."
+  - "Keyboard: Left and Right arrows choose a column; Enter or Space drops."
+  - "Number keys 1–7 drop straight into that column, counting from the left."
+  - "Your discs are solid; the opponent's carry a ring, so colour is never the only clue."
+  - "Opponent: Computer (Easy, Medium or Hard) or Two players sharing one screen."
+widget: "connect-four"
+coverImage: ./cover.svg
+coverImageAlt: "A Connect Four rack mid-game, with solid and ringed discs stacked in the middle columns and one disc about to drop."
+relatedGameSlugs:
+  - tic-tac-toe
+  - nim
+  - mastermind
+seoTitle: "Connect Four: rules, winning strategy and a free board to play"
+seoDescription: "Learn Connect Four in a minute, then play the computer or a friend. Understand double threats, odd and even rows, and why the first player can always win."
+publishedAt: 2026-09-25
+---
+
+import Callout from '../../../components/ui/Callout.astro';
+import BoardDiagram from '../../../components/content/BoardDiagram.astro';
+
+Connect Four looks like tic-tac-toe with a bigger board. It isn't. Gravity changes everything: you can only ever play the lowest empty hole in a column, so every disc you drop also decides who gets the hole above it. Half the game is making threats; the other half is making sure your opponent is the one forced to play underneath them.
+
+The rules take thirty seconds. The ideas — double threats, tempo, and a surprisingly deep point about odd and even rows — will keep you busy for much longer.
+
+## How to play
+
+The rack has 7 columns and 6 rows: 42 holes. Players take turns; on your turn you drop one disc into any column that still has room, and it falls to the lowest empty hole. You cannot pass, and discs never move once they land.
+
+You win the moment you have four of your discs in a straight line: across a row, up and down a column, or along either diagonal. Lines of five or more also count. The game ends immediately, so the rack is often far from full.
+
+If all 42 holes are filled and nobody has four in a row, the game is a draw. Each player gets exactly 21 discs.
+
+Below, columns are numbered 1 to 7 from the left (the same numbers you can press on the keyboard), rows 1 to 6 from the bottom, **X** is the first player and **O** the second. In the diagrams, X discs are solid red and O discs are black with a pale ring, just like the rack above.
+
+## A worked example
+
+This is the fastest trap in the game, and it is played on the bottom row.
+
+X drops in the centre, column 4. O stacks on top of it. X drops in column 3, next to the first disc. O, not seeing the danger, stacks on column 3 as well.
+
+<BoardDiagram
+  variant="discs"
+  caption="Bottom two rows after four moves: X in columns 3 and 4 on the bottom row, O stacked on top of both."
+  columns={[1, 2, 3, 4, 5, 6, 7]}
+  rows={['. . O O . . .', '. . X X . . .']}
+/>
+
+(Only the bottom two rows are shown; the rest are empty.)
+
+Now X drops in column 5. The bottom row reads X X X in columns 3–5, and *both* ends are open: column 2 and column 6 each complete four.
+
+<BoardDiagram
+  variant="discs"
+  caption="X adds column 5: three in a row on the bottom with columns 2 and 6 both open."
+  columns={[1, 2, 3, 4, 5, 6, 7]}
+  rows={['. . O O . . .', '. . X X X . .']}
+/>
+
+O can block only one end. X plays the other and wins with four discs. O's mistake was move four: after X held columns 3 and 4 on the bottom row, O had to take column 2 or column 5 straight away.
+
+## Strategy
+
+### Win, block, and don't play underneath
+
+Every turn, ask three questions in order. Can I win now? Can my opponent win next move — and if so, where must I block? And will my move put a disc *directly under* a hole that wins for my opponent? If it will, you have just handed them that hole. The Easy computer forgets these checks half the time; that is why it is Easy.
+
+### Take the centre
+
+A hole is only useful if it can be part of a four. Count the possible fours through each hole and the middle of the rack dominates:
+
+<BoardDiagram
+  variant="numbers"
+  caption="How many of the 69 possible fours pass through each hole. The two busiest holes, 13 lines each, sit in column 4 and are highlighted."
+  rows={['3 4 5 7 5 4 3', '4 6 8 10 8 6 4', '5 8 11 13 11 8 5', '5 8 11 13 11 8 5', '4 6 8 10 8 6 4', '3 4 5 7 5 4 3']}
+/>
+
+There are 69 possible lines in total, and every horizontal one passes through column 4. Open in the centre and keep contesting it.
+
+### Double threats
+
+One threat can be blocked. Two can't. The bottom-row trap above is the simplest double threat; the most common one in real games is two of your winning holes stacked **directly on top of each other** in the same column. Your opponent must block the lower one — and in doing so gives you the hole above it.
+
+### Threats you can't use yet
+
+A winning hole floating in mid-air is not wasted. Nobody wants to play the hole beneath it: if your opponent does, you win; if you do, they block. As the rack fills, those "don't play here" columns pile up, and eventually someone runs out of safe moves. That is the endgame of most strong games.
+
+### Odd and even rows
+
+Here is where it gets deep. Suppose the safe moves run out and the players simply fill columns turn by turn. Because the first player moves on turns 1, 3, 5… and each column has an even number of holes, the first player tends to end up with holes in **odd** rows (1, 3, 5) and the second with **even** rows (2, 4, 6). So as the first player, a floating threat on an odd row is worth far more than one on an even row; as the second player, the reverse. Grandmaster-level Connect Four is largely the art of arranging threats on the right parity.
+
+## The idea underneath
+
+Three ideas carry the whole game.
+
+A **threat** is a hole that would complete your four. A **tempo** is the right to make the next free move: when you make a threat your opponent must answer, you keep the tempo, and you get to choose where the next fight happens.
+
+**Zugzwang** is a German chess word for "compulsion to move": a position where any move you make hurts you, and you'd rather pass — but you can't. Connect Four is full of zugzwang, because every disc props up the hole above it. The player who is forced to play under their opponent's threat loses, and the odd/even rule above is really a way of predicting who will be forced.
+
+Connect Four is **solved**. In 1988, James D. Allen and Victor Allis independently showed that the first player can always win by starting in the centre column. Starting in either column next to the centre lets the second player hold a draw, and starting in any of the four outer columns loses against perfect play. Allis's solution rests on exactly the ideas on this page: it is a catalogue of rules about threats, parity and zugzwang, backed by computer search.
+
+The computer on this page searches instead of knowing. On Hard it uses **alpha-beta search**: it imagines up to a dozen moves ahead, skips any line that is already worse than one it has found, and scores unfinished positions by counting open lines of two and three. It tries central columns first because they are usually best, which lets it skip more. It is strong, but it has no solved database behind it — a patient player can find its blind spots.
+
+## Common mistakes
+
+- **Stacking on your opponent's disc by reflex.** It feels safe and often leaves a bottom-row trap wide open.
+- **Blocking a threat and creating one for them.** Check what your blocking disc props up.
+- **Chasing one line.** A single three-in-a-row is easy to block. Build towards two threats that share discs.
+
+<Callout title="Try this">
+  Play the Medium computer and move first. Win using the bottom-row trap from the worked example — three in a row with both ends open — within your first five discs. Then set the computer to Hard, let it move first, and survive until the rack is at least half full.
+</Callout>

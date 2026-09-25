@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-24T19:07:53.601Z",
+  "title": "Design System: Arkedia",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Chipboard Paper",
+        "canonical": "#f2eee5",
+        "tonalRamp": [
+          "#332b1a",
+          "#5a4c2d",
+          "#816d40",
+          "#a88e54",
+          "#bca879",
+          "#d0c1a0",
+          "#e3dac7",
+          "#f6f4ee"
+        ]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Deep Chipboard",
+        "canonical": "#e6e0d2",
+        "tonalRamp": [
+          "#312b1b",
+          "#574b30",
+          "#7c6c45",
+          "#a28c5a",
+          "#b7a67e",
+          "#ccc0a4",
+          "#e1dac9",
+          "#f6f4ef"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card Stock",
+        "canonical": "#fbf9f4",
+        "tonalRamp": [
+          "#382e14",
+          "#635124",
+          "#8e7433",
+          "#b89743",
+          "#caaf6c",
+          "#d9c697",
+          "#e9ddc2",
+          "#f8f5ec"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Black Ink",
+        "canonical": "#1d1c1a",
+        "tonalRamp": [
+          "#282724",
+          "#474540",
+          "#66625b",
+          "#858077",
+          "#a09d95",
+          "#bcb9b4",
+          "#d7d6d3",
+          "#f3f2f2"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#4e4a42",
+        "tonalRamp": [
+          "#292723",
+          "#49453e",
+          "#696358",
+          "#888173",
+          "#a39e92",
+          "#bebab2",
+          "#d9d6d2",
+          "#f3f3f1"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#6b665b",
+        "tonalRamp": [
+          "#292723",
+          "#49453e",
+          "#686359",
+          "#888174",
+          "#a39e93",
+          "#bebab2",
+          "#d8d6d2",
+          "#f3f3f1"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule Grey",
+        "canonical": "#cfc6b4",
+        "tonalRamp": [
+          "#2f291e",
+          "#524835",
+          "#76684b",
+          "#998762",
+          "#b1a285",
+          "#c8bda8",
+          "#ded8cc",
+          "#f5f3ef"
+        ]
+      },
+      "vermilion": {
+        "role": "primary",
+        "displayName": "Vermilion",
+        "canonical": "#c8341b",
+        "tonalRamp": [
+          "#431209",
+          "#771f10",
+          "#aa2c17",
+          "#dd3a1e",
+          "#e7654e",
+          "#ee9182",
+          "#f5beb5",
+          "#fcebe9"
+        ]
+      },
+      "cobalt": {
+        "role": "primary",
+        "displayName": "Cobalt",
+        "canonical": "#2544c4",
+        "tonalRamp": [
+          "#0c1640",
+          "#152771",
+          "#1f38a2",
+          "#2849d3",
+          "#5671df",
+          "#879ae8",
+          "#b9c4f2",
+          "#eaedfb"
+        ]
+      },
+      "green": {
+        "role": "primary",
+        "displayName": "Green",
+        "canonical": "#0a7049",
+        "tonalRamp": [
+          "#06462e",
+          "#0b7c51",
+          "#10b174",
+          "#15e796",
+          "#47efaf",
+          "#7df3c6",
+          "#b2f8dd",
+          "#e8fdf5"
+        ]
+      },
+      "mustard": {
+        "role": "primary",
+        "displayName": "Mustard",
+        "canonical": "#e0a21a",
+        "tonalRamp": [
+          "#453208",
+          "#79570e",
+          "#ad7d14",
+          "#e1a31a",
+          "#eab84b",
+          "#f0cd80",
+          "#f6e2b4",
+          "#fcf6e8"
+        ]
+      },
+      "violet": {
+        "role": "primary",
+        "displayName": "Violet",
+        "canonical": "#6536a6",
+        "tonalRamp": [
+          "#23133a",
+          "#3e2166",
+          "#592f92",
+          "#733ebe",
+          "#9368ce",
+          "#b294dc",
+          "#d2c0ea",
+          "#f1ecf9"
+        ]
+      },
+      "pink": {
+        "role": "primary",
+        "displayName": "Pink",
+        "canonical": "#c73d7e",
+        "tonalRamp": [
+          "#3b1125",
+          "#691e41",
+          "#962b5d",
+          "#c3387a",
+          "#d26498",
+          "#df91b6",
+          "#ecbed4",
+          "#f9ebf2"
+        ]
+      },
+      "teal": {
+        "role": "primary",
+        "displayName": "Teal",
+        "canonical": "#0b6f7a",
+        "tonalRamp": [
+          "#064046",
+          "#0b707c",
+          "#10a1b1",
+          "#15d2e7",
+          "#47deee",
+          "#7de7f3",
+          "#b2f1f8",
+          "#e8fbfd"
+        ]
+      },
+      "orange": {
+        "role": "primary",
+        "displayName": "Orange",
+        "canonical": "#e0661c",
+        "tonalRamp": [
+          "#441f08",
+          "#78370f",
+          "#ac4e15",
+          "#df661c",
+          "#e9884d",
+          "#efaa81",
+          "#f6cdb5",
+          "#fcf0e8"
+        ]
+      },
+      "sky": {
+        "role": "primary",
+        "displayName": "Sky",
+        "canonical": "#3b8fd9",
+        "tonalRamp": [
+          "#0c2840",
+          "#164671",
+          "#1f65a2",
+          "#2983d3",
+          "#579fde",
+          "#88bbe8",
+          "#b9d7f1",
+          "#eaf3fb"
+        ]
+      },
+      "plum": {
+        "role": "primary",
+        "displayName": "Plum",
+        "canonical": "#8c2b5b",
+        "tonalRamp": [
+          "#3b1226",
+          "#672043",
+          "#942d60",
+          "#c03b7d",
+          "#d0669a",
+          "#de92b8",
+          "#ebbfd5",
+          "#f9ebf2"
+        ]
+      },
+      "olive": {
+        "role": "primary",
+        "displayName": "Olive",
+        "canonical": "#6b7a1e",
+        "tonalRamp": [
+          "#363d0f",
+          "#5f6c1b",
+          "#889b26",
+          "#b1ca32",
+          "#c4d75e",
+          "#d5e38d",
+          "#e6eebc",
+          "#f7faeb"
+        ]
+      },
+      "brick": {
+        "role": "primary",
+        "displayName": "Brick",
+        "canonical": "#9c3b24",
+        "tonalRamp": [
+          "#3e180e",
+          "#6e2919",
+          "#9d3b24",
+          "#cc4d2f",
+          "#d9745c",
+          "#e49d8c",
+          "#efc5bb",
+          "#faedea"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The home hero only: \"Learn it in a minute. Then play it.\""
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page H1s — library, About, 404 and each game title."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Home-page band headings and \"Play next\"; tracking −0.02em."
+      },
+      "title": {
+        "displayName": "Lid Title",
+        "purpose": "Box-lid and shelf-tile titles, sized in container-query units so they scale with the tile."
+      },
+      "body": {
+        "displayName": "Interface Body",
+        "purpose": "All interface text: game descriptions, rule steps, controls, footers."
+      },
+      "prose": {
+        "displayName": "Guide Prose",
+        "purpose": "The MDX guide body only, Source Serif 4 with optical sizing, held to 68ch."
+      },
+      "label": {
+        "displayName": "Micro Label",
+        "purpose": "Stat labels, the \"Code\" tag, clue column headers, stamps — uppercase Archivo."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lid-hover-lift",
+        "value": "0 16px 28px -14px rgb(29 28 26 / 0.6)",
+        "purpose": "Box lids only, on hover, paired with translateY(-4px); suppressed under reduced motion."
+      },
+      {
+        "name": "stamp-ring",
+        "value": "inset 0 0 0 2px var(--color-ink), inset 0 0 0 3.5px var(--color-paper), inset 0 0 0 4.5px var(--color-ink)",
+        "purpose": "The progress stamp printed on a played box lid."
+      },
+      {
+        "name": "high-tile-ring",
+        "value": "inset 0 0 0 6px var(--game-ink)",
+        "purpose": "2048 tiles above the painted set, so the game ink still reads as a printed edge."
+      },
+      {
+        "name": "focus-outline",
+        "value": "outline: 3px solid var(--color-ink); outline-offset: 3px",
+        "purpose": "Every focusable element; flips to the field \"on\" colour inside a solid ink strip."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-colour",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Colour and background changes on buttons, chips, cells and tabs."
+      },
+      {
+        "name": "move-quick",
+        "value": "120ms ease-out",
+        "purpose": "2048 tile translation."
+      },
+      {
+        "name": "move",
+        "value": "200ms ease-out",
+        "purpose": "Disc drop, card flip, mark pop, Hanoi disc lift, RPS hand roll."
+      },
+      {
+        "name": "move-slow",
+        "value": "220ms ease-out",
+        "purpose": "Wordle tile flip."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce): all animation and transition durations collapse to 0.01ms",
+        "purpose": "Global guard in global.css; islands additionally use motion-safe: / motion-reduce: variants."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action on a board (New game). Black ink fill that takes the game ink on hover.",
+      "html": "<button class=\"ds-btn ds-btn--primary\">NEW GAME</button>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; min-height:44px; padding:0 16px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; font-size:1rem; font-weight:600; font-stretch:112.5%; cursor:pointer; transition:color 150ms cubic-bezier(.4,0,.2,1), background-color 150ms cubic-bezier(.4,0,.2,1), border-color 150ms cubic-bezier(.4,0,.2,1); }\n.ds-btn:focus-visible { outline:3px solid var(--color-ink,#1d1c1a); outline-offset:3px; }\n.ds-btn--primary { background:var(--color-ink,#1d1c1a); color:var(--color-paper,#f2eee5); }\n.ds-btn--primary:hover { background:var(--game-ink,#c8341b); color:var(--game-on-ink,#fff); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Beside-actions on a board (Undo, Hint). Transparent with a 2px ink border.",
+      "html": "<button class=\"ds-btn ds-btn--secondary\">UNDO</button>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; min-height:44px; padding:0 16px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; background:transparent; color:var(--color-ink,#1d1c1a); font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; font-size:1rem; font-weight:600; font-stretch:112.5%; cursor:pointer; transition:background-color 150ms cubic-bezier(.4,0,.2,1); }\n.ds-btn--secondary:hover { background:var(--color-paper-deep,#e6e0d2); }\n.ds-btn:focus-visible { outline:3px solid var(--color-ink,#1d1c1a); outline-offset:3px; }"
+    },
+    {
+      "name": "Paper Button",
+      "kind": "button",
+      "refersTo": "button-paper",
+      "description": "Play again, placed on a solid ink or game-ink result strip.",
+      "html": "<div class=\"ds-strip\"><span>Solved — 4:12</span><button class=\"ds-btn ds-btn--paper\">PLAY AGAIN</button></div>",
+      "css": ".ds-strip { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; padding:10px 16px; background:var(--game-ink,#c8341b); color:var(--game-on-ink,#fff); border-top:2px solid var(--color-ink,#1d1c1a); font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; font-size:0.875rem; }\n.ds-btn--paper { display:inline-flex; align-items:center; justify-content:center; min-height:36px; padding:0 16px; border:2px solid var(--color-paper,#f2eee5); border-radius:6px; background:var(--color-paper,#f2eee5); color:var(--color-ink,#1d1c1a); font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; font-size:0.875rem; font-weight:600; font-stretch:112.5%; cursor:pointer; transition:background-color 150ms cubic-bezier(.4,0,.2,1), border-color 150ms cubic-bezier(.4,0,.2,1); }\n.ds-btn--paper:hover { background:var(--color-paper-deep,#e6e0d2); border-color:var(--color-paper-deep,#e6e0d2); }\n.ds-btn--paper:focus-visible { outline:3px solid var(--color-paper,#f2eee5); outline-offset:3px; }"
+    },
+    {
+      "name": "Segmented Options",
+      "kind": "input",
+      "refersTo": "segmented-option",
+      "description": "Difficulty and mode pickers: a radiogroup of die-cut tabs; the checked one inverts to ink.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Difficulty\"><span class=\"ds-seg__label\">Difficulty</span><div class=\"ds-seg__group\"><button class=\"ds-seg__opt\" role=\"radio\" aria-checked=\"false\">Easy</button><button class=\"ds-seg__opt is-checked\" role=\"radio\" aria-checked=\"true\">Medium</button><button class=\"ds-seg__opt\" role=\"radio\" aria-checked=\"false\">Hard</button></div></div>",
+      "css": ".ds-seg { display:flex; flex-wrap:wrap; align-items:center; gap:0 0.75rem; font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; }\n.ds-seg__label { font-size:0.875rem; font-weight:600; color:var(--color-ink-muted,#6b665b); }\n.ds-seg__group { display:inline-flex; padding:2px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; }\n.ds-seg__opt { display:inline-flex; align-items:center; min-height:32px; padding:0 10px; border:0; border-radius:3px; background:transparent; color:var(--color-ink,#1d1c1a); font-family:inherit; font-size:0.875rem; font-weight:600; cursor:pointer; transition:background-color 150ms cubic-bezier(.4,0,.2,1), color 150ms cubic-bezier(.4,0,.2,1); }\n.ds-seg__opt:hover { background:var(--color-paper-deep,#e6e0d2); }\n.ds-seg__opt.is-checked { background:var(--color-ink,#1d1c1a); color:var(--color-paper,#f2eee5); }\n.ds-seg__opt:focus-visible { outline:3px solid var(--color-ink,#1d1c1a); outline-offset:2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Library filter: a hidden radio behind a chip label; checked inverts to ink fill.",
+      "html": "<fieldset class=\"ds-chips\"><legend class=\"ds-chips__legend\">Kind</legend><label class=\"ds-chip\"><input type=\"radio\" name=\"kind\" checked><span class=\"ds-chip__face is-checked\">All</span></label><label class=\"ds-chip\"><input type=\"radio\" name=\"kind\"><span class=\"ds-chip__face\">Puzzle</span></label></fieldset>",
+      "css": ".ds-chips { display:flex; flex-wrap:wrap; gap:0.375rem; border:0; padding:0; font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; }\n.ds-chips__legend { float:left; margin-right:0.75rem; font-size:0.875rem; font-weight:700; }\n.ds-chip { position:relative; }\n.ds-chip input { position:absolute; width:1px; height:1px; opacity:0; }\n.ds-chip__face { display:inline-flex; align-items:center; min-height:40px; padding:0 12px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; font-size:0.875rem; font-weight:600; cursor:pointer; transition:background-color 150ms cubic-bezier(.4,0,.2,1), color 150ms cubic-bezier(.4,0,.2,1); }\n.ds-chip__face:hover { background:var(--color-paper-deep,#e6e0d2); }\n.ds-chip__face.is-checked { background:var(--color-ink,#1d1c1a); color:var(--color-paper,#f2eee5); }\n.ds-chip input:focus-visible + .ds-chip__face { outline:3px solid var(--color-ink,#1d1c1a); outline-offset:2px; }"
+    },
+    {
+      "name": "Box Lid",
+      "kind": "card",
+      "refersTo": "box-lid",
+      "description": "The repeated unit of the shelf: a 4:3 solid ink field with cover art, title, meta and an optional progress stamp.",
+      "html": "<a class=\"ds-lid\" href=\"#\"><span class=\"ds-lid__art\"><svg viewBox=\"0 0 64 64\" width=\"46%\" height=\"46%\" aria-hidden=\"true\"><rect x=\"6\" y=\"6\" width=\"52\" height=\"52\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\"/><circle cx=\"24\" cy=\"24\" r=\"6\" fill=\"currentColor\"/><circle cx=\"40\" cy=\"40\" r=\"6\" fill=\"currentColor\"/></svg></span><span class=\"ds-lid__foot\"><span class=\"ds-lid__title\">Connect Four</span><span class=\"ds-lid__meta\">Strategy · 8 min · 1–2 players</span></span><span class=\"ds-lid__stamp\">Won ×4</span></a>",
+      "css": ".ds-lid { position:relative; display:flex; flex-direction:column; aspect-ratio:4/3; overflow:hidden; border-radius:6px; background:var(--game-ink,#c8341b); color:var(--game-on-ink,#fff); text-decoration:none; font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; transition:transform 200ms ease-out, box-shadow 200ms ease-out; }\n.ds-lid:hover { transform:translateY(-4px); box-shadow:0 16px 28px -14px rgb(29 28 26 / 0.6); }\n.ds-lid:focus-visible { outline:3px solid var(--color-ink,#1d1c1a); outline-offset:3px; }\n.ds-lid__art { display:flex; flex:1 1 0; min-height:0; align-items:flex-start; justify-content:center; }\n.ds-lid__foot { padding:0 5% 4.5%; }\n.ds-lid__title { display:block; font-weight:900; font-stretch:125%; letter-spacing:-0.015em; line-height:0.98; font-size:clamp(0.9375rem, 7vw, 1.875rem); }\n.ds-lid__meta { display:block; margin-top:0.35rem; font-weight:600; font-stretch:112.5%; font-size:clamp(0.6875rem, 3.6vw, 0.875rem); }\n.ds-lid__stamp { position:absolute; top:4.5%; right:4.5%; transform:rotate(-6deg); border-radius:3px; background:var(--color-paper,#f2eee5); color:var(--color-ink,#1d1c1a); padding:0.55em 0.6em; font-size:clamp(0.625rem, 3.4vw, 0.8125rem); font-weight:900; font-stretch:125%; letter-spacing:0.05em; text-transform:uppercase; font-variant-numeric:tabular-nums; box-shadow:inset 0 0 0 2px var(--color-ink,#1d1c1a), inset 0 0 0 3.5px var(--color-paper,#f2eee5), inset 0 0 0 4.5px var(--color-ink,#1d1c1a); }"
+    },
+    {
+      "name": "Game Frame",
+      "kind": "custom",
+      "refersTo": "game-frame",
+      "description": "The die-cut frame every board sits in: options + stats bar, board, live status / result strip.",
+      "html": "<section class=\"ds-frame\" aria-label=\"Demo board\"><div class=\"ds-frame__top\"><div class=\"ds-seg__group\"><button class=\"ds-seg__opt is-checked\">Easy</button><button class=\"ds-seg__opt\">Hard</button></div><dl class=\"ds-frame__stats\"><div><dt>Score</dt><dd>128</dd></div><div><dt>Best</dt><dd>512</dd></div></dl></div><div class=\"ds-frame__board\"><div class=\"ds-board\"></div></div><div class=\"ds-frame__strip\"><p>Your move.</p><button class=\"ds-btn ds-btn--primary\">NEW GAME</button></div></section>",
+      "css": ".ds-frame { overflow:hidden; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; background:var(--color-card,#fbf9f4); color:var(--color-ink,#1d1c1a); font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; }\n.ds-frame__top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.75rem; padding:10px 16px; border-bottom:2px solid var(--color-ink,#1d1c1a); }\n.ds-frame__stats { display:flex; gap:1rem; margin:0; }\n.ds-frame__stats dt { font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.025em; color:var(--color-ink-muted,#6b665b); }\n.ds-frame__stats dd { margin:0; font-size:1rem; font-weight:700; font-variant-numeric:tabular-nums; }\n.ds-frame__board { padding:16px 20px; }\n.ds-board { width:min(100%, 22rem); aspect-ratio:1; margin:0 auto; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; background:var(--color-paper,#f2eee5); }\n.ds-frame__strip { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.75rem; padding:10px 16px; border-top:2px solid var(--color-ink,#1d1c1a); }\n.ds-frame__strip p { margin:0; font-size:0.875rem; }\n.ds-seg__group { display:inline-flex; padding:2px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; }\n.ds-seg__opt { display:inline-flex; align-items:center; min-height:32px; padding:0 10px; border:0; border-radius:3px; background:transparent; color:var(--color-ink,#1d1c1a); font:inherit; font-size:0.875rem; font-weight:600; cursor:pointer; }\n.ds-seg__opt.is-checked { background:var(--color-ink,#1d1c1a); color:var(--color-paper,#f2eee5); }\n.ds-btn--primary { display:inline-flex; align-items:center; min-height:36px; padding:0 16px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; background:var(--color-ink,#1d1c1a); color:var(--color-paper,#f2eee5); font:inherit; font-size:0.875rem; font-weight:600; cursor:pointer; }"
+    },
+    {
+      "name": "Callout Slip",
+      "kind": "card",
+      "refersTo": "callout",
+      "description": "A rule card inside a guide: a challenge or aside printed on its own slip of deep chipboard.",
+      "html": "<aside class=\"ds-callout\"><p class=\"ds-callout__title\">Try this</p><div class=\"ds-callout__body\"><p>Fill the top-left box without repeating a digit in any row.</p></div></aside>",
+      "css": ".ds-callout { margin:2rem 0; padding:16px 20px; border:2px solid var(--color-ink,#1d1c1a); border-radius:6px; background:var(--color-paper-deep,#e6e0d2); color:var(--color-ink,#1d1c1a); }\n.ds-callout__title { margin:0; font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; font-size:1rem; font-weight:800; font-stretch:125%; line-height:1.3; }\n.ds-callout__body { margin-top:0.5rem; font-family:\"Source Serif 4 Variable\", ui-serif, Georgia, serif; font-size:1.0625rem; line-height:1.7; }\n.ds-callout__body p { margin:0.5rem 0; }"
+    },
+    {
+      "name": "Shelf Tile",
+      "kind": "card",
+      "refersTo": "shelf-tile",
+      "description": "A lid-sized paper slot for a way onward (the whole library, a random pick), dashed until taken.",
+      "html": "<a class=\"ds-tile\" href=\"#\"><span class=\"ds-tile__title\">Surprise me</span><span class=\"ds-tile__row\"><span>Open a random box</span><svg viewBox=\"0 0 16 16\" width=\"1.1em\" height=\"1.1em\" aria-hidden=\"true\"><path d=\"M2 8h11M9 3.5 13.5 8 9 12.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"square\"/></svg></span></a>",
+      "css": ".ds-tile { display:flex; flex-direction:column; justify-content:flex-end; aspect-ratio:4/3; padding:5%; border:2px dashed var(--color-ink,#1d1c1a); border-radius:6px; background:var(--color-paper,#f2eee5); color:var(--color-ink,#1d1c1a); text-decoration:none; font-family:\"Archivo Variable\", ui-sans-serif, system-ui, sans-serif; transition:border-color 150ms cubic-bezier(.4,0,.2,1), background-color 150ms cubic-bezier(.4,0,.2,1), border-style 150ms linear; }\n.ds-tile:hover { border-style:solid; background:var(--color-paper-deep,#e6e0d2); }\n.ds-tile:focus-visible { outline:3px solid var(--color-ink,#1d1c1a); outline-offset:3px; }\n.ds-tile__title { font-weight:900; font-stretch:125%; letter-spacing:-0.015em; line-height:0.98; font-size:clamp(0.9375rem, 6.5vw, 1.625rem); }\n.ds-tile__row { display:flex; align-items:flex-end; justify-content:space-between; gap:0.5rem; margin-top:0.4rem; font-size:clamp(0.75rem, 3.6vw, 0.9375rem); color:var(--color-ink-soft,#4e4a42); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Shelf of Boxes",
+    "overview": "Arkedia is a shelf of game boxes, and every game page is one box opened. The shelf is a grid of solid ink lids — one process colour per game, its cover motif printed on top, the title set along the bottom in expanded black, and a rubber stamp in the corner once this browser has played it. Opening a box does not launch an app; it sets the board beside the rule sheet, the live game and the printed rules sharing one spread the way a box lid and its insert do.\n\nThe world is printed matter, not software chrome. The ground is chipboard paper, panels are card stock, and everything structural — headings, rules, borders, dividers — is drawn in black ink at a steady 2px. Colour is ink too, but it is *process* ink: a single flat spot colour per game, laid down only where a press would lay it — a lid, a title band, a game piece, an active or winning state. Fourteen inks never meet; each game writes in one.\n\nDepth and decoration are refused. There are no gradients, no glass, no blur, no glows, and no shadows at rest; corners are die-cut, not rounded off, and the only lift in the system is a lid rising toward you on hover. The type is a two-voice pairing: Archivo, expanded and black, for all structure and interface; Source Serif 4 for the guide prose you actually read.",
+    "keyCharacteristics": [
+      "Chipboard paper ground (#f2eee5) with card-stock panels (#fbf9f4); never plain white.",
+      "Black ink (#1d1c1a) carries all text, all 2px structural rules and all borders.",
+      "One process ink per game, injected as `--game-ink`, used only as solid fills.",
+      "Two typefaces only: Archivo for structure and controls, Source Serif 4 for guide prose.",
+      "Die-cut 6px corners, printed board geometry, dashed borders for empty or onward slots.",
+      "Flat by default: no gradients, glass, blur, glow, or resting shadow."
+    ],
+    "rules": [
+      {
+        "name": "The One Ink Rule",
+        "body": "A game has exactly one process ink. Two game inks never appear inside the same game’s surfaces, and the ink is the same colour on the lid, the title band, the pieces and the win state.",
+        "section": "colors"
+      },
+      {
+        "name": "The Solid-Fill Rule",
+        "body": "Process ink is laid down only as a solid fill on lids, title bands, pieces, and active/win states. It is never body text, never a link colour, never a heading, and never a gradient.",
+        "section": "colors"
+      },
+      {
+        "name": "The Never-Colour-Alone Rule",
+        "body": "Colour never carries meaning by itself. Every state a player must read — a placed piece, a win, a wrong guess, a live count — is also in text (`aria-live` status), in shape, or in a glyph. The opponent’s Connect Four disc is ink with a paper ring, not a second colour; X and O are drawn, not tinted.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Archivo for everything a player uses or scans; Source Serif 4 for everything a player reads. A serif heading or a sans-serif guide paragraph is a break, not a variation.",
+        "section": "typography"
+      },
+      {
+        "name": "The Expanded-Caps Rule",
+        "body": "Titles and headings are Archivo at expanded width and weight 900 with negative tracking. Uppercase is reserved for micro-labels; it is never used to build an eyebrow or kicker above a heading.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at rest. Shadow appears only as the lid hover lift, as an inset printed ring, or as a focus outline — never as ambient depth.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Die-Cut Rule",
+        "body": "Structure is cut at 6px. 4px and 3px are for small printed parts only; anything larger or rounder breaks the box.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Two-Weight Rule",
+        "body": "2px black ink draws structure; 1px Rule Grey draws only what is inside a panel. A 1px black rule or a 2px grey rule is off-system.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Dashed-For-Empty Rule",
+        "body": "Paper with a dashed ink border means “nothing printed here yet” — an empty slot, an unplayed shelf, a dead end. Filled panels are always solid.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do give each game exactly one process ink, injected with `inkStyle()` as `--game-ink`/`--game-on-ink` and consumed through `bg-game` / `text-on-game` / `fill-game` / `text-game`.",
+      "Do keep ink to solid fills on lids, title bands, pieces, and active or win states — The Solid-Fill Rule.",
+      "Do draw structure with 2px black ink rules and reserve 1px Rule Grey for subdivisions inside a panel.",
+      "Do cut corners at 6px (`rounded-die`), stepping to 4px and 3px only for small printed parts.",
+      "Do set titles and headings in Archivo expanded (width 125) black (900) with negative tracking, and guide prose in Source Serif 4 at 1.125rem/1.7 capped at 68ch.",
+      "Do put a 2px dashed ink border on paper for any empty or onward slot.",
+      "Do state every outcome in text and shape as well as colour (`aria-live` status, X/O glyphs, a ringed opponent disc, printed numbers).",
+      "Do animate transform and opacity in 120–220ms ease-out and colour in 150ms, and guard motion with `motion-safe:` / `motion-reduce:` (the global `prefers-reduced-motion` rule collapses all transitions to 0.01ms).",
+      "Do keep every control at `min-h-11` (44px) and enlarge under `pointer-coarse` (`min-h-12` for medium buttons, `min-h-10` for segmented options).",
+      "Do author covers as 400×300 transparent SVGs — a `<title>`, printed geometry, and only the paper, card and ink colours, with no text in the artwork."
+    ],
+    "donts": [
+      "Don’t use a process ink for text, links, headings or any large surface; ink is a fill, not a voice.",
+      "Don’t let two game inks meet inside one game’s surfaces — The One Ink Rule.",
+      "Don’t add gradients, glass or frost, backdrop blur, glows, or any shadow at rest — The Flat-By-Default Rule.",
+      "Don’t put an eyebrow or kicker line above a heading; type begins with the heading itself.",
+      "Don’t round a control into a pill — circles belong to game pieces only.",
+      "Don’t ship icon fonts or third-party icon packages; every icon is an inline SVG drawn in `currentColor`.",
+      "Don’t colour a state without also naming it in text or marking it in shape — The Never-Colour-Alone Rule."
+    ]
+  }
+}

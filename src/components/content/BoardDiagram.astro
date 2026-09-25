@@ -1,0 +1,84 @@
+---
+/**
+ * Printed board diagram for guides. Rows are written top to bottom as space-separated
+ * tokens: `X`, `O`, `.` (empty) or a number. Pieces use the page's game ink (`X`) and
+ * black (`O`), matching the live boards.
+ *
+ *   <BoardDiagram variant="discs" caption="…" columns={[1,2,3,4,5,6,7]} rows={['. . O O . . .', '. . X X . . .']} />
+ */
+interface Props {
+  rows: string[];
+  caption: string;
+  /** discs: Connect Four rack · marks: pen-and-paper grid · numbers: data grid */
+  variant: 'discs' | 'marks' | 'numbers';
+  /** Optional labels printed under each column. */
+  columns?: (string | number)[];
+}
+
+const { rows, caption, variant, columns } = Astro.props;
+const grid = rows.map((row) => row.trim().split(/\s+/));
+const numbers = grid.flat().map(Number).filter(Number.isFinite);
+const maxNumber = numbers.length > 0 ? Math.max(...numbers) : undefined;
+const pieceName = (token: string) => (token === 'X' ? 'X' : token === 'O' ? 'O' : token === '.' ? 'empty' : token);
+---
+
+<figure class="board-diagram not-prose my-7">
+  <table
+    class:list={[
+      'border-collapse',
+      variant === 'discs' && 'rounded-die bg-ink',
+      variant === 'marks' && 'bg-card',
+      variant === 'numbers' && 'border-2 border-ink bg-card',
+    ]}
+  >
+    <caption class="sr-only">{caption}</caption>
+    <tbody>
+      {grid.map((row) => (
+        <tr>
+          {row.map((token) => (
+            <td
+              aria-label={pieceName(token)}
+              class:list={[
+                'p-0 text-center align-middle',
+                variant === 'discs' && 'h-10 w-10 bg-ink sm:h-11 sm:w-11',
+                variant === 'marks' && 'h-14 w-14 border-2 border-ink first:border-l-0 last:border-r-0 [tr:first-child_&]:border-t-0 [tr:last-child_&]:border-b-0',
+                variant === 'numbers' && 'h-10 w-10 border border-rule font-sans text-[0.9375rem] font-semibold tabular-nums sm:h-11 sm:w-11',
+                variant === 'numbers' && Number(token) === maxNumber && 'bg-game font-black text-on-game',
+              ]}
+            >
+              {variant === 'discs' && (
+                <span
+                  aria-hidden="true"
+                  class:list={[
+                    'mx-auto block h-7 w-7 rounded-full sm:h-8 sm:w-8',
+                    token === 'X' && 'bg-game',
+                    token === 'O' && 'border-[5px] border-paper bg-ink',
+                    token !== 'X' && token !== 'O' && 'bg-paper',
+                  ]}
+                />
+              )}
+              {variant === 'marks' && token !== '.' && (
+                <span aria-hidden="true" class:list={['font-sans text-3xl leading-none font-black font-stretch-expanded', token === 'X' ? 'text-game' : 'text-ink']}>
+                  {token}
+                </span>
+              )}
+              {variant === 'numbers' && <span aria-hidden="true">{token}</span>}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+    {columns && (
+      <tfoot>
+        <tr>
+          {columns.map((label) => (
+            <td class:list={['border-0 pt-1.5 text-center font-sans text-sm font-bold tabular-nums', variant === 'discs' ? 'bg-paper text-ink-soft' : 'bg-transparent text-ink-soft']}>
+              {label}
+            </td>
+          ))}
+        </tr>
+      </tfoot>
+    )}
+  </table>
+  <figcaption class="mt-2.5 max-w-[60ch] font-sans text-sm leading-snug text-ink-soft" aria-hidden="true">{caption}</figcaption>
+</figure>

@@ -1,217 +1,245 @@
-import { useEffect, useMemo, useState } from 'react';
-import {
-  SNAKE_BOARD_SIZE,
-  SNAKE_START_DELAY,
-  advanceSnake,
-  getInitialSnakeState,
-  getNextDirection,
-  type CellPosition,
-  type Direction,
-} from '../../lib/playable/snake';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import { recordRound } from '../../lib/progress';
+import { OFFSETS, createSnake, step, togglePause, turn, type Direction, type SnakeState } from '../../lib/playable/snake';
+import { Button } from './kit/Button';
+import { DPad } from './kit/DPad';
+import { GameFrame, type GameResult } from './kit/GameFrame';
+import { Segmented } from './kit/Segmented';
+import { usePref, useProgress } from './kit/useProgress';
+import { useSwipe } from './kit/useSwipe';
 
-function positionsEqual(left: CellPosition, right: CellPosition) {
-  return left.x === right.x && left.y === right.y;
-}
+type Speed = 'slow' | 'normal' | 'fast';
 
-const keyDirectionMap: Record<string, Direction> = {
-  ArrowUp: 'up',
-  ArrowDown: 'down',
-  ArrowLeft: 'left',
-  ArrowRight: 'right',
+const SPEEDS: Record<Speed, { label: string; ms: number }> = {
+  slow: { label: 'Slow', ms: 180 },
+  normal: { label: 'Normal', ms: 125 },
+  fast: { label: 'Fast', ms: 85 },
+};
+
+const KEYS: Record<string, Direction> = {
+  arrowup: 'up',
+  arrowdown: 'down',
+  arrowleft: 'left',
+  arrowright: 'right',
   w: 'up',
   a: 'left',
   s: 'down',
   d: 'right',
 };
 
-export default function SnakeGame() {
-  const [state, setState] = useState(() => getInitialSnakeState());
-  const boardHelpId = 'snake-board-help';
+/** SVG units per cell. */
+const U = 10;
+
+const END_TITLES = { wall: 'Hit the wall', self: 'Bit your own tail', full: 'Board filled' } as const;
+
+export default function SnakeGame({ slug }: { slug: string }) {
+  const record = useProgress(slug);
+  const [speedPref, setSpeedPref] = usePref<string>(slug, 'speed', 'normal');
+  const speed: Speed = speedPref in SPEEDS ? (speedPref as Speed) : 'normal';
+  const [game, setGame] = useState(() => createSnake());
+  const [result, setResult] = useState<GameResult | null>(null);
+  const gameRef = useRef(game);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const helpId = useId();
+  const whereId = useId();
+
+  function commit(next: SnakeState) {
+    const previous = gameRef.current;
+    if (next === previous) return;
+    gameRef.current = next;
+    setGame(next);
+    if (next.status !== 'over' || previous.status === 'over') return;
+
+    const label = SPEEDS[speed].label;
+    const { isNewBest, previousBest } = recordRound(slug, {
+      outcome: next.end === 'full' ? 'win' : 'complete',
+      score: next.score,
+      scoreOrder: 'higher',
+      bucket: speed,
+    });
+    const bestNote = isNewBest
+      ? previousBest === undefined
+        ? `First round on ${label}.`
+        : `New best on ${label}, up from ${previousBest}.`
+      : `Best on ${label}: ${previousBest}.`;
+    setResult({
+      title: END_TITLES[next.end ?? 'wall'],
+      detail: `${next.score} eaten. ${bestNote}`,
+      tone: next.end === 'full' || (isNewBest && next.score > 0) ? 'win' : 'loss',
+    });
+  }
+
+  function newGame() {
+    commit(createSnake());
+    setResult(null);
+    boardRef.current?.focus();
+  }
+
+  const playing = game.status === 'playing';
 
   useEffect(() => {
-    if (state.status !== 'playing') {
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setState((current) => advanceSnake(current));
-    }, SNAKE_START_DELAY);
-
+    if (!playing) return undefined;
+    const timer = window.setInterval(() => commit(step(gameRef.current)), SPEEDS[speed].ms);
     return () => window.clearInterval(timer);
-  }, [state.status]);
+    // commit reads the latest state from gameRef; `speed` is the only render value it uses.
+  }, [playing, speed]);
 
-  function requestDirection(direction: Direction) {
-    setState((current) => ({
-      ...current,
-      direction: getNextDirection(current.direction, direction),
-      status: current.status === 'idle' ? 'playing' : current.status,
-    }));
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.hidden && gameRef.current.status === 'playing') commit(togglePause(gameRef.current));
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  const swipe = useSwipe((direction) => commit(turn(gameRef.current, direction)), { continuous: true, threshold: 22 });
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const key = event.key.toLowerCase();
+    const direction = KEYS[key];
+    const onBoard = event.target === boardRef.current;
+    if (direction) {
+      event.preventDefault();
+      commit(turn(gameRef.current, direction));
+    } else if (key === 'p' || (key === ' ' && onBoard)) {
+      event.preventDefault();
+      const current = gameRef.current;
+      if (current.status === 'ready') commit(turn(current, current.direction));
+      else if (current.status === 'over') newGame();
+      else commit(togglePause(current));
+    } else if (key === 'enter' && onBoard && gameRef.current.status === 'over') {
+      event.preventDefault();
+      newGame();
+    }
   }
 
-  function togglePause() {
-    setState((current) => ({
-      ...current,
-      status:
-        current.status === 'playing'
-          ? 'paused'
-          : current.status === 'paused' || current.status === 'idle'
-            ? 'playing'
-            : current.status,
-    }));
-  }
+  const { size, snake, food, status } = game;
+  const head = snake[0];
+  const ahead = OFFSETS[game.direction];
+  const side = { x: -ahead.y, y: ahead.x };
+  const eyes = [1, -1].map((sign) => ({
+    x: (head.x + 0.5 + ahead.x * 0.18 + side.x * 0.22 * sign) * U,
+    y: (head.y + 0.5 + ahead.y * 0.18 + side.y * 0.22 * sign) * U,
+  }));
+  // Run the body through segment centres, then stretch the tail end to its cell edge.
+  const [tail, beforeTail] = [snake.at(-1)!, snake.at(-2) ?? head];
+  const body = [...snake, { x: tail.x + (tail.x - beforeTail.x) * 0.15, y: tail.y + (tail.y - beforeTail.y) * 0.15 }]
+    .map((cell, index) => `${index === 0 ? 'M' : 'L'}${(cell.x + 0.5) * U} ${(cell.y + 0.5) * U}`)
+    .join(' ');
+  const best = record.best[speed];
 
-  function reset() {
-    setState(getInitialSnakeState());
-  }
-
-  const board = useMemo(
-    () =>
-      Array.from({ length: SNAKE_BOARD_SIZE * SNAKE_BOARD_SIZE }, (_, index) => {
-        const x = index % SNAKE_BOARD_SIZE;
-        const y = Math.floor(index / SNAKE_BOARD_SIZE);
-        const cell = { x, y };
-        const isHead = positionsEqual(state.snake[0], cell);
-        const isBody = state.snake.slice(1).some((segment) => positionsEqual(segment, cell));
-        const isFood = positionsEqual(state.food, cell);
-
-        return { x, y, isHead, isBody, isFood };
-      }),
-    [state.food, state.snake],
-  );
+  const statusText =
+    status === 'ready'
+      ? 'Press an arrow key or swipe on the board to start.'
+      : status === 'paused'
+        ? 'Paused. Press Space, P or an arrow key to carry on.'
+        : game.score === 0
+          ? 'Go. Steer to the black diamond.'
+          : `${game.score} eaten, snake ${snake.length} long.`;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={state.status === 'lost' ? reset : togglePause}
-          className="rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-        >
-          {state.status === 'playing'
-            ? 'Pause'
-            : state.status === 'paused'
-              ? 'Resume'
-              : state.status === 'lost'
-                ? 'Start a new run'
-                : 'Start'}
-        </button>
-        <button
-          type="button"
-          onClick={reset}
-          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-        >
-          Restart Snake
-        </button>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,0.7fr)]">
-        <div>
-          <p id={boardHelpId} className="mb-3 text-sm leading-7 text-slate-700">
-            Focus the board and use the arrow keys or WASD to steer. Press the space bar to pause or resume.
-          </p>
-          <div
-            tabIndex={0}
-            aria-label="Snake game board"
-            aria-describedby={boardHelpId}
-            onKeyDown={(event) => {
-              const requested = keyDirectionMap[event.key];
-
-              if (requested) {
-                event.preventDefault();
-                requestDirection(requested);
-              }
-
-              if (event.key === ' ') {
-                event.preventDefault();
-                togglePause();
-              }
+    <GameFrame
+      label="Snake"
+      options={
+        <Segmented
+          label="Speed"
+          options={(Object.keys(SPEEDS) as Speed[]).map((value) => ({ value, label: SPEEDS[value].label }))}
+          value={speed}
+          disabled={status === 'playing' || status === 'paused'}
+          onChange={(value) => {
+            setSpeedPref(value);
+            if (gameRef.current.status === 'over') newGame();
+          }}
+        />
+      }
+      stats={[
+        { label: 'Score', value: game.score },
+        { label: 'Best', value: best ?? '–' },
+      ]}
+      onNewGame={newGame}
+      actions={
+        !result && (
+          <Button
+            size="sm"
+            disabled={status !== 'playing' && status !== 'paused'}
+            onClick={() => {
+              commit(togglePause(gameRef.current));
+              boardRef.current?.focus();
             }}
-            className="grid aspect-square max-w-[28rem] grid-cols-10 gap-1 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-3 outline-none"
           >
-            {board.map((cell) => (
-              <div
-                key={`${cell.x}-${cell.y}`}
-                aria-hidden="true"
-                className={[
-                  'flex items-center justify-center rounded-md border text-[10px] font-semibold uppercase',
-                  cell.isHead
-                    ? 'border-sky-400 bg-sky-600 text-white'
-                    : cell.isBody
-                      ? 'border-sky-200 bg-sky-100 text-sky-900'
-                      : cell.isFood
-                        ? 'border-amber-300 bg-amber-100 text-amber-900'
-                        : 'border-slate-200 bg-white text-slate-300',
-                ].join(' ')}
-              >
-                {cell.isHead ? 'H' : cell.isBody ? 'S' : cell.isFood ? 'F' : ''}
-              </div>
-            ))}
-          </div>
+            {status === 'paused' ? 'Resume' : 'Pause'}
+          </Button>
+        )
+      }
+      status={statusText}
+      result={result}
+    >
+      <div onKeyDown={handleKeyDown} className="flex flex-col items-center justify-center gap-5 sm:flex-row sm:items-end">
+        <div
+          ref={boardRef}
+          tabIndex={0}
+          role="application"
+          aria-roledescription="game board"
+          aria-label={`Snake board, ${size} by ${size} squares`}
+          aria-describedby={`${helpId} ${whereId}`}
+          {...swipe}
+          className="relative aspect-square w-full max-w-[26rem] touch-none select-none overflow-hidden rounded-die border-2 border-ink bg-paper"
+        >
+          <svg viewBox={`0 0 ${size * U} ${size * U}`} aria-hidden="true" className="block size-full">
+            <g stroke="var(--color-rule)" strokeWidth="0.6">
+              {Array.from({ length: size - 1 }, (_, index) => (
+                <path key={index} d={`M${(index + 1) * U} 0V${size * U}M0 ${(index + 1) * U}H${size * U}`} />
+              ))}
+            </g>
+            {food && (
+              <polygon
+                points={[
+                  [food.x + 0.5, food.y + 0.12],
+                  [food.x + 0.88, food.y + 0.5],
+                  [food.x + 0.5, food.y + 0.88],
+                  [food.x + 0.12, food.y + 0.5],
+                ]
+                  .map(([x, y]) => `${x * U},${y * U}`)
+                  .join(' ')}
+                fill="var(--color-ink)"
+              />
+            )}
+            <path d={body} fill="none" className="stroke-game" strokeWidth={U * 0.7} strokeLinecap="square" strokeLinejoin="miter" />
+            <rect x={head.x * U + 0.6} y={head.y * U + 0.6} width={U - 1.2} height={U - 1.2} rx="1.6" className="fill-game" stroke="var(--color-ink)" strokeWidth="0.9" />
+            {eyes.map((eye, index) =>
+              status === 'over' && game.end !== 'full' ? (
+                <path
+                  key={index}
+                  d={`M${eye.x - 1.1} ${eye.y - 1.1}l2.2 2.2m0 -2.2l-2.2 2.2`}
+                  className="stroke-on-game"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                />
+              ) : (
+                <rect key={index} x={eye.x - 0.9} y={eye.y - 0.9} width="1.8" height="1.8" className="fill-on-game" />
+              ),
+            )}
+          </svg>
 
-          <div className="mt-4 grid w-full max-w-[12rem] grid-cols-3 gap-2" aria-label="Directional controls">
-            <span />
-            <button
-              type="button"
-              onClick={() => requestDirection('up')}
-              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50"
-              aria-label="Move up"
-            >
-              Up
-            </button>
-            <span />
-            <button
-              type="button"
-              onClick={() => requestDirection('left')}
-              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50"
-              aria-label="Move left"
-            >
-              Left
-            </button>
-            <button
-              type="button"
-              onClick={() => requestDirection('down')}
-              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50"
-              aria-label="Move down"
-            >
-              Down
-            </button>
-            <button
-              type="button"
-              onClick={() => requestDirection('right')}
-              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:border-sky-300 hover:bg-sky-50"
-              aria-label="Move right"
-            >
-              Right
-            </button>
-          </div>
+          {(status === 'ready' || status === 'paused') && (
+            <p className="pointer-events-none absolute inset-x-4 top-[18%] mx-auto w-fit rounded-die border-2 border-ink bg-card px-3 py-1.5 text-center text-sm font-semibold">
+              {status === 'ready' ? 'Press an arrow key or swipe to start' : 'Paused'}
+            </p>
+          )}
+          <p id={whereId} className="sr-only">
+            {`Head at row ${head.y + 1}, column ${head.x + 1}, heading ${game.direction}.`}
+            {food ? ` Food at row ${food.y + 1}, column ${food.x + 1}.` : ''}
+          </p>
         </div>
 
-        <div className="space-y-4">
-          <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4">
-            <h3 className="text-sm font-semibold text-slate-950">Current state</h3>
-            <p className="mt-3 text-sm leading-7 text-slate-700" aria-live="polite">
-              {state.status === 'lost'
-                ? `Game over. Final score: ${state.score}.`
-                : state.status === 'playing'
-                  ? `Score ${state.score}. Snake moving ${state.direction}.`
-                  : state.status === 'paused'
-                    ? `Paused with score ${state.score}.`
-                    : 'Ready to begin. Start the board and use the keyboard to steer.'}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-2xl bg-sky-50 px-3 py-3">
-              <p className="text-slate-500">Score</p>
-              <p className="mt-1 text-lg font-semibold text-slate-950">{state.score}</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 px-3 py-3">
-              <p className="text-slate-500">Direction</p>
-              <p className="mt-1 text-lg font-semibold capitalize text-slate-950">{state.direction}</p>
-            </div>
-          </div>
+        <div className="flex flex-col items-center gap-2">
+          <DPad label="Steer the snake" onPress={(direction) => commit(turn(gameRef.current, direction))} disabled={status === 'over'} />
+          <p id={helpId} className="max-w-[12rem] text-center text-xs leading-5 text-ink-soft">
+            Arrows or WASD steer. Space or P pauses. On touch, swipe the board or use the pad.
+          </p>
         </div>
       </div>
-    </div>
+    </GameFrame>
   );
 }

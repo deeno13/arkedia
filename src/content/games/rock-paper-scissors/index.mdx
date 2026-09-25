@@ -1,67 +1,105 @@
 ---
-title: Rock Paper Scissors
+title: "Rock Paper Scissors"
 slug: rock-paper-scissors
-excerpt: A compact game of outcomes and prediction that works well for probability, strategy, and reading patterns.
-category: probability
-tags:
-  - outcomes
-  - prediction
-  - randomness
-  - decision making
+excerpt: "Three moves, no best one. Beat a computer that learns your habits."
+description: "A game with no winning move — only winning patterns. Play first to five against opponents that copy you, count you, hunt your habits, or pick at random."
+category: strategy
+ink: sky
 difficulty: beginner
-minPlayers: 2
-maxPlayers: 2
-estimatedMinutes: 5
-educationalTopics:
-  - probability vocabulary
-  - strategic thinking
-  - pattern recognition
-  - experimental data
-isPlayable: true
-status: published
+minPlayers: 1
+maxPlayers: 1
+estimatedMinutes: 3
+concept: "Mixed strategies and pattern exploitation"
+skills:
+  - "reading patterns"
+  - "probability"
+  - "hiding your intentions"
+quickRules:
+  - "Both players pick rock, paper or scissors at the same moment."
+  - "Rock crushes scissors, scissors cut paper, paper covers rock."
+  - "The same throw on both sides is a draw; nobody scores."
+  - "The winner of each round scores a point. First to 5 points wins the match."
+controls:
+  - "Click or tap Rock, Paper or Scissors to throw."
+  - "Keyboard: Tab to a throw button, then press R, P or S (or 1, 2, 3) each round."
+  - "Opponent picks the computer's style: Random, Copycat, Counter or Pattern hunter."
+  - "After each match, read how the opponent decided every throw."
+widget: "rock-paper-scissors"
 coverImage: ./cover.svg
-coverImageAlt: Stylized icons for rock, paper, and scissors on a clean background.
+coverImageAlt: "Two hands thrown at once: a pale hand showing scissors meets a dark fist showing rock."
 relatedGameSlugs:
-  - snake
-  - wordle-style-game
-seoTitle: Rock Paper Scissors strategy and educational guide
-seoDescription: Learn how Rock Paper Scissors supports probability, prediction, and pattern analysis, with a playable widget ready for this game page.
-description: Rock Paper Scissors is simple enough to explain quickly and rich enough to support discussion about fairness, prediction, and repeated outcomes.
-publishedAt: 2026-04-10
-updatedAt: 2026-04-10
-playableWidget: rock-paper-scissors
-widgetHydration: visible
+  - nim
+  - tic-tac-toe
+  - mastermind
+seoTitle: "Rock Paper Scissors: why random is unbeatable and how to exploit habits"
+seoDescription: "Play first to five against four computer styles — Random, Copycat, Counter and Pattern hunter. Learn the Nash equilibrium and how to read a predictable opponent."
+publishedAt: 2026-09-25
 ---
 
 import Callout from '../../../components/ui/Callout.astro';
 
-Rock Paper Scissors is useful because learners understand the rules almost instantly. That leaves more room to focus on what the game reveals: repeated outcomes, strategic habits, and the difference between a fair system and a predictable opponent.
+Rock Paper Scissors is the only game on this shelf where the rules have no best move. Every throw beats one throw and loses to another. So a single round is a coin toss, and anyone who tells you they have a system is really telling you about their opponent.
 
-## How the game works
+That is the interesting part. Over a match, the game stops being about the throws and starts being about the *thrower*. The four computer opponents here each have a different brain, from one that ignores you completely to one that keeps notes on everything you do.
 
-Two players reveal one of three options at the same time: rock, paper, or scissors. Rock beats scissors, scissors beats paper, and paper beats rock. If both players choose the same option, the round is a draw.
+## How to play
 
-The rules create a balanced cycle. No single move is strongest on its own, which makes the game a clear introduction to fairness and mixed strategies.
+- Both players choose rock, paper or scissors in secret and reveal at the same moment.
+- **Rock** beats scissors, **scissors** beats paper, **paper** beats rock.
+- If both throw the same, the round is a draw and nobody scores.
+- Otherwise the winner scores a point. The first player to reach **5 points** wins the match; draws do not count, so a match can run longer than nine rounds.
 
-## Example
+Here you throw by pressing a button (or R, P, S), and the computer commits to its throw at the same instant, based only on your earlier rounds. It never sees the throw you are making.
 
-If a class records thirty rounds and notices that one player chooses rock far more often than the others, the game shifts from pure randomness to pattern reading. Students can start asking whether the best response should depend on probability alone or on observed behavior.
+## A worked example
 
-## Strategy tips
+Suppose you play Pattern hunter and, trying to be "varied", you cycle rock, paper, scissors, rock, paper…
 
-- treat one round as a single outcome, but several rounds as a data set
-- watch for habits in repeated play rather than assuming every round is random
-- remember that a fair ruleset can still produce predictable players
-- use the result history to talk about evidence, not superstition
+| Round | You | It | Why it threw that |
+| --- | --- | --- | --- |
+| 1 | Rock | random | Nothing to go on yet |
+| 2 | Paper | Paper | Your favourite so far is rock, so it throws paper: draw |
+| 3 | Scissors | Scissors or Paper | Rock and paper are tied, so it guesses between them |
+| 4 | Rock | random | No move has followed scissors yet |
+| 5 | Paper | Scissors | After rock, you once played paper; scissors cuts it |
+| 6 | Scissors | Rock | After rock then paper, you once played scissors |
 
-## Educational value
+From round 5 on, every one of your throws has happened before in the same context, so it wins every round. A strict cycle is the most predictable thing a human can do, and it loses the match 5–0 or close to it.
 
-This game gives teachers a low-friction way to discuss probability, fairness, expected outcomes, and human prediction. It is especially useful because the rules are easy enough that the conversation can move quickly from “what happened” to “why it happened.”
+Now flip it. Against Copycat, which repeats your last throw, the same cycle wins every round: after rock it throws rock, and your paper covers it.
 
-<Callout title="Teaching prompt">
-  Have learners predict the next move after watching a short series of rounds, then compare whether they relied on data, assumptions, or a story they invented after the fact.
+## Strategy
+
+### Beginner: play the equilibrium
+
+If you pick each throw with probability one in three, independent of everything, no opponent can do better than break even against you in the long run. You will win, lose and draw about a third of the time each. That is safe, not strong.
+
+### Intermediate: spot a simple rule
+
+Watch what the opponent does after your throws. If it copies you, beat your own last throw. If it keeps throwing the move that beats your favourite, find your favourite on the frequency bars and throw what beats *its* answer. For example, if you have thrown rock most, Counter expects rock and throws paper, so you throw scissors.
+
+### Advanced: exploit, but don't become exploitable
+
+Every time you deviate from one-in-three to exploit someone, you create a pattern they could exploit back. Pattern hunter does exactly this to you. Good players exploit in short bursts and return to unpredictable play when the opponent starts adapting. Against Pattern hunter, a useful trick is to repeat a context on purpose once, then do something different the next time it appears: its table now predicts the old follow-up, and you throw what beats its counter.
+
+### Human tendencies, used cautiously
+
+Studies of people playing many rounds have reported that winners tend to repeat a winning throw a bit more often than chance, and losers tend to switch. People asked to act randomly also tend to avoid repeating the same choice several times in a row, which real randomness does quite often. These are small population averages, not laws; treat them as a first guess and let the history strip overrule them.
+
+## The idea underneath
+
+A **mixed strategy** is a probability for each move rather than a fixed choice. In Rock Paper Scissors the only **Nash equilibrium**, the pair of strategies where neither player gains by changing alone, is both players choosing uniformly at random.
+
+Why uniform? Suppose you throw rock with probability *r*, paper *p* and scissors *s*. If rock is more likely than the others, paper wins more than it loses against you, so your opponent would throw paper more. The only mix that gives your opponent no better answer is *r* = *p* = *s* = 1/3. Against that mix, every opponent strategy has an expected score of exactly zero.
+
+The catch is that the equilibrium never *wins*. It only guarantees you cannot be beaten on average. To win, you must deviate from it and bet that your opponent is predictable, which is what the pattern hunter does with a frequency table: it counts what you threw after each pair of throws and plays the counter to the most common follow-up. The same idea, predicting the next symbol from the last few, powers text prediction and compression.
+
+## Common mistakes
+
+- **Cycling to "be random".** A cycle is a perfectly predictable pattern.
+- **Reading meaning into a short streak.** Three losses in a row happens by chance about once every 27 tries.
+- **Chasing the last result.** Always switching after a loss is itself a pattern.
+
+<Callout title="Try this">
+  Pick Pattern hunter and win a match. Watch the "Your throws" bars and the round strip: if it starts taking rounds, change the habit it has learned, not just the throw.
 </Callout>
-
-## Related concepts
-
-Rock Paper Scissors connects to probability, game theory, repeated experiments, and pattern spotting. It also works well as a first candidate for a playable widget because the rules are tiny and the feedback is immediate.

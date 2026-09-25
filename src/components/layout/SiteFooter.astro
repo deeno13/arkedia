@@ -1,35 +1,40 @@
 ---
 import Container from './Container.astro';
-import { editorialPrinciples, mainNavigation, siteConfig } from '../../data/site';
+import Mark from '../ui/Mark.astro';
+import { siteConfig } from '../../data/site';
+import { gameHref, getPublishedGames, groupGamesByCategory } from '../../lib/games';
+
+const groups = groupGamesByCategory(await getPublishedGames());
 ---
 
-<footer class="border-t border-slate-200/80 bg-white/70 py-10">
-  <Container class="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)]">
-    <div class="space-y-4">
-      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-sky-700">Arkedia</p>
-      <p class="max-w-md text-sm leading-7 text-slate-600">
-        Built as a static-first educational site where explanations, examples, and optional practice can live
-        together without turning the whole site into a client-heavy app.
+<footer class="mt-24 border-t-2 border-ink bg-paper-deep">
+  <Container class="grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] lg:gap-16">
+    <div class="max-w-sm">
+      <a href="/" class="inline-flex items-center gap-2.5 rounded-die text-ink">
+        <Mark class="h-5 w-6" />
+        <span class="text-lg leading-none font-black font-stretch-expanded tracking-[-0.02em]">{siteConfig.name}</span>
+      </a>
+      <p class="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
+        {siteConfig.tagline}. No accounts and no ads. Your record lives in this browser only,
+        <a class="font-semibold text-ink underline" href="/about/#progress">and you can wipe it any time</a>.
       </p>
-      <p class="text-sm text-slate-500">{siteConfig.tagline}</p>
     </div>
 
-    <div>
-      <h2 class="text-sm font-semibold text-slate-950">Explore</h2>
-      <ul aria-label="Footer navigation" class="mt-4 space-y-3 text-sm text-slate-600">
-        {mainNavigation.map((item) => (
-          <li>
-            <a class="transition hover:text-slate-950" href={item.href}>{item.label}</a>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-semibold text-slate-950">Editorial guardrails</h2>
-      <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
-        {editorialPrinciples.map((principle) => <li>{principle}</li>)}
-      </ul>
-    </div>
+    <nav aria-label="All games" class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+      {groups.map((group) => (
+        <div>
+          <h2 class="text-sm font-extrabold font-stretch-semi-expanded text-ink">
+            <a class="rounded-die underline-offset-4 hover:underline" href={`/games/?category=${group.category}`}>{group.label}</a>
+          </h2>
+          <ul class="mt-3 space-y-1.5 text-[0.9375rem] text-ink-soft">
+            {group.entries.map((game) => (
+              <li>
+                <a class="inline-block rounded-die py-0.5 hover:text-ink hover:underline" href={gameHref(game)}>{game.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
   </Container>
 </footer>

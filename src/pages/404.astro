@@ -1,23 +1,35 @@
 ---
-import LinkButton from '../components/ui/LinkButton.astro';
-import PageHero from '../components/ui/PageHero.astro';
+import Container from '../components/layout/Container.astro';
+import BoxLid from '../components/ui/BoxLid.astro';
 import MainLayout from '../layouts/MainLayout.astro';
+import { getPublishedGames, getStarterGames } from '../lib/games';
+
+const games = await getPublishedGames();
+const picks = getStarterGames(games, 4);
 ---
 
-<MainLayout
-  title="Page not found"
-  description="The page you were looking for could not be found."
-  noindex={true}
->
-  <PageHero
-    eyebrow="404"
-    title="This page is missing, but the rest of Arkedia is still on track"
-    description="Try the home page or browse the current game guides to get back to the content-first part of the site."
-    size="narrow"
-  >
-    <Fragment slot="actions">
-      <LinkButton href="/">Back home</LinkButton>
-      <LinkButton href="/games/" variant="secondary">Browse games</LinkButton>
-    </Fragment>
-  </PageHero>
+<MainLayout title="Page not found" description="There is nothing at this address. Every Arkedia game is on the shelf at /games/." noindex={true}>
+  <Container class="pt-10 sm:pt-16">
+    <div class="max-w-2xl rounded-die border-2 border-dashed border-ink px-6 py-10 sm:px-10 sm:py-14">
+      <h1 class="text-[clamp(2.25rem,6vw,4rem)] leading-[0.95] font-black font-stretch-expanded tracking-[-0.03em]">This box is empty.</h1>
+      <p class="mt-4 max-w-[44ch] text-lg leading-snug text-ink-soft">
+        There is no page at this address. It may have moved, or the link may have a typo. Every game is still on the shelf.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a class="inline-flex min-h-11 items-center rounded-die border-2 border-ink bg-ink px-4 font-semibold font-stretch-semi-expanded text-paper transition-colors duration-150 hover:bg-ink-soft" href="/games/">
+          See all {games.length} games
+        </a>
+        <a class="inline-flex min-h-11 items-center rounded-die border-2 border-ink px-4 font-semibold font-stretch-semi-expanded text-ink transition-colors duration-150 hover:bg-paper-deep" href="/">
+          Home
+        </a>
+      </div>
+    </div>
+
+    <h2 class="mt-16 text-2xl leading-tight font-black font-stretch-expanded tracking-[-0.015em]">Or open one of these</h2>
+    <ul class="mt-5 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+      {picks.map((game) => (
+        <li><BoxLid entry={game} /></li>
+      ))}
+    </ul>
+  </Container>
 </MainLayout>
